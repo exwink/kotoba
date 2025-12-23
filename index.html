@@ -3,17 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>kotoba - Master Kosakata Jepang</title>
+    <title>Master Kosakata Jepang - 15 BAB Lengkap</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Library WanaKana untuk konversi Romaji ke Kana otomatis -->
     <script src="https://unpkg.com/wanakana@2.3.1/wanakana.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Noto+Sans+JP:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+JP:wght@400;700&display=swap');
         
         body {
-            font-family: 'Plus Jakarta Sans', 'Noto Sans JP', sans-serif;
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
             -webkit-font-smoothing: antialiased;
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
         }
 
         .japanese-text {
@@ -26,7 +25,7 @@
 
         @keyframes pulse-green {
             0% { transform: scale(1); }
-            50% { transform: scale(1.02); background-color: #f0fdf4; }
+            50% { transform: scale(1.05); background-color: #dcfce7; }
             100% { transform: scale(1); }
         }
 
@@ -39,157 +38,117 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Custom Scrollbar */
-        #menu-view::-webkit-scrollbar, .custom-scroll::-webkit-scrollbar {
-            width: 5px;
+        /* Mengatur scrollbar untuk menu */
+        #menu-view::-webkit-scrollbar {
+            width: 6px;
         }
-        #menu-view::-webkit-scrollbar-thumb, .custom-scroll::-webkit-scrollbar-thumb {
+        #menu-view::-webkit-scrollbar-thumb {
             background-color: #e2e8f0;
             border-radius: 10px;
         }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-        }
-        
-        .bab-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .bab-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Gaya Khusus Judul Kotoba yang sudah dikecilkan */
-        .title-aesthetic {
-            font-size: 3.5rem; /* Ukuran dikecilkan dari 5rem */
-            line-height: 1;
-            letter-spacing: -0.05em;
-            background: linear-gradient(to bottom, #ef4444, #991b1b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .instruction-box {
-            animation: slideUp 0.6s ease-out;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4 sm:p-6">
+<body class="bg-slate-50 min-h-screen flex items-center justify-center p-4">
 
-    <!-- Layar Pemuatan -->
+    <!-- Layar Pemuatan (Loading) -->
     <div id="app-loading" class="fixed inset-0 bg-white z-50 flex items-center justify-center">
         <div class="text-center">
-            <div class="inline-block w-10 h-10 border-4 border-red-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-            <p class="text-slate-500 font-medium animate-pulse text-sm">Menyiapkan kosa kata...</p>
+            <div class="inline-block w-8 h-8 border-4 border-red-600 border-t-transparent rounded-full animate-spin mb-2"></div>
+            <p class="text-slate-500 text-sm italic">Memuat data kuis...</p>
         </div>
     </div>
 
-    <div class="max-w-md w-full glass-card rounded-[2.5rem] shadow-2xl overflow-hidden border border-white/50 hidden flex flex-col h-[92vh]" id="main-app">
+    <div class="max-w-md w-full bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 hidden flex flex-col max-h-[90vh]" id="main-app">
         
         <!-- View 1: Menu Pemilihan BAB -->
-        <div id="menu-view" class="p-8 overflow-y-auto flex-1">
-            <div class="text-center mb-10 pt-6">
-                <h1 class="title-aesthetic font-black uppercase mb-6 text-center">kotoba</h1>
-                <p class="text-slate-500 text-[11px] font-bold tracking-widest uppercase bg-slate-100/80 inline-block px-5 py-2 rounded-full border border-slate-200/50">Minna no Nihongo (BAB 1 - 15)</p>
+        <div id="menu-view" class="p-6 overflow-y-auto">
+            <div class="text-center mb-6">
+                <h1 class="text-2xl font-bold text-slate-800 tracking-tight text-red-600">Menu Belajar</h1>
+                <p class="text-slate-500 text-sm italic">Minna no Nihongo (BAB 1 - 15)</p>
             </div>
-            
-            <div class="grid grid-cols-2 gap-4" id="bab-list">
-                <!-- Tombol BAB dibuat dinamis oleh JS -->
-            </div>
-
-            <div class="mt-12 text-center border-t border-slate-100 pt-8 pb-4">
-                <p class="text-slate-400 text-[10px] font-bold tracking-[0.2em] uppercase mb-1">Created by</p>
-                <p class="text-red-500 font-extrabold text-xl tracking-tight hover:scale-110 transition-transform cursor-default text-center">Exwink</p>
+            <div class="grid grid-cols-2 gap-3" id="bab-list">
+                <!-- Tombol BAB akan dibuat secara dinamis oleh JavaScript -->
             </div>
         </div>
 
         <!-- View 2: Area Kuis Aktif -->
-        <div id="quiz-view" class="hidden flex-1 flex flex-col overflow-hidden">
+        <div id="quiz-view" class="hidden flex-1 flex flex-col">
             <!-- Header Kuis -->
-            <div class="bg-gradient-to-br from-red-600 to-rose-500 p-7 text-white text-center relative shrink-0">
-                <button onclick="backToMenu()" class="absolute left-6 top-7 p-2 bg-white/20 rounded-xl hover:bg-white/30 transition-colors cursor-pointer">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+            <div class="bg-red-600 p-6 text-white text-center relative shrink-0">
+                <button onclick="backToMenu()" class="absolute left-4 top-6 opacity-80 hover:opacity-100 transition-opacity">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                     </svg>
                 </button>
-                <h1 id="current-bab-title" class="text-xl font-extrabold mb-1 tracking-widest italic opacity-90 uppercase">BAB 1</h1>
-                <div class="w-full bg-black/10 rounded-full h-2 mt-5">
-                    <div id="progress-bar" class="bg-white h-2 rounded-full transition-all duration-700 shadow-sm" style="width: 0%"></div>
+                <h1 id="current-bab-title" class="text-xl font-bold mb-1 italic text-white">BAB</h1>
+                <div class="w-full bg-red-800 rounded-full h-2 mt-4">
+                    <div id="progress-bar" class="bg-white h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
                 </div>
-                <div class="flex justify-between mt-3 text-[10px] font-bold uppercase tracking-wider opacity-90">
-                    <span id="progress-text">Soal 1 / 0</span>
+                <div class="flex justify-between mt-2 text-xs font-medium opacity-80">
+                    <span id="progress-text">问题 1 / 0</span>
                     <span id="score-text">Skor: 0</span>
                 </div>
             </div>
 
-            <!-- Konten Pertanyaan yang Bisa Discroll -->
-            <div class="p-6 flex-1 overflow-y-auto custom-scroll flex flex-col">
-                <div class="text-center fade-in w-full max-w-sm mx-auto flex-1 flex flex-col justify-center py-4">
-                    <p class="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-2">Bahasa Jepangnya:</p>
-                    <h2 id="display-definition" class="text-3xl font-extrabold text-slate-800 mb-6 min-h-[5rem] flex items-center justify-center px-4 leading-[1.25]">
+            <!-- Area Pertanyaan -->
+            <div class="p-8 flex-1 flex flex-col justify-center">
+                <div class="text-center fade-in">
+                    <p class="text-slate-500 text-sm font-semibold uppercase tracking-wider mb-2">Bahasa Jepangnya:</p>
+                    <h2 id="display-definition" class="text-3xl font-bold text-slate-800 mb-8 min-h-[5rem] flex items-center justify-center px-4 leading-tight">
                         ...
                     </h2>
-
-                    <div class="relative mb-6 w-full">
+                    
+                    <div class="relative mb-4">
                         <input type="text" id="user-input" 
-                            class="japanese-text w-full px-4 py-6 text-center text-4xl font-bold border-2 border-slate-100 rounded-[2rem] focus:border-red-500 focus:outline-none transition-all shadow-xl shadow-slate-100/50 placeholder:text-slate-200"
-                            placeholder="...."
+                            class="w-full px-4 py-4 text-center text-3xl font-bold border-2 border-slate-200 rounded-2xl focus:border-red-500 focus:outline-none transition-colors"
+                            placeholder="Tulis Romanji (watashi, anata, dll)..."
                             autocomplete="off"
                             autocapitalize="none">
                         
-                        <div id="status-notif" class="hidden absolute -top-12 left-0 right-0 font-bold flex items-center justify-center gap-2 fade-in">
+                        <!-- Notifikasi Status -->
+                        <div id="status-notif" class="hidden absolute -top-10 left-0 right-0 font-bold flex items-center justify-center gap-2 fade-in">
                             <span id="notif-text"></span>
                         </div>
                     </div>
 
-                    <button id="skip-button" class="text-slate-400 hover:text-slate-600 text-xs font-bold transition-colors flex items-center justify-center w-full gap-2 mb-8 py-2 group">
-                        <span class="opacity-50 group-hover:opacity-100 transition-opacity">⏭️</span>
-                        Lewati Soal
+                    <!-- Tombol Skip -->
+                    <button id="skip-button" class="text-slate-400 hover:text-slate-600 text-sm font-medium transition-colors flex items-center justify-center w-full gap-1 mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                        </svg>
+                        Lewati (Skip)
                     </button>
 
-                    <!-- Bagian Instruksi -->
-                    <div class="instruction-box bg-slate-50 p-5 rounded-[2rem] border border-slate-100 shadow-sm w-full mb-4">
-                        <div class="text-slate-600 text-[13px] leading-relaxed font-semibold">
-                            Gunakan huruf hiragana atau katakana untuk menjawab ya!<br>
-                            <span class="text-[11px] font-medium text-slate-400 block mt-1">(Contoh: わたし, コーヒー)</span>
-                        </div>
-                        <div class="mt-3 text-red-500 font-extrabold text-base flex items-center justify-center gap-2 animate-bounce">
-                            Semangat mengerjakan! 💪
-                        </div>
+                    <div class="bg-blue-50 p-3 rounded-xl border border-blue-100">
+                        <p class="text-blue-700 text-[10px] leading-relaxed">
+                            <strong>Petunjuk:</strong> Ketik dalam huruf Latin (Romanji). Contoh: "watashi" untuk わたし, "nihon" untuk 日本.
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- View 3: Layar Hasil Akhir -->
-        <div id="result-view" class="hidden p-10 text-center fade-in flex-1 flex flex-col justify-center overflow-y-auto">
-            <div class="mb-8 text-center">
-                <div class="inline-flex items-center justify-center w-24 h-24 bg-emerald-50 text-emerald-500 rounded-[2.5rem] mb-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        <div id="result-view" class="hidden p-8 text-center fade-in flex-1 flex flex-col justify-center">
+            <div class="mb-6 text-center">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                 </div>
-                <h2 class="text-3xl font-extrabold text-slate-800">Luar Biasa!</h2>
-                <p class="text-slate-500 mt-2 font-medium">Materi BAB ini telah selesai kamu pelajari.</p>
-                <div class="mt-8 bg-slate-50 p-6 rounded-[2rem] border border-slate-100 relative overflow-hidden">
-                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em]">Skor Akhir</p>
-                    <p id="final-score" class="text-5xl font-black text-red-500 mt-1">0</p>
+                <h2 class="text-2xl font-bold text-slate-800">Luar Biasa!</h2>
+                <p class="text-slate-500 mt-2">Materi BAB ini telah selesai kamu pelajari.</p>
+                <div class="mt-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                    <p class="text-sm text-slate-400">Skor Akhir</p>
+                    <p id="final-score" class="text-3xl font-black text-red-600">0</p>
                 </div>
             </div>
-            <div class="flex flex-col gap-4 px-4">
-                <button onclick="startQuiz(currentBabIndex)" class="w-full bg-red-600 hover:bg-red-700 text-white font-extrabold py-5 rounded-[1.5rem] transition-all shadow-lg shadow-red-500/20 active:scale-95">
+            <div class="flex flex-col gap-3">
+                <button onclick="startQuiz(currentBabIndex)" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-2xl transition-all shadow-lg active:scale-95">
                     Ulangi BAB Ini
                 </button>
-                <button onclick="backToMenu()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-extrabold py-5 rounded-[1.5rem] transition-all active:scale-95">
-                    Kembali ke Menu
+                <button onclick="backToMenu()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-4 rounded-2xl transition-all active:scale-95">
+                    Kembali ke Menu Utama
                 </button>
             </div>
         </div>
@@ -197,224 +156,761 @@
 
     <script>
         /**
-         * BASIS DATA KOSAKATA (BAB 1 - 15)
+         * BASIS DATA KOSAKATA DENGAN ROMANJI (BAB 1 - 15)
+         * Setiap kata memiliki 3 properti: word (huruf Jepang), romanji, dan definition
          */
         const allData = {
             1: [
-                { word: "わたし", definition: "Saya" }, { word: "あなた", definition: "Kamu" }, { word: "あのひと", definition: "Orang itu (biasa)" }, { word: "あのかた", definition: "Orang itu (sopan)" },
-                { word: "さん", definition: "Saudara......" }, { word: "ちゃん", definition: "Panggilan untuk anak laki/perempuan" }, { word: "じん", definition: "Orang......" }, { word: "せんせい", definition: "Guru, dosen" },
-                { word: "きょうし", definition: "Guru, dosen (untuk kalangan sendiri)" }, { word: "가くせい", definition: "Siswa, murid" }, { word: "かいしゃいん", definition: "Pegawai perusahaan" }, { word: "しゃいん", definition: "Pegawai perusahaan" },
-                { word: "ぎんこういん", definition: "Pegawai bank" }, { word: "いしゃ", definition: "Dokter" }, { word: "けんきゅうしゃ", definition: "Peneliti" }, { word: "だいがく", definition: "Universitas" },
-                { word: "びょういん", definition: "Rumah sakit" }, { word: "だれ", definition: "Siapa (biasa)" }, { word: "どなた", definition: "Siapa (sopan)" }, { word: "さい", definition: "Umur......" },
-                { word: "なんさい", definition: "Umur berapa? (biasa)" }, { word: "おいくつ", definition: "Umur berapa? (sopan)" }, { word: "はい", definition: "Iya" }, { word: "いいえ", definition: "Tidak" },
-                { word: "はじめまして", definition: "Perkenalkan" }, { word: "からきました", definition: "Datang dari......" }, { word: "どうぞよろしくおねがいします", definition: "Terimalah perkenalan saya" },
-                { word: "しつれいですが", definition: "Permisi" }, { word: "おなまえは", definition: "Nama anda siapa?" }, { word: "アメリカ", definition: "Amerika" }, { word: "イギリス", definition: "Inggris" },
-                { word: "インド", definition: "India" }, { word: "インドネシア", definition: "Indonesia" }, { word: "かんこく", definition: "Korea" }, { word: "ちゅうごく", definition: "China" },
-                { word: "ドイツ", definition: "Jerman" }, { word: "にほん", definition: "Jepang" }, { word: "フランス", definition: "Perancis" }
+                { word: "わたし", romanji: "watashi", definition: "Saya" }, 
+                { word: "あなた", romanji: "anata", definition: "Kamu" }, 
+                { word: "あのひと", romanji: "ano hito", definition: "Orang itu (biasa)" }, 
+                { word: "あのかた", romanji: "ano kata", definition: "Orang itu (sopan)" },
+                { word: "さん", romanji: "san", definition: "Saudara......" }, 
+                { word: "ちゃん", romanji: "chan", definition: "Panggilan untuk anak" }, 
+                { word: "じん", romanji: "jin", definition: "Orang......" }, 
+                { word: "せんせい", romanji: "sensee", definition: "Guru, dosen" },
+                { word: "きょうし", romanji: "kyoushi", definition: "Guru, dosen (sendiri)" }, 
+                { word: "がくせい", romanji: "gakusee", definition: "Siswa, murid" }, 
+                { word: "かいしゃいん", romanji: "kaishain", definition: "Pegawai perusahaan" }, 
+                { word: "しゃいん", romanji: "shain", definition: "Pegawai perusahaan" },
+                { word: "ぎんこういん", romanji: "ginkouin", definition: "Pegawai bank" }, 
+                { word: "いしゃ", romanji: "isha", definition: "Dokter" }, 
+                { word: "けんきゅうしゃ", romanji: "kenkyuusha", definition: "Peneliti" }, 
+                { word: "だいがく", romanji: "daigaku", definition: "Universitas" },
+                { word: "びょういん", romanji: "byouin", definition: "Rumah sakit" }, 
+                { word: "だれ", romanji: "dare", definition: "Siapa (biasa)" }, 
+                { word: "どなた", romanji: "donata", definition: "Siapa (sopan)" }, 
+                { word: "さい", romanji: "sai", definition: "Umur......" },
+                { word: "なんさい", romanji: "nansai", definition: "Umur berapa? (biasa)" }, 
+                { word: "おいくつ", romanji: "oikutsu", definition: "Umur berapa? (sopan)" }, 
+                { word: "はい", romanji: "hai", definition: "Iya" }, 
+                { word: "いいえ", romanji: "iie", definition: "Tidak" },
+                { word: "はじめまして", romanji: "hajimemashite", definition: "Perkenalkan" }, 
+                { word: "からきました", romanji: "kara kimashita", definition: "Datang dari......" }, 
+                { word: "どうぞよろしくおねがいします", romanji: "douzo yoroshiku onegaishimasu", definition: "Terimalah perkenalan saya" },
+                { word: "しつれいですが", romanji: "shitsuree desu ga", definition: "Permisi" }, 
+                { word: "おなまえは", romanji: "onamae wa", definition: "Nama anda siapa?" }, 
+                { word: "アメリカ", romanji: "amerika", definition: "Amerika" }, 
+                { word: "イギリス", romanji: "igirisu", definition: "Inggris" },
+                { word: "インド", romanji: "indo", definition: "India" }, 
+                { word: "インドネシア", romanji: "indoneshia", definition: "Indonesia" }, 
+                { word: "かんこく", romanji: "kankoku", definition: "Korea" }, 
+                { word: "ちゅうごく", romanji: "chuugoku", definition: "China" },
+                { word: "ドイツ", romanji: "doitsu", definition: "Jerman" }, 
+                { word: "にほん", romanji: "nihon", definition: "Jepang" }, 
+                { word: "フランス", romanji: "furansu", definition: "Perancis" }
             ],
             2: [
-                { word: "これ", definition: "Ini" }, { word: "それ", definition: "Itu (dekat)" }, { word: "あれ", definition: "Itu (jauh)" }, { word: "この", definition: "～ini" },
-                { word: "その", definition: "～itu (dekat)" }, { word: "あの", definition: "～itu (jauh)" }, { word: "ほん", definition: "Buku" }, { word: "じしょ", definition: "Kamus" },
-                { word: "ざっし", definition: "Majalah" }, { word: "しんぶん", definition: "Koran" }, { word: "ノート", definition: "Buku catatan" }, { word: "てちょう", definition: "Buku agenda" },
-                { word: "めいし", definition: "Kartu nama" }, { word: "カード", definition: "Kartu" }, { word: "えんぴつ", definition: "Pensil" }, { word: "ボールペン", definition: "Bolpoin" },
-                { word: "シャープペンシル", definition: "Pensil mekanik" }, { word: "かぎ", definition: "Kunci" }, { word: "とけい", definition: "Jam, arloji" }, { word: "かさ", definition: "Payung" },
-                { word: "かばん", definition: "Tas" }, { word: "テレビ", definition: "Televisi" }, { word: "ラジオ", definition: "Radio" }, { word: "カメラ", definition: "Kamera" },
-                { word: "コンピューター", definition: "Komputer" }, { word: "くるま", definition: "Mobil" }, { word: "つくえ", definition: "Meja" }, { word: "いす", definition: "Kursi" },
-                { word: "チョコレート", definition: "Coklat" }, { word: "コーヒー", definition: "Kopi" }, { word: "おみやげ", definition: "Oleh-oleh" }, { word: "えいご", definition: "Bahasa Inggris" },
-                { word: "にほんご", definition: "Bahasa Jepang" }, { word: "ご", definition: "Bahasa ～" }, { word: "なん", definition: "Apa" }, { word: "そう", definition: "Begitu" },
-                { word: "あのう", definition: "Eee ... (ungkapan ketika ragu)" }, { word: "えっ", definition: "Eh (di luar dugaan)" }, { word: "どうぞ", definition: "Silakan" }, { word: "どうもありがとうございます", definition: "Terima kasih" },
-                { word: "そうですか", definition: "O, begitu, benarkah?" }, { word: "ちがいます", definition: "Bukan, Salah" }, { word: "あ", definition: "O, eh (sadar)" },
-                { word: "これからおせわになります", definition: "Mulai sekarang saya akan meminta bantuannya" }, { word: "こちらこそよろしくおねがいします", definition: "Ya sama-sama" }
+                { word: "これ", romanji: "kore", definition: "Ini" }, 
+                { word: "それ", romanji: "sore", definition: "Itu (dekat)" }, 
+                { word: "あれ", romanji: "are", definition: "Itu (jauh)" }, 
+                { word: "この", romanji: "kono", definition: "～ini" },
+                { word: "その", romanji: "sono", definition: "～itu (dekat)" }, 
+                { word: "あの", romanji: "ano", definition: "～itu (jauh)" }, 
+                { word: "ほん", romanji: "hon", definition: "Buku" }, 
+                { word: "じしょ", romanji: "jisho", definition: "Kamus" },
+                { word: "ざっし", romanji: "zasshi", definition: "Majalah" }, 
+                { word: "しんぶん", romanji: "shinbun", definition: "Koran" }, 
+                { word: "ノート", romanji: "nooto", definition: "Buku catatan" }, 
+                { word: "てちょう", romanji: "techou", definition: "Buku agenda" },
+                { word: "めいし", romanji: "meishi", definition: "Kartu nama" }, 
+                { word: "カード", romanji: "kaado", definition: "Kartu" }, 
+                { word: "えんぴつ", romanji: "enpitsu", definition: "Pensil" }, 
+                { word: "ボールペン", romanji: "boorupen", definition: "Bolpoin" },
+                { word: "シャープペンシル", romanji: "shaapupenshiru", definition: "Pensil mekanik" }, 
+                { word: "かぎ", romanji: "kagi", definition: "Kunci" }, 
+                { word: "とけい", romanji: "tokei", definition: "Jam, arloji" }, 
+                { word: "かさ", romanji: "kasa", definition: "Payung" },
+                { word: "かばん", romanji: "kaban", definition: "Tas" }, 
+                { word: "テレビ", romanji: "terebi", definition: "Televisi" }, 
+                { word: "ラジオ", romanji: "rajio", definition: "Radio" }, 
+                { word: "カメラ", romanji: "kamera", definition: "Kamera" },
+                { word: "コンピューター", romanji: "konpyuutaa", definition: "Komputer" }, 
+                { word: "くるま", romanji: "kuruma", definition: "Mobil" }, 
+                { word: "つくえ", romanji: "tsukue", definition: "Meja" }, 
+                { word: "いす", romanji: "isu", definition: "Kursi" },
+                { word: "チョコレート", romanji: "chokoreeto", definition: "Coklat" }, 
+                { word: "コーヒー", romanji: "koohii", definition: "Kopi" }, 
+                { word: "おみやげ", romanji: "omiyage", definition: "Oleh-oleh" }, 
+                { word: "えいご", romanji: "eigo", definition: "Bahasa Inggris" },
+                { word: "にほんご", romanji: "nihongo", definition: "Bahasa Jepang" }, 
+                { word: "ご", romanji: "go", definition: "Bahasa ～" }, 
+                { word: "なん", romanji: "nan", definition: "Apa" }, 
+                { word: "そう", romanji: "sou", definition: "Begitu" },
+                { word: "あのう", romanji: "anou", definition: "Eee ... (ragu)" }, 
+                { word: "えっ", romanji: "e'", definition: "Eh (terkejut)" }, 
+                { word: "どうぞ", romanji: "douzo", definition: "Silakan" }, 
+                { word: "どうもありがとうございます", romanji: "doumo arigatou gozaimasu", definition: "Terima kasih" },
+                { word: "ですか", romanji: "desu ka", definition: "O, begitu, benarkah?" }, 
+                { word: "ちがいます", romanji: "chigaimasu", definition: "Bukan, Salah" }, 
+                { word: "あ", romanji: "a", definition: "O, eh (sadar)" },
+                { word: "これからおせわになります", romanji: "kore kara osewa ni narimasu", definition: "Mulai sekarang mohon bantuannya" }, 
+                { word: "こちらこそよろしくおねがいします", romanji: "kochira koso yoroshiku onegaishimasu", definition: "Sama-sama" }
             ],
             3: [
-                { word: "ここ", definition: "Disini" }, { word: "そこ", definition: "Disitu" }, { word: "あそこ", definition: "Disana" }, { word: "どこ", definition: "Dimana?" },
-                { word: "こちら", definition: "Disini (sopan)" }, { word: "そちら", definition: "Disitu (sopan)" }, { word: "あちら", definition: "Disana (sopan)" }, { word: "どちら", definition: "Dimana? (sopan)" },
-                { word: "きょうしつ", definition: "Ruang kelas" }, { word: "しょくどう", definition: "Ruang makan, Kantin" }, { word: "じむしょ", definition: "Pejabat" }, { word: "かいぎしつ", definition: "Bilik mesyuarat" },
-                { word: "うけつけ", definition: "Meja maklumat" }, { word: "ロビー", definition: "Lobi" }, { word: "へや", definition: "Bilik" }, { word: "おてあらい", definition: "Tandas (sopan)" },
-                { word: "トイレ", definition: "Tandas" }, { word: "かいだん", definition: "Tangga" }, { word: "エレベーター", definition: "Lif" }, { word: "エスカレーター", definition: "Eskalator" },
-                { word: "じどうはんばいき", definition: "Mesin jual automatik" }, { word: "でんわ", definition: "Telefon" }, { word: "おくに", definition: "Negara" }, { word: "かいしゃ", definition: "Syarikat" },
-                { word: "うち", definition: "Rumah" }, { word: "くつ", definition: "Kasut" }, { word: "ネクタイ", definition: "Tali leher" }, { word: "ワイン", definition: "Wain" },
-                { word: "うりば", definition: "Tempat jualan" }, { word: "ちか", definition: "Tingkat bawah tanah" }, { word: "かい", definition: "Tingkat ～" }, { word: "なんがい", definition: "Tingkat berapa?" },
-                { word: "えん", definition: "～yen" }, { word: "いくら", definition: "Berapa harganya?" }, { word: "ひゃく", definition: "Seratus" }, { word: "せん", definition: "Seribu" },
-                { word: "まん", definition: "Sepuluh ribu" }, { word: "すみません", definition: "Maaf" }, { word: "どうも", definition: "Terima kasih" }, { word: "いらっしゃいませ", definition: "Selamat datang" },
-                { word: "みせてください", definition: "Tolong tunjukkan" }, { word: "じゃ", definition: "Kalau begitu" }, { word: "をください", definition: "Tolong beri ～" }, { word: "イタリア", definition: "Italia" },
-                { word: "スイス", definition: "Swiss" }, { word: "フランス", definition: "Perancis" }, { word: "ジャカルタ", definition: "Jakarta" }, { word: "バンコク", definition: "Bangkok" },
-                { word: "ベルリン", definition: "Berlin" }, { word: "おくじょう", definition: "Bumbung" }, { word: "レストラン", definition: "Restoran" }, { word: "ゆうえんち", definition: "Taman tema" },
-                { word: "もよおしものかいじょう", definition: "Tempat pertunjukan" }, { word: "めがね", definition: "Cermin mata" }
+                { word: "ここ", romanji: "koko", definition: "Disini" }, 
+                { word: "そこ", romanji: "soko", definition: "Disitu" }, 
+                { word: "あそこ", romanji: "asoko", definition: "Disana" }, 
+                { word: "どこ", romanji: "doko", definition: "Dimana?" },
+                { word: "こちら", romanji: "kochira", definition: "Disini (sopan)" }, 
+                { word: "そちら", romanji: "sochira", definition: "Disitu (sopan)" }, 
+                { word: "あちら", romanji: "achira", definition: "Disana (sopan)" }, 
+                { word: "どちら", romanji: "dochira", definition: "Dimana? (sopan)" },
+                { word: "きょうしつ", romanji: "kyoushitsu", definition: "Ruang kelas" }, 
+                { word: "しょくどう", romanji: "shokudou", definition: "Kantin" }, 
+                { word: "じむしょ", romanji: "jimusho", definition: "Kantor" }, 
+                { word: "かいぎしつ", romanji: "kaigishitsu", definition: "Ruang rapat" },
+                { word: "うけつけ", romanji: "uketsuke", definition: "Meja informasi" }, 
+                { word: "ロビー", romanji: "robii", definition: "Lobi" }, 
+                { word: "へや", romanji: "heya", definition: "Kamar" }, 
+                { word: "おてあらい", romanji: "otearai", definition: "WC" },
+                { word: "トイレ", romanji: "toire", definition: "Toilet" }, 
+                { word: "かいだん", romanji: "kaidan", definition: "Tangga" }, 
+                { word: "エレベーター", romanji: "erebeetaa", definition: "Lift" }, 
+                { word: "エスカレーター", romanji: "esukareetaa", definition: "Eskalator" },
+                { word: "じどうはんばいき", romanji: "jidouhanbaiki", definition: "Mesin jual otomatis" }, 
+                { word: "でんわ", romanji: "denwa", definition: "Telepon" }, 
+                { word: "おくに", romanji: "okuni", definition: "Negara" }, 
+                { word: "かいしゃ", romanji: "kaisha", definition: "Perusahaan" },
+                { word: "うち", romanji: "uchi", definition: "Rumah" }, 
+                { word: "くつ", romanji: "kutsu", definition: "Sepatu" }, 
+                { word: "ネクタイ", romanji: "nekutai", definition: "Dasi" }, 
+                { word: "ワイン", romanji: "wain", definition: "Anggur putih" },
+                { word: "うりば", romanji: "uriba", definition: "Tempat penjualan" }, 
+                { word: "ちか", romanji: "chika", definition: "Basement" }, 
+                { word: "かい", romanji: "kai", definition: "Lantai ～" }, 
+                { word: "なんがい", romanji: "nangai", definition: "Lantai berapa?" },
+                { word: "えん", romanji: "en", definition: "～yen" }, 
+                { word: "いくら", romanji: "ikura", definition: "Berapa harganya?" }, 
+                { word: "ひゃく", romanji: "hyaku", definition: "Seratus" }, 
+                { word: "せん", romanji: "sen", definition: "Seribu" },
+                { word: "まん", romanji: "man", definition: "Puluh ribu" }, 
+                { word: "すみません", romanji: "sumimasen", definition: "Maaf" }, 
+                { word: "どうも", romanji: "doumo", definition: "Terima kasih" }, 
+                { word: "いらっしゃいませ", romanji: "irasshaimase", definition: "Selamat datang" },
+                { word: "みせてください", romanji: "misete kudasai", definition: "Tolong perlihatkan" }, 
+                { word: "じゃ", romanji: "ja", definition: "Kalau begitu" }, 
+                { word: "をください", romanji: "o kudasai", definition: "Tolong ～" }, 
+                { word: "イタリア", romanji: "itaria", definition: "Italia" },
+                { word: "スイス", romanji: "suisu", definition: "Swiss" }, 
+                { word: "フランス", romanji: "furansu", definition: "Perancis" }, 
+                { word: "ジャカルタ", romanji: "jakaruta", definition: "Jakarta" }, 
+                { word: "バンコク", romanji: "bankoku", definition: "Bangkok" },
+                { word: "ベルリン", romanji: "berurin", definition: "Berlin" }, 
+                { word: "おくじょう", romanji: "okujou", definition: "Lantai atas" }, 
+                { word: "レストラン", romanji: "resutoran", definition: "Restoran" }, 
+                { word: "ゆうえんち", romanji: "yuuenchi", definition: "Tempat hiburan" },
+                { word: "もよおしものかいじょう", romanji: "moyooshimono kaijou", definition: "Tempat pertunjukan" }, 
+                { word: "めがね", romanji: "megane", definition: "Kacamata" }
             ],
             4: [
-                { word: "おきます", definition: "Bangun tidur" }, { word: "ねます", definition: "Tidur" }, { word: "はたらきます", definition: "Bekerja" }, { word: "やすみます", definition: "Berehat, cuti" },
-                { word: "べんきょうします", definition: "Belajar" }, { word: "おわります", definition: "Tamat/Selesai" }, { word: "デパート", definition: "Pasar raya besar" }, { word: "ぎんこう", definition: "Bank" },
-                { word: "ゆうびんきょく", definition: "Pejabat pos" }, { word: "としょかん", definition: "Perpustakaan" }, { word: "びじゅつかん", definition: "Gedung seni" }, { word: "いま", definition: "Sekarang" },
-                { word: "じ", definition: "Jam / Pukul" }, { word: "ふん", definition: "Minit" }, { word: "はん", definition: "Setengah" }, { word: "なんじ", definition: "Pukul berapa?" },
-                { word: "なんぶん", definition: "Berapa minit?" }, { word: "ごぜん", definition: "Pagi (AM)" }, { word: "ごご", definition: "Petang/Malam (PM)" }, { word: "あさ", definition: "Pagi" },
-                { word: "ひる", definition: "Tengah hari" }, { word: "ばん", definition: "Malam" }, { word: "よる", definition: "Malam" }, { word: "おととい", definition: "Kelmarin dulu" },
-                { word: "きのう", definition: "Semalam" }, { word: "きょう", definition: "Hari ini" }, { word: "あした", definition: "Besok" }, { word: "あさって", definition: "Lusa" },
-                { word: "けさ", definition: "Pagi tadi" }, { word: "こんばん", definition: "Malam ini" }, { word: "やすみ", definition: "Cuti" }, { word: "ひるやすみ", definition: "Rehat tengah hari" },
-                { word: "しけん", definition: "Peperiksaan" }, { word: "かいぎ", definition: "Mesyuarat" }, { word: "えいが", definition: "Filem" }, { word: "まいあさ", definition: "Setiap pagi" },
-                { word: "まいばん", definition: "Setiap malam" }, { word: "まいにち", definition: "Setiap hari" }, { word: "げつようび", definition: "Isnin" }, { word: "かようび", definition: "Selasa" },
-                { word: "すいようび", definition: "Rabu" }, { word: "もくようび", definition: "Khamis" }, { word: "きんようび", definition: "Jumaat" }, { word: "どようび", definition: "Sabtu" },
-                { word: "にちようび", definition: "Ahad" }, { word: "なんようび", definition: "Hari apa?" }, { word: "から", definition: "Dari" }, { word: "まで", definition: "Hingga" },
-                { word: "と", definition: "Dan" }, { word: "たいへんですね", definition: "Beratnya" }, { word: "ばんごう", definition: "Nombor" }, { word: "なんばん", definition: "Nombor berapa?" },
-                { word: "ニューヨーク", definition: "New York" }, { word: "ペキン", definition: "Beijing" }, { word: "ロサンゼルス", definition: "Los Angeles" }, { word: "ロンドン", definition: "London" },
-                { word: "けいさつしょ", definition: "Balai polis" }, { word: "しょうぼうしょ", definition: "Balai bomba" }, { word: "じほう", definition: "Pengumuman waktu" }, { word: "てんきよほう", definition: "Ramalan cuaca" },
-                { word: "でんわばんごうあんない", definition: "Maklumat nombor telefon" }
+                { word: "おきます", romanji: "okimasu", definition: "Bangun tidur" }, 
+                { word: "ねます", romanji: "nemasu", definition: "Tidur" }, 
+                { word: "はたらきます", romanji: "hatarakimasu", definition: "Bekerja" }, 
+                { word: "やすみます", romanji: "yasumimasu", definition: "Beristirahat, libur" },
+                { word: "べんきょうします", romanji: "benkyou shimasu", definition: "Belajar" }, 
+                { word: "おわります", romanji: "owarimasu", definition: "Selesai" }, 
+                { word: "デパート", romanji: "depaato", definition: "Dept. store" }, 
+                { word: "ぎんこう", romanji: "ginkou", definition: "Bank" },
+                { word: "ゆうびんきょく", romanji: "yuubinkyoku", definition: "Kantor pos" }, 
+                { word: "としょかん", romanji: "toshokan", definition: "Perpustakaan" }, 
+                { word: "びじゅつかん", romanji: "bijutsukan", definition: "Gedung kesenian" }, 
+                { word: "いま", romanji: "ima", definition: "Sekarang" },
+                { word: "じ", romanji: "ji", definition: "Jam / Pukul" }, 
+                { word: "ふん", romanji: "fun", definition: "Menit" }, 
+                { word: "はん", romanji: "han", definition: "Setengah" }, 
+                { word: "なんじ", romanji: "nanji", definition: "Jam berapa?" },
+                { word: "なんぶん", romanji: "nambun", definition: "Berapa menit?" }, 
+                { word: "ごぜん", romanji: "gozen", definition: "AM (Pagi)" }, 
+                { word: "ごご", romanji: "gogo", definition: "PM (Sore/Malam)" }, 
+                { word: "あさ", romanji: "asa", definition: "Pagi" },
+                { word: "ひる", romanji: "hiru", definition: "Siang" }, 
+                { word: "ばん", romanji: "ban", definition: "Malam" }, 
+                { word: "よる", romanji: "yoru", definition: "Malam" }, 
+                { word: "おととい", romanji: "ototoi", definition: "Kemarin lusa" },
+                { word: "きのう", romanji: "kinou", definition: "Kemarin" }, 
+                { word: "きょう", romanji: "kyou", definition: "Hari ini" }, 
+                { word: "あした", romanji: "ashita", definition: "Besok" }, 
+                { word: "あさって", romanji: "asatte", definition: "Besok lusa" },
+                { word: "けさ", romanji: "kesa", definition: "Tadi pagi" }, 
+                { word: "こんばん", romanji: "konban", definition: "Malam ini" }, 
+                { word: "やすみ", romanji: "yasumi", definition: "Istirahat, libur" }, 
+                { word: "ひるやすみ", romanji: "hiruyasumi", definition: "Istirahat siang" },
+                { word: "しけん", romanji: "shiken", definition: "Ujian" }, 
+                { word: "かいぎ", romanji: "kaigi", definition: "Rapat" }, 
+                { word: "えいが", romanji: "eiga", definition: "Film" }, 
+                { word: "まいあさ", romanji: "maiasa", definition: "Setiap pagi" },
+                { word: "まいばん", romanji: "maiban", definition: "Setiap malam" }, 
+                { word: "まいにち", romanji: "mainichi", definition: "Setiap hari" }, 
+                { word: "げつようび", romanji: "getsuyoubi", definition: "Hari Senin" }, 
+                { word: "かようび", romanji: "kayoubi", definition: "Hari Selasa" },
+                { word: "すいようび", romanji: "suiyoubi", definition: "Hari Rabu" }, 
+                { word: "もくようび", romanji: "mokuyoubi", definition: "Hari Kamis" }, 
+                { word: "きんようび", romanji: "kin'youbi", definition: "Hari Jumat" }, 
+                { word: "どようび", romanji: "doyoubi", definition: "Hari Sabtu" },
+                { word: "にちようび", romanji: "nichiyoubi", definition: "Hari Minggu" }, 
+                { word: "なんようび", romanji: "nanyoubi", definition: "Hari apa?" }, 
+                { word: "から", romanji: "kara", definition: "Dari" }, 
+                { word: "まで", romanji: "made", definition: "Sampai" },
+                { word: "と", romanji: "to", definition: "Dan" }, 
+                { word: "たいへんですね", romanji: "taihen desu ne", definition: "Berat ya" }, 
+                { word: "ばんごう", romanji: "bangou", definition: "Nomor" }, 
+                { word: "なんばん", romanji: "nanban", definition: "Nomor berapa?" },
+                { word: "ニューヨーク", romanji: "nyuuyooku", definition: "New York" }, 
+                { word: "ペキン", romanji: "pekin", definition: "Beijing" }, 
+                { word: "ロサンゼルス", romanji: "rosanzerusu", definition: "Los Angeles" }, 
+                { word: "ロンドン", romanji: "rondon", definition: "London" },
+                { word: "けいさつしょ", romanji: "keisatsusho", definition: "Kantor polisi" }, 
+                { word: "しょうぼうしょ", romanji: "shoubousho", definition: "Pemadam kebakaran" }, 
+                { word: "じほう", romanji: "jihou", definition: "Pemberitahuan waktu" }, 
+                { word: "てんきよほう", romanji: "tenki yohou", definition: "Ramalan cuaca" },
+                { word: "でんわばんごうあんない", romanji: "denwa bangou annai", definition: "Petunjuk nomor telepon" }
             ],
             5: [
-                { word: "いきます", definition: "Pergi" }, { word: "きます", definition: "Datang" }, { word: "かえります", definition: "Pulang" }, { word: "がっこう", definition: "Sekolahan" },
-                { word: "スーパー", definition: "Supermarket" }, { word: "えき", definition: "Stasiun" }, { word: "ひこうき", definition: "Pesawat terbang" }, { word: "ふね", definition: "Kapal laut" },
-                { word: "でんしゃ", definition: "Kereta listrik" }, { word: "ちかてつ", definition: "Kereta bawah tanah" }, { word: "しんかんせん", definition: "Shinkansen" }, { word: "バス", definition: "Bus" },
-                { word: "タクシー", definition: "Taksi" }, { word: "じてんしゃ", definition: "Sepeda" }, { word: "あるいて", definition: "Jalan kaki" }, { word: "ひと", definition: "Orang" },
-                { word: "ともだち", definition: "Teman" }, { word: "かれ", definition: "Dia (laki-laki)" }, { word: "かのじょ", definition: "Dia (perempuan)" }, { word: "かぞく", definition: "Keluarga" },
-                { word: "ひとりで", definition: "Sendirian" }, { word: "せんしゅう", definition: "Minggu lalu" }, { word: "こんしゅう", definition: "Minggu ini" }, { word: "らいしゅう", definition: "Minggu depan" },
-                { word: "せんげつ", definition: "Bulan lalu" }, { word: "こんげつ", definition: "Bulan ini" }, { word: "らいげつ", definition: "Bulan depan" }, { word: "きょねん", definition: "Tahun lalu" },
-                { word: "ことし", definition: "Tahun ini" }, { word: "らいねん", definition: "Tahun depan" }, { word: "ねん", definition: "Tahun" }, { word: "なんねん", definition: "Tahun berapa?" },
-                { word: "がつ", definition: "Bulan" }, { word: "なんがつ", definition: "Bulan apa?" }, { word: "ついたち", definition: "Tanggal 1" }, { word: "ふつか", definition: "Tanggal 2" },
-                { word: "みっか", definition: "Tanggal 3" }, { word: "よっか", definition: "Tanggal 4" }, { word: "いつか", definition: "Tanggal 5" }, { word: "むいか", definition: "Tanggal 6" },
-                { word: "なのか", definition: "Tanggal 7" }, { word: "ようか", definition: "Tanggal 8" }, { word: "ここのか", definition: "Tanggal 9" }, { word: "とおか", definition: "Tanggal 10" },
-                { word: "じゅうよっか", definition: "Tanggal 14" }, { word: "はつか", definition: "Tanggal 20" }, { word: "にじゅうよっか", definition: "Tanggal 24" }, { word: "にち", definition: "Hari / Tarikh" },
-                { word: "なんにち", definition: "Berapa hari / Tarikh berapa?" }, { word: "いつ", definition: "Bila" }, { word: "たんじょうび", definition: "Hari lahir" }, { word: "そうですね", definition: "Ya betul" },
-                { word: "どういたしまして", definition: "Sama-sama" }, { word: "ばんせん", definition: "Platform nombor" }, { word: "つぎの", definition: "Seterusnya" }, { word: "ふつう", definition: "Biasa" },
-                { word: "きゅうこう", definition: "Ekspres" }, { word: "とっきゅう", definition: "Super ekspres" }, { word: "しゅくさいじつ", definition: "Cuti am" }, { word: "がんじつ", definition: "Tahun baru" }
+                { word: "いきます", romanji: "ikimasu", definition: "Pergi" }, 
+                { word: "きます", romanji: "kimasu", definition: "Datang" }, 
+                { word: "かえります", romanji: "kaerimasu", definition: "Pulang" }, 
+                { word: "がっこう", romanji: "gakkou", definition: "Sekolah" },
+                { word: "スーパー", romanji: "suupaa", definition: "Supermarket" }, 
+                { word: "えき", romanji: "eki", definition: "Stasiun" }, 
+                { word: "ひこうき", romanji: "hi kou ki", definition: "Pesawat terbang" }, 
+                { word: "ふね", romanji: "fune", definition: "Kapal laut" },
+                { word: "でんしゃ", romanji: "densha", definition: "Kereta listrik" }, 
+                { word: "ちかてつ", romanji: "chikatetsu", definition: "Kereta bawah tanah" }, 
+                { word: "しんかんせん", romanji: "shinkansen", definition: "Shinkansen" }, 
+                { word: "バス", romanji: "basu", definition: "Bus" },
+                { word: "タクシー", romanji: "takushii", definition: "Taksi" }, 
+                { word: "じてんしゃ", romanji: "jitensha", definition: "Sepeda" }, 
+                { word: "あるいて", romanji: "aruite", definition: "Jalan kaki" }, 
+                { word: "ひと", romanji: "hito", definition: "Orang" },
+                { word: "ともだち", romanji: "tomodachi", definition: "Teman" }, 
+                { word: "かれ", romanji: "kare", definition: "Dia (laki-laki)" }, 
+                { word: "かのじょ", romanji: "kanojo", definition: "Dia (perempuan)" }, 
+                { word: "かぞく", romanji: "kazoku", definition: "Keluarga" },
+                { word: "ひとりで", romanji: "hitori de", definition: "Sendirian" }, 
+                { word: "せんしゅう", romanji: "senshuu", definition: "Minggu lalu" }, 
+                { word: "こんしゅう", romanji: "konshuu", definition: "Minggu ini" }, 
+                { word: "らいしゅう", romanji: "raishuu", definition: "Minggu depan" },
+                { word: "せんげつ", romanji: "sengetsu", definition: "Bulan lalu" }, 
+                { word: "こんげつ", romanji: "kongetsu", definition: "Bulan ini" }, 
+                { word: "らいげつ", romanji: "raigetsu", definition: "Bulan depan" }, 
+                { word: "きょねん", romanji: "kyonen", definition: "Tahun lalu" },
+                { word: "ことし", romanji: "kotoshi", definition: "Tahun ini" }, 
+                { word: "らいねん", romanji: "rainen", definition: "Tahun depan" }, 
+                { word: "ねん", romanji: "nen", definition: "Tahun" }, 
+                { word: "なんねん", romanji: "nan nen", definition: "Tahun berapa?" },
+                { word: "がつ", romanji: "gatsu", definition: "Bulan" }, 
+                { word: "なんがつ", romanji: "nan gatsu", definition: "Bulan apa?" }, 
+                { word: "ついたち", romanji: "tsuitachi", definition: "Tanggal 1" }, 
+                { word: "ふつか", romanji: "futsuka", definition: "Tanggal 2 / 2 hari" },
+                { word: "みっか", romanji: "mikka", definition: "Tanggal 3 / 3 hari" }, 
+                { word: "よっか", romanji: "yokka", definition: "Tanggal 4 / 4 hari" }, 
+                { word: "いつか", romanji: "itsuka", definition: "Tanggal 5 / 5 hari" }, 
+                { word: "むいか", romanji: "muika", definition: "Tanggal 6 / 6 hari" },
+                { word: "なのか", romanji: "nanoka", definition: "Tanggal 7 / 7 hari" }, 
+                { word: "ようか", romanji: "youka", definition: "Tanggal 8 / 8 hari" }, 
+                { word: "ここのか", romanji: "kokonoka", definition: "Tanggal 9 / 9 hari" }, 
+                { word: "とおか", romanji: "tooka", definition: "Tanggal 10 / 10 hari" },
+                { word: "じゅうよっか", romanji: "juuyokka", definition: "Tanggal 14 / 14 hari" }, 
+                { word: "はつか", romanji: "hatsuka", definition: "Tanggal 20 / 20 hari" }, 
+                { word: "にじゅうよっか", romanji: "nijuuyokka", definition: "Tanggal 24 / 24 hari" }, 
+                { word: "にち", romanji: "nichi", definition: "Tanggal / Hari" },
+                { word: "なんにち", romanji: "nan nichi", definition: "Tanggal berapa?" }, 
+                { word: "いつ", romanji: "itsu", definition: "Kapan" }, 
+                { word: "たんじょうび", romanji: "tanjoubi", definition: "Hari ulang tahun" }, 
+                { word: "そうですね", romanji: "sou desu ne", definition: "Ya begitulah" },
+                { word: "どういたしまして", romanji: "dou itashimashite", definition: "Sama-sama" }, 
+                { word: "ばんせん", romanji: "bansen", definition: "Peron nomor" }, 
+                { word: "つぎの", romanji: "tsugi no", definition: "Yang berikutnya" }, 
+                { word: "ふつう", romanji: "futsuu", definition: "Biasa" },
+                { word: "きゅうこう", romanji: "kyuukou", definition: "Ekspres" }, 
+                { word: "とっきゅう", romanji: "tokkyuu", definition: "Super ekspres" }, 
+                { word: "しゅくさいじつ", romanji: "shukusai jitsu", definition: "Hari libur nasional" }, 
+                { word: "がんじつ", romanji: "ganjitsu", definition: "Tahun baru" }
             ],
             6: [
-                { word: "たべます", definition: "Makan" }, { word: "のみます", definition: "Minum" }, { word: "すいます", definition: "Menyedut / Merokok" }, { word: "みます", definition: "Melihat / Menonton" },
-                { word: "ききます", definition: "Mendengar" }, { word: "よみます", definition: "Membaca" }, { word: "かきます", definition: "Menulis / Melukis" }, { word: "かいます", definition: "Membeli" },
-                { word: "とります", definition: "Mengambil (gambar)" }, { word: "します", definition: "Melakukan" }, { word: "あえます", definition: "Berjumpa" }, { word: "ごはん", definition: "Nasi / Hidangan" },
-                { word: "あさごはん", definition: "Sarapan pagi" }, { word: "ひるごはん", definition: "Makan tengah hari" }, { word: "ばんごはん", definition: "Makan malam" }, { word: "パン", definition: "Roti" },
-                { word: "たまご", definition: "Telur" }, { word: "にく", definition: "Daging" }, { word: "さかな", definition: "Ikan" }, { word: "やさい", definition: "Sayur" },
-                { word: "くだもの", definition: "Buah-buahan" }, { word: "みず", definition: "Air" }, { word: "おちゃ", definition: "Teh Hijau" }, { word: "こうちゃ", definition: "Teh Merah/Hitam" },
-                { word: "ぎゅうにゅう", definition: "Susu" }, { word: "ジュース", definition: "Jus" }, { word: "ビール", definition: "Bir" }, { word: "おさけ", definition: "Arak / Sake" },
-                { word: "たばこ", definition: "Rokok" }, { word: "てがみ", definition: "Surat" }, { word: "レポート", definition: "Laporan" }, { word: "しゃしん", definition: "Gambar" },
-                { word: "ビデオ", definition: "Video" }, { word: "みせ", definition: "Kedai" }, { word: "にわ", definition: "Halaman" }, { word: "しゅくだい", definition: "Kerja sekolah" },
-                { word: "テニス", definition: "Tenis" }, { word: "サッカー", definition: "Bola sepak" }, { word: "はなみ", definition: "Melihat bunga" }, { word: "なに", definition: "Apa" },
-                { word: "いっしょに", definition: "Bersama-sama" }, { word: "ちょっと", definition: "Sedikit" }, { word: "いつも", definition: "Selalu" }, { word: "ときどき", definition: "Kadang-kadang" },
-                { word: "それから", definition: "Selepas itu" }, { word: "ええ", definition: "Ya" }, { word: "いいですね", definition: "Bagusnya" }, { word: "わかりました", definition: "Faham/Mengerti" },
-                { word: "メキシコ", definition: "Mexico" }, { word: "なんですか", definition: "Apa dia?" }, { word: "じゃ、また", definition: "Jumpa lagi" }
+                { word: "たべます", romanji: "tabemasu", definition: "Makan" }, 
+                { word: "のみます", romanji: "nomimasu", definition: "Minum" }, 
+                { word: "すいます", romanji: "suimasu", definition: "Merokok" }, 
+                { word: "みます", romanji: "mimasu", definition: "Melihat / Menonton" },
+                { word: "ききます", romanji: "kikimasu", definition: "Mendengar" }, 
+                { word: "よみます", romanji: "yomimasu", definition: "Membaca" }, 
+                { word: "かきます", romanji: "kakimasu", definition: "Menulis / Menggambar" }, 
+                { word: "かいます", romanji: "kaimasu", definition: "Membeli" },
+                { word: "とります", romanji: "torimasu", definition: "Mengambil (foto)" }, 
+                { word: "します", romanji: "shimasu", definition: "Melakukan" }, 
+                { word: "あいます", romanji: "aimasu", definition: "Bertemu" }, 
+                { word: "ごはん", romanji: "gohan", definition: "Nasi" },
+                { word: "あさごはん", romanji: "asagohan", definition: "Makan pagi" }, 
+                { word: "ひるごはん", romanji: "hirugohan", definition: "Makan siang" }, 
+                { word: "ばんごはん", romanji: "bangohan", definition: "Makan malam" }, 
+                { word: "パン", romanji: "pan", definition: "Roti" },
+                { word: "たまご", romanji: "tamago", definition: "Telur" }, 
+                { word: "にく", romanji: "niku", definition: "Daging" }, 
+                { word: "さかな", romanji: "sakana", definition: "Ikan" }, 
+                { word: "やさい", romanji: "yasai", definition: "Sayuran" },
+                { word: "くだもの", romanji: "kudamono", definition: "Buah-buahan" }, 
+                { word: "みず", romanji: "mizu", definition: "Air" }, 
+                { word: "おちゃ", romanji: "ocha", definition: "Teh Jepang" }, 
+                { word: "こうちゃ", romanji: "koucha", definition: "Teh" },
+                { word: "ぎゅうにゅう", romanji: "gyuunyuu", definition: "Susu" }, 
+                { word: "ジュース", romanji: "juusu", definition: "Jus" }, 
+                { word: "ビール", romanji: "biiru", definition: "Bir" }, 
+                { word: "おさけ", romanji: "osake", definition: "Minuman keras" },
+                { word: "たばこ", romanji: "tabako", definition: "Rokok" }, 
+                { word: "てがみ", romanji: "tegami", definition: "Surat" }, 
+                { word: "レポート", romanji: "reepooto", definition: "Laporan" }, 
+                { word: "しゃしん", romanji: "shashin", definition: "Foto" },
+                { word: "ビデオ", romanji: "bideo", definition: "Kaset video" }, 
+                { word: "みせ", romanji: "mise", definition: "Toko" }, 
+                { word: "にわ", romanji: "niwa", definition: "Halaman" }, 
+                { word: "しゅくだい", romanji: "shukudai", definition: "PR" },
+                { word: "テニス", romanji: "tenisu", definition: "Tenis" }, 
+                { word: "サッカー", romanji: "sakkaa", definition: "Sepak bola" }, 
+                { word: "はなみ", romanji: "hanami", definition: "Hanami" }, 
+                { word: "なに", romanji: "nani", definition: "Apa" },
+                { word: "いっしょに", romanji: "issho ni", definition: "Bersama-sama" }, 
+                { word: "ちょっと", romanji: "chotto", definition: "Sebentar" }, 
+                { word: "いつも", romanji: "itsumo", definition: "Selalu" }, 
+                { word: "ときどき", romanji: "tokidoki", definition: "Kadang-kadang" },
+                { word: "それから", romanji: "sorekara", definition: "Setelah itu" }, 
+                { word: "ええ", romanji: "ee", definition: "Ya" }, 
+                { word: "いいですね", romanji: "ii desu ne", definition: "Bagus ya" }, 
+                { word: "わかりました", romanji: "wakarimashita", definition: "Mengerti" },
+                { word: "メキシコ", romanji: "mekishiko", definition: "Meksiko" }, 
+                { word: "なんですか", romanji: "nan desu ka", definition: "Apa?" }, 
+                { word: "じゃ、また", romanji: "ja, mata", definition: "Ok, sampai jumpa" }
             ],
             7: [
-                { word: "きります", definition: "Memotong / Menggunting" }, { word: "おくります", definition: "Menghantar" }, { word: "あげます", definition: "Memberi" }, { word: "もらいます", definition: "Menerima" },
-                { word: "かします", definition: "Meminjamkan" }, { word: "かります", definition: "Meminjam" }, { word: "おしえます", definition: "Mengajar" }, { word: "ならいます", definition: "Belajar (drpd)" },
-                { word: "かけます", definition: "Membuat panggilan telefon" }, { word: "て", definition: "Tangan" }, { word: "はし", definition: "Chopstick" }, { word: "スプーン", definition: "Sudu" },
-                { word: "ナイフ", definition: "Pisau" }, { word: "フォーク", definition: "Garpu" }, { word: "はさみ", definition: "Gunting" }, { word: "パソコン", definition: "Komputer riba" },
-                { word: "ケータイ", definition: "HP" }, { word: "メール", definition: "E-mel" }, { word: "ねんがじょう", definition: "Kad tahun baru" }, { word: "パンチ", definition: "Penebuk kertas" },
-                { word: "ホッチキス", definition: "Stapler" }, { word: "セロテープ", definition: "Pita pelekat" }, { word: "けしゴム", definition: "Pemadam" }, { word: "かみ", definition: "Kertas" },
-                { word: "はな", definition: "Bunga" }, { word: "シャツ", definition: "Kemeja" }, { word: "プレゼント", definition: "Hadiah" }, { word: "にもつ", definition: "Bagasi / Barang" },
-                { word: "おかね", definition: "Wang" }, { word: "きっぷ", definition: "Tiket" }, { word: "クリスマス", definition: "Krismas" }, { word: "ちち", definition: "Bapa" },
-                { word: "はは", definition: "Ibu" }, { word: "おとうさん", definition: "Bapa orang lain" }, { word: "おかあさん", definition: "Ibu orang lain" }, { word: "もう", definition: "Sudah" },
-                { word: "まだ", definition: "Belum" }, { word: "これから", definition: "Mulai sekarang" }, { word: "すてきですね", definition: "Cantiknya" }, { word: "いらっしゃい", definition: "Selamat datang" },
-                { word: "どうぞおあがりください", definition: "Sila masuk" }, { word: "しつれいします", definition: "Permisi" }, { word: "いかがですか", definition: "Bagaimana?" }, { word: "いただきます", definition: "Selamat makan" },
-                { word: "ごちそうさまでした", definition: "Terima kasih atas hidangan" }, { word: "スペイン", definition: "Sepanyol" }, { word: "かぞく", definition: "Keluarga" }, { word: "そぼ", definition: "Nenek" },
-                { word: "そふ", definition: "Datuk" }, { word: "そふぼ", definition: "Datuk nenek" }
+                { word: "きります", romanji: "kirimasu", definition: "Memotong / Menggunting" }, 
+                { word: "おくります", romanji: "okurimasu", definition: "Mengirim" }, 
+                { word: "あげます", romanji: "agemasu", definition: "Memberikan" }, 
+                { word: "もらいます", romanji: "moraimasu", definition: "Menerima" },
+                { word: "かします", romanji: "kashimasu", definition: "Meminjamkan" }, 
+                { word: "かります", romanji: "karimasu", definition: "Meminjam" }, 
+                { word: "おしえます", romanji: "oshiernasu", definition: "Mengajar" }, 
+                { word: "ならいます", romanji: "naraimasu", definition: "Belajar (kepada)" },
+                { word: "かけます", romanji: "kakemasu", definition: "Menelepon" }, 
+                { word: "て", romanji: "te", definition: "Tangan" }, 
+                { word: "はし", romanji: "hashi", definition: "Sumpit" }, 
+                { word: "スプーン", romanji: "supuun", definition: "Sendok" },
+                { word: "ナイフ", romanji: "naifu", definition: "Pisau" }, 
+                { word: "フォーク", romanji: "fooku", definition: "Garpu" }, 
+                { word: "はさみ", romanji: "hasami", definition: "Gunting" }, 
+                { word: "パソコン", romanji: "pasokon", definition: "Laptop" },
+                { word: "ケータイ", romanji: "keitai", definition: "HP" }, 
+                { word: "メール", romanji: "meeru", definition: "Email" }, 
+                { word: "ねんがじょう", romanji: "nengajou", definition: "Kartu tahun baru" }, 
+                { word: "パンチ", romanji: "panchi", definition: "Pelubang kertas" },
+                { word: "ホッチキス", romanji: "hotchikisu", definition: "Stapler" }, 
+                { word: "セロテープ", romanji: "seroteepu", definition: "Selotip" }, 
+                { word: "けしゴム", romanji: "keshigomu", definition: "Penghapus karet" }, 
+                { word: "かみ", romanji: "kami", definition: "Kertas" },
+                { word: "はな", romanji: "hana", definition: "Bunga" }, 
+                { word: "シャツ", romanji: "shatsu", definition: "Kemeja" }, 
+                { word: "プレゼント", romanji: "purezento", definition: "Hadiah / Kado" }, 
+                { word: "にもつ", romanji: "nimotsu", definition: "Barang" },
+                { word: "おかね", romanji: "okane", definition: "Uang" }, 
+                { word: "きっぷ", romanji: "kippu", definition: "Karcis" }, 
+                { word: "クリスマス", romanji: "kurisumasu", definition: "Natal" }, 
+                { word: "ちち", romanji: "chichi", definition: "Ayah" },
+                { word: "はは", romanji: "haha", definition: "Ibu" }, 
+                { word: "おとうさん", romanji: "otousan", definition: "Ayah orang lain" }, 
+                { word: "おかあさん", romanji: "okaasan", definition: "Ibu orang lain" }, 
+                { word: "もう", romanji: "mou", definition: "Sudah" },
+                { word: "まだ", romanji: "mada", definition: "Belum" }, 
+                { word: "これから", romanji: "korekara", definition: "Mulai dari sekarang" }, 
+                { word: "すてきですね", romanji: "suteki desu ne", definition: "Bagus / Indah ya" }, 
+                { word: "いらっしゃい", romanji: "irasshai", definition: "Selamat datang" },
+                { word: "どうぞおあがりください", romanji: "douzo oagari kudasai", definition: "Silakan masuk" }, 
+                { word: "しつれいします", romanji: "shitsurei shimasu", definition: "Permisi" }, 
+                { word: "いかがですか", romanji: "ikaga desu ka", definition: "Bagaimana?" }, 
+                { word: "いただきます", romanji: "itadakimasu", definition: "Selamat makan" },
+                { word: "ごちそうさまでした", romanji: "gochisousama deshita", definition: "Terima kasih atas hidangannya" }, 
+                { word: "スペイン", romanji: "supein", definition: "Spanyol" }, 
+                { word: "かぞく", romanji: "kazoku", definition: "Keluarga" }, 
+                { word: "そぼ", romanji: "sobo", definition: "Nenek" },
+                { word: "そふ", romanji: "sofu", definition: "Kakek" }, 
+                { word: "そふぼ", romanji: "sofubo", definition: "Kakek nenek" }
             ],
             8: [
-                { word: "ハンサム", definition: "Kacak / Tampan" }, { word: "きれい", definition: "Cantik / Bersih" }, { word: "しずか", definition: "Tenang / Senyap" }, { word: "にぎやか", definition: "Meriah" },
-                { word: "ゆうめい", definition: "Terkenal" }, { word: "しんせつ", definition: "Baik hati" }, { word: "げんき", definition: "Sihat / Cergas" }, { word: "ひま", definition: "Lapang" },
-                { word: "べんり", definition: "Mudah / Praktikal" }, { word: "すてき", definition: "Menarik / Bagus" }, { word: "おおきい", definition: "Besar" }, { word: "ちいさい", definition: "Kecil" },
-                { word: "あたらしい", definition: "Baru" }, { word: "ふるい", definition: "Lama / Tua" }, { word: "いい", definition: "Baik / Elok" }, { word: "わるい", definition: "Buruk / Jahat" },
-                { word: "あつい", definition: "Panas" }, { word: "さむい", definition: "Sejuk (cuaca)" }, { word: "つめたい", definition: "Sejuk (benda)" }, { word: "むずかしい", definition: "Susah" },
-                { word: "やさしい", definition: "Senang / Mudah" }, { word: "たかい", definition: "Mahal / Tinggi" }, { word: "やすい", definition: "Murah" }, { word: "ひくい", definition: "Rendah" },
-                { word: "おもしろい", definition: "Menarik / Kelakar" }, { word: "おいしい", definition: "Sedap" }, { word: "いそがしい", definition: "Sibuk" }, { word: "たのしい", definition: "Seronok" },
-                { word: "しろい", definition: "Putih" }, { word: "くろい", definition: "Hitam" }, { word: "あかい", definition: "Merah" }, { word: "あおい", definition: "Biru" },
-                { word: "さくら", definition: "Sakura" }, { word: "やま", definition: "Gunung" }, { word: "まち", definition: "Bandar" }, { word: "たべもの", definition: "Makanan" },
-                { word: "ところ", definition: "Tempat" }, { word: "りょう", definition: "Asrama" }, { word: "レストラン", definition: "Restoran" }, { word: "せいかつ", definition: "Kehidupan" },
-                { word: "しごと", definition: "Kerja" }, { word: "どう", definition: "Bagaimana?" }, { word: "どんな", definition: "Jenis apa?" }, { word: "とても", definition: "Sangat" },
-                { word: "あまり", definition: "Tidak berapa" }, { word: "そして", definition: "Dan kemudian" }, { word: "가", definition: "Tetapi" }, { word: "ogenki desu ka", definition: "Apa khabar?" },
-                { word: "そうですね", definition: "Mari saya fikir" }, { word: "mou ippai ikaga desu ka", definition: "Nambah secangkir lagi?" }, { word: "kekkou desu", definition: "Tidak mengapa" }, { word: "sorosoro shitsurei shimasu", definition: "Maaf saya pamit dulu" },
-                { word: "いいえ", definition: "Sama-sama" }, { word: "またいらっしゃってください", definition: "Silakan datang lagi" }
+                { word: "ハンサム", romanji: "hansamu", definition: "Tampan / Gagah" }, 
+                { word: "きれい", romanji: "kirei", definition: "Cantik / Bersih" }, 
+                { word: "しずか", romanji: "shizuka", definition: "Sunyi / Tenang" }, 
+                { word: "にぎやか", romanji: "nigiyaka", definition: "Ramai" },
+                { word: "ゆうめい", romanji: "yuumei", definition: "Terkenal" }, 
+                { word: "しんせつ", romanji: "shinsetsu", definition: "Baik hati" }, 
+                { word: "げんき", romanji: "genki", definition: "Sehat" }, 
+                { word: "ひま", romanji: "hima", definition: "Senggang" },
+                { word: "べんり", romanji: "benri", definition: "Praktis" }, 
+                { word: "すてき", romanji: "suteki", definition: "Bagus" }, 
+                { word: "おおきい", romanji: "ookii", definition: "Besar" }, 
+                { word: "ちいさい", romanji: "chiisai", definition: "Kecil" },
+                { word: "あたらしい", romanji: "atarashii", definition: "Baru" }, 
+                { word: "ふるい", romanji: "furui", definition: "Lama / Tua" }, 
+                { word: "いい", romanji: "ii", definition: "Baik / Bagus" }, 
+                { word: "わるい", romanji: "warui", definition: "Jelek" },
+                { word: "あつい", romanji: "atsui", definition: "Panas" }, 
+                { word: "さむい", romanji: "samui", definition: "Dingin (suhu)" }, 
+                { word: "つめたい", romanji: "tsumetai", definition: "Dingin (benda)" }, 
+                { word: "むずかしい", romanji: "muzukashii", definition: "Sulit" },
+                { word: "やさしい", romanji: "yasashii", definition: "Mudah" }, 
+                { word: "たかい", romanji: "takai", definition: "Mahal / Tinggi" }, 
+                { word: "やすい", romanji: "yasui", definition: "Murah" }, 
+                { word: "ひくい", romanji: "hikui", definition: "Rendah" },
+                { word: "おもしろい", romanji: "omoshiroi", definition: "Menarik" }, 
+                { word: "おいしい", romanji: "oishii", definition: "Enak" }, 
+                { word: "いそがしい", romanji: "isogashii", definition: "Sibuk" }, 
+                { word: "たのしい", romanji: "tanoshii", definition: "Senang" },
+                { word: "しろい", romanji: "shiroi", definition: "Putih" }, 
+                { word: "くろい", romanji: "kuroi", definition: "Hitam" }, 
+                { word: "あかい", romanji: "akai", definition: "Merah" }, 
+                { word: "あおい", romanji: "aoi", definition: "Biru" },
+                { word: "さくら", romanji: "sakura", definition: "Sakura" }, 
+                { word: "やま", romanji: "yama", definition: "Gunung" }, 
+                { word: "まち", romanji: "machi", definition: "Kota" }, 
+                { word: "たべもの", romanji: "tabemono", definition: "Makanan" },
+                { word: "ところ", romanji: "tokoro", definition: "Tempat" }, 
+                { word: "りょう", romanji: "ryou", definition: "Asrama" }, 
+                { word: "レストラン", romanji: "resutoran", definition: "Restoran" }, 
+                { word: "せいかつ", romanji: "seikatsu", definition: "Kehidupan" },
+                { word: "しごと", romanji: "shigoto", definition: "Pekerjaan" }, 
+                { word: "どう", romanji: "dou", definition: "Bagaimana?" }, 
+                { word: "どんな", romanji: "donna", definition: "Yang bagaimana?" }, 
+                { word: "とても", romanji: "totemo", definition: "Sangat / Sekali" },
+                { word: "あまり", romanji: "amari", definition: "Tidak begitu" }, 
+                { word: "そして", romanji: "soshite", definition: "Kemudian" }, 
+                { word: "が", romanji: "ga", definition: "Tetapi" }, 
+                { word: "おげんきですか", romanji: "ogenki desu ka", definition: "Apa kabar?" },
+                { word: "そうですね", romanji: "sou desu ne", definition: "Bagaimana ya?" }, 
+                { word: "もういっぱい いかがですか", romanji: "mou ippai ikaga desu ka", definition: "Mau nambah secangkir lagi?" }, 
+                { word: "けっこうです", romanji: "kekkou desu", definition: "Cukup" }, 
+                { word: "そろそろ しつれいします", romanji: "sorosoro shitsurei shimasu", definition: "Maaf saya pamit dulu" },
+                { word: "いいえ", romanji: "iie", definition: "Sama-sama" }, 
+                { word: "また いらっしゃってください", romanji: "mata irasshatte kudasai", definition: "Silakan datang lagi" }
             ],
             9: [
-                { word: "わかります", definition: "Faham" }, { word: "あります", definition: "Ada / Mempunyai" }, { word: "すき", definition: "Suka" }, { word: "きらい", definition: "Benci" },
-                { word: "じょうず", definition: "Pandai / Mahir" }, { word: "へた", definition: "Lemah / Tidak mahir" }, { word: "のみもの", definition: "Minuman" }, { word: "りょうり", definition: "Masakan" },
-                { word: "スポーツ", definition: "Sukan" }, { word: "やきゅう", definition: "Besbol" }, { word: "ダンス", definition: "Tarian" }, { word: "りょこう", definition: "Melancong" },
-                { word: "おんがく", definition: "Muzik" }, { word: "うた", definition: "Lagu" }, { word: "クラシック", definition: "Klasik" }, { word: "ジャズ", definition: "Jaz" },
-                { word: "コンサート", definition: "Konsert" }, { word: "カラオケ", definition: "Karaoke" }, { word: "かぶき", definition: "Kabuki" }, { word: "え", definition: "Gambar / Lukisan" },
-                { word: "じ", definition: "Huruf / Karakter" }, { word: "かんじ", definition: "Kanji" }, { word: "ひらがな", definition: "Hiragana" }, { word: "カタカナ", definition: "Katakana" },
-                { word: "ローマじ", definition: "Huruf Rumi" }, { word: "komakai okane", definition: "Wang kecil" }, { word: "チケット", definition: "Tiket" }, { word: "じかん", definition: "Masa" },
-                { word: "ようじ", definition: "Urusan" }, { word: "やくそく", definition: "Janji" }, { word: "アルバイト", definition: "Kerja sambilan" }, { word: "ごしゅじん", definition: "Suami (orang lain)" },
-                { word: "しゅじん", definition: "Suami" }, { word: "おくさん", definition: "Isteri (orang lain)" }, { word: "つま", definition: "Isteri" }, { word: "こども", definition: "Kanak-kanak" },
-                { word: "よく", definition: "Dengan baik" }, { word: "だいたい", definition: "Lebih kurang" }, { word: "たくさん", definition: "Banyak" }, { word: "すこし", definition: "Sedikit" },
-                { word: "ぜんぜん", definition: "Tidak pernah" }, { word: "はやく", definition: "Awal / Cepat" }, { word: "から", definition: "Sebab" }, { word: "どうして", definition: "Kenapa?" },
-                { word: "かしてください", definition: "Tolong pinjamkan" }, { word: "いいですよ", definition: "Boleh" }, { word: "ざんねんです", definition: "Malangnya" }, { word: "いっしょにいかがですか", definition: "Mahukah ikut?" },
-                { word: "ちょっと", definition: "Sukar sedikit" }, { word: "だめですか", definition: "Tidak boleh kah?" }, { word: "またこんどおねがいします", definition: "Lain kali ya" }, { word: "おお", definition: "Wah" }
+                { word: "わかります", romanji: "wakarimasu", definition: "Mengerti" }, 
+                { word: "あります", romanji: "arimasu", definition: "Ada / Mempunyai" }, 
+                { word: "すき", romanji: "suki", definition: "Suka / Gemar" }, 
+                { word: "きらい", romanji: "kirai", definition: "Benci" },
+                { word: "じょうず", romanji: "jouzu", definition: "Pandai" }, 
+                { word: "へた", romanji: "heta", definition: "Tidak pandai" }, 
+                { word: "のみもの", romanji: "nomimono", definition: "Minuman" }, 
+                { word: "りょうり", romanji: "ryouri", definition: "Masakan" },
+                { word: "スポーツ", romanji: "supootsu", definition: "Olahraga" }, 
+                { word: "やきゅう", romanji: "yakyuu", definition: "Baseball" }, 
+                { word: "ダンス", romanji: "dansu", definition: "Dansa" }, 
+                { word: "りょこう", romanji: "ryokou", definition: "Tamasya" },
+                { word: "おんがく", romanji: "ongaku", definition: "Musik" }, 
+                { word: "うた", romanji: "uta", definition: "Lagu" }, 
+                { word: "クラシック", romanji: "kurashikku", definition: "Klasik" }, 
+                { word: "ジャズ", romanji: "jazu", definition: "Jazz" },
+                { word: "コンサート", romanji: "konsaato", definition: "Konser" }, 
+                { word: "カラオケ", romanji: "karaoke", definition: "Karaoke" }, 
+                { word: "かぶき", romanji: "kabuki", definition: "Kabuki" }, 
+                { word: "え", romanji: "e", definition: "Gambar" },
+                { word: "じ", romanji: "ji", definition: "Huruf" }, 
+                { word: "かんじ", romanji: "kanji", definition: "Kanji" }, 
+                { word: "ひらがな", romanji: "hiragana", definition: "Hiragana" }, 
+                { word: "カタカナ", romanji: "katakana", definition: "Katakana" },
+                { word: "ローマじ", romanji: "roomaji", definition: "Huruf Latin" }, 
+                { word: "こまかいおかね", romanji: "komakai okane", definition: "Uang kecil" }, 
+                { word: "チケット", romanji: "chiketto", definition: "Tiket" }, 
+                { word: "じかん", romanji: "jikan", definition: "Waktu" },
+                { word: "ようじ", romanji: "youji", definition: "Urusan" }, 
+                { word: "やくそく", romanji: "yakusoku", definition: "Janji" }, 
+                { word: "アルバイト", romanji: "arubaito", definition: "Paruh waktu" }, 
+                { word: "ごしゅじん", romanji: "goshujin", definition: "Suami orang lain" },
+                { word: "しゅじん", romanji: "shujin", definition: "Suami" }, 
+                { word: "おくさん", romanji: "okusan", definition: "Istri orang lain" }, 
+                { word: "つま", romanji: "tsuma", definition: "Istri" }, 
+                { word: "こども", romanji: "kodomo", definition: "Anak" },
+                { word: "よく", romanji: "yoku", definition: "Dengan baik" }, 
+                { word: "だいたい", romanji: "daitai", definition: "Kira-kira" }, 
+                { word: "たくさん", romanji: "takusan", definition: "Banyak" }, 
+                { word: "すこし", romanji: "sukoshi", definition: "Sedikit" },
+                { word: "ぜんぜん", romanji: "zenzen", definition: "Sama sekali" }, 
+                { word: "はやく", romanji: "hayaku", definition: "Cepat" }, 
+                { word: "から", romanji: "kara", definition: "Karena" }, 
+                { word: "どうして", romanji: "doushite", definition: "Kenapa" },
+                { word: "かしてください", romanji: "kashite kudasai", definition: "Tolong pinjamkan" }, 
+                { word: "いいですよ", romanji: "ii desu yo", definition: "Boleh" }, 
+                { word: "ざんねんです", romanji: "zannen desu", definition: "Sayang sekali" }, 
+                { word: "いっしょにいかがですか", romanji: "issho ni ikaga desu ka", definition: "Bagaimana kalau bersama" },
+                { word: "ちょっと", romanji: "chotto", definition: "Tidak bisa" }, 
+                { word: "だめですか", romanji: "dame desu ka", definition: "Tidak bisa ya" }, 
+                { word: "またこんどおねがいします", romanji: "mata kondo onegaishimasu", definition: "Lain kali saja" }, 
+                { word: "おお", romanji: "oo", definition: "Ah / Oh" }
             ],
             10: [
-                { word: "ATM", definition: "ATM" }, { word: "コンビニ", definition: "Kedai serbaneka" }, { word: "こうえん", definition: "Taman" }, { word: "きっさてん", definition: "Kedai kopi" },
-                { word: "や", definition: "Kedai ～" }, { word: "のりば", definition: "Tempat naik" }, { word: "けん", definition: "Wilayah" }, { word: "うえ", definition: "Atas" },
-                { word: "した", definition: "Bawah" }, { word: "まえ", definition: "Depan" }, { word: "うしろ", definition: "Belakang" }, { word: "みぎ", definition: "Kanan" },
-                { word: "ひだり", definition: "Kiri" }, { word: "なか", definition: "Dalam" }, { word: "そと", definition: "Luar" }, { word: "となり", definition: "Sebelah" },
-                { word: "ちかく", definition: "Dekat" }, { word: "あいだ", definition: "Antara" }, { word: "どうもすみません", definition: "Terima kasih / Maaf" }, { word: "ナンプラー", definition: "Sos ikan" },
-                { word: "コーナー", definition: "Bagian / Sudut" }, { word: "いちばんした", definition: "Paling bawah" }, { word: "げんかん", definition: "Pintu masuk" }, { word: "ふろば", definition: "Bilik mandi" },
-                { word: "せんめんじょ", definition: "Bilik basuh muka" }, { word: "だいどころ", definition: "Dapur" }, { word: "しょくどう", definition: "Dewan makan" }, { word: "いま", definition: "Ruang tamu" },
-                { word: "しんしつ", definition: "Bilik tidur" }, { word: "ろうか", definition: "Koridor" }, { word: "ベランダ", definition: "Beranda" }, { word: "あります", definition: "Ada (benda)" },
-                { word: "います", definition: "Ada (makhluk)" }, { word: "いろいろ", definition: "Macam-macam" }, { word: "おとこのひと", definition: "Orang Lelaki" }, { word: "おんなのひと", definition: "Orang Perempuan" },
-                { word: "おとこのこ", definition: "Budak Lelaki" }, { word: "おんなのこ", definition: "Budak Perempuan" }, { word: "いぬ", definition: "Anjing" }, { word: "ねこ", definition: "Kucing" },
-                { word: "panda", definition: "Panda" }, { word: "zou", definition: "Gajah" }, { word: "ki", definition: "Pokok" }, { word: "mono", definition: "Barang" },
-                { word: "denchi", definition: "Bateri" }, { word: "hako", definition: "Kotak" }, { word: "suicchi", definition: "Suis" }, { word: "reizouko", definition: "Peti sejuk" },
-                { word: "テーブル", definition: "Meja" }, { word: "ベッド", definition: "Katil" }, { word: "たな", definition: "Rak" }, { word: "ドア", definition: "Pintu" },
-                { word: "まど", definition: "Tingkap" }, { word: "ポスト", definition: "Peti surat" }, { word: "ビル", definition: "Bangunan" }
+                { word: "ＡＴＭ", romanji: "ee tii emu", definition: "ATM" }, 
+                { word: "コンビニ", romanji: "konbini", definition: "Toko 24 jam" }, 
+                { word: "こうえん", romanji: "kouen", definition: "Taman" }, 
+                { word: "きっさてん", romanji: "kissaten", definition: "Coffee shop" },
+                { word: "や", romanji: "ya", definition: "Toko ～" }, 
+                { word: "のりば", romanji: "noriba", definition: "Tempat naik" }, 
+                { word: "けん", romanji: "ken", definition: "Prefektur" }, 
+                { word: "うえ", romanji: "ue", definition: "Atas" },
+                { word: "した", romanji: "shita", definition: "Bawah" }, 
+                { word: "まえ", romanji: "mae", definition: "Depan" }, 
+                { word: "うしろ", romanji: "ushiro", definition: "Belakang" }, 
+                { word: "みぎ", romanji: "migi", definition: "Kanan" },
+                { word: "ひだり", romanji: "hidari", definition: "Kiri" }, 
+                { word: "なか", romanji: "naka", definition: "Dalam" }, 
+                { word: "そと", romanji: "soto", definition: "Luar" }, 
+                { word: "となり", romanji: "tonari", definition: "Samping" },
+                { word: "ちかく", romanji: "chikaku", definition: "Dekat" }, 
+                { word: "あいだ", romanji: "aida", definition: "Antara" }, 
+                { word: "どうもすみません", romanji: "doumo sumimasen", definition: "Maaf / Terima kasih banyak" }, 
+                { word: "ナンプラー", romanji: "nanpuraa", definition: "Kecap ikan" },
+                { word: "コーナー", romanji: "koonaa", definition: "Bagian penjualan" }, 
+                { word: "いちばんした", romanji: "ichiban shita", definition: "Paling bawah" }, 
+                { word: "げんかん", romanji: "genkan", definition: "Pintu masuk" }, 
+                { word: "ふろば", romanji: "furoba", definition: "Kamar mandi" },
+                { word: "せんめんじょ", romanji: "senmenjo", definition: "Tempat cuci tangan" }, 
+                { word: "だいどころ", romanji: "daidokoro", definition: "Dapur" }, 
+                { word: "しょくどう", romanji: "shokudou", definition: "Kantin" }, 
+                { word: "いま", romanji: "ima", definition: "Ruang tamu" },
+                { word: "しんしつ", romanji: "shinshitsu", definition: "Kamar tidur" }, 
+                { word: "ろうか", romanji: "rouka", definition: "Koridor" }, 
+                { word: "ベランダ", romanji: "beranda", definition: "Teras" }, 
+                { word: "あります", romanji: "arimasu", definition: "Ada (benda mati)" },
+                { word: "います", romanji: "imasu", definition: "Ada (benda hidup)" }, 
+                { word: "いろいろ", romanji: "iroiro", definition: "Berbagai" }, 
+                { word: "おとこのひと", romanji: "otoko no hito", definition: "Orang laki-laki" }, 
+                { word: "おんなのひと", romanji: "onna no hito", definition: "Orang perempuan" },
+                { word: "おとこのこ", romanji: "otoko no ko", definition: "Anak laki-laki" }, 
+                { word: "おんなのこ", romanji: "onna no ko", definition: "Anak perempuan" }, 
+                { word: "いぬ", romanji: "inu", definition: "Anjing" }, 
+                { word: "ねこ", romanji: "neko", definition: "Kucing" },
+                { word: "パンダ", romanji: "panda", definition: "Panda" }, 
+                { word: "ぞう", romanji: "zou", definition: "Gajah" }, 
+                { word: "き", romanji: "ki", definition: "Pohon" }, 
+                { word: "もの", romanji: "mono", definition: "Barang" },
+                { word: "でんち", romanji: "denchi", definition: "Baterai" }, 
+                { word: "はこ", romanji: "hako", definition: "Kotak" }, 
+                { word: "スイッチ", romanji: "suicchi", definition: "Saklar" }, 
+                { word: "れいぞうこ", romanji: "reizouko", definition: "Kulkas" },
+                { word: "テーブル", romanji: "teeburu", definition: "Meja makan" }, 
+                { word: "ベッド", romanji: "beddo", definition: "Tempat tidur" }, 
+                { word: "たな", romanji: "tana", definition: "Lemari" }, 
+                { word: "ドア", romanji: "doa", definition: "Pintu" },
+                { word: "まど", romanji: "mado", definition: "Jendela" }, 
+                { word: "ポスト", romanji: "posuto", definition: "Kotak surat" }, 
+                { word: "ビル", romanji: "biru", definition: "Gedung" }
             ],
             11: [
-                { word: "います", definition: "Ada / Mempunyai" }, { word: "かかります", definition: "Ambil masa/kos" }, { word: "やすみます", definition: "Cuti / Tidak hadir" }, { word: "ひとつ", definition: "1 biji" },
-                { word: "ふたつ", definition: "2 biji" }, { word: "みっつ", definition: "3 biji" }, { word: "よっつ", definition: "4 biji" }, { word: "いつつ", definition: "5 biji" },
-                { word: "むっつ", definition: "6 biji" }, { word: "ななつ", definition: "7 biji" }, { word: "やっつ", definition: "8 biji" }, { word: "ここのつ", definition: "9 biji" },
-                { word: "とお", definition: "10 biji" }, { word: "いくつ", definition: "Berapa biji?" }, { word: "ひとり", definition: "1 orang" }, { word: "ふたり", definition: "2 orang" },
-                { word: "にん", definition: "～ orang" }, { word: "だい", definition: "～ unit" }, { word: "まい", definition: "～ keping" }, { word: "かい", definition: "～ kali" },
-                { word: "りんご", definition: "Epal" }, { word: "みかん", definition: "Oren / Limau" }, { word: "サンドイッチ", definition: "Sandwic" }, { word: "カレー", definition: "Kari" },
-                { word: "アイスクリーム", definition: "Ais krim" }, { word: "きって", definition: "Setem" }, { word: "はがき", definition: "Poskad" }, { word: "ふうとう", definition: "Sampul surat" },
-                { word: "がいこく", definition: "Luar negara" }, { word: "りゅうがくせい", definition: "Pelajar asing" }, { word: "クラス", definition: "Kelas" }, { word: "じかん", definition: "～ jam" },
-                { word: "しゅうかん", definition: "～ minggu" }, { word: "かげつ", definition: "～ bulan" }, { word: "ねん", definition: "～ tahun" }, { word: "ぐらい", definition: "Lebih kurang" },
-                { word: "どのくらい", definition: "Berapa lama?" }, { word: "ぜんぶで", definition: "Jumlah semua" }, { word: "みんな", definition: "Semua orang" }, { word: "だけ", definition: "Hanya ～" },
-                { word: "かしこまりました", definition: "Baiklah" }, { word: "いいてんきですね", definition: "Cuaca bagus ya" }, { word: "おでかけですか", definition: "Nak keluar ke?" }, { word: "いってらっしゃい", definition: "Selamat jalan" },
-                { word: "いってきます", definition: "Saya pergi dulu" }, { word: "ふなびん", definition: "Mel laut" }, { word: "こうくうびん", definition: "Mel udara" }, { word: "エアメール", definition: "Airmail" },
-                { word: "オーストラリア", definition: "Australia" }, { word: "おねがいします", definition: "Tolong" }
+                { word: "います", romanji: "imasu", definition: "Ada / Mempunyai" }, 
+                { word: "かかります", romanji: "kakarimasu", definition: "Memerlukan waktu" }, 
+                { word: "やすみます", romanji: "yasumimasu", definition: "Libur / Tidak masuk" }, 
+                { word: "ひとつ", romanji: "hitotsu", definition: "1 buah" },
+                { word: "ふたつ", romanji: "futatsu", definition: "2 buah" }, 
+                { word: "みっつ", romanji: "mittsu", definition: "3 buah" }, 
+                { word: "よっつ", romanji: "yottsu", definition: "4 buah" }, 
+                { word: "いつつ", romanji: "itsutsu", definition: "5 buah" },
+                { word: "むっつ", romanji: "muttsu", definition: "6 buah" }, 
+                { word: "ななつ", romanji: "nanatsu", definition: "7 buah" }, 
+                { word: "やっつ", romanji: "yattsu", definition: "8 buah" }, 
+                { word: "ここのつ", romanji: "kokonotsu", definition: "9 buah" },
+                { word: "とお", romanji: "too", definition: "10 buah" }, 
+                { word: "いくつ", romanji: "ikutsu", definition: "Berapa buah?" }, 
+                { word: "ひとり", romanji: "hitori", definition: "1 orang" }, 
+                { word: "ふたり", romanji: "futari", definition: "2 orang" },
+                { word: "にん", romanji: "nin", definition: "～ orang" }, 
+                { word: "だい", romanji: "dai", definition: "～ unit" }, 
+                { word: "まい", romanji: "mai", definition: "～ lembar" }, 
+                { word: "かい", romanji: "kai", definition: "～ kali" },
+                { word: "りんご", romanji: "ringo", definition: "Apel" }, 
+                { word: "みかん", romanji: "mikan", definition: "Jeruk" }, 
+                { word: "サンドイッチ", romanji: "sandoicchi", definition: "Sandwich" }, 
+                { word: "カレー", romanji: "karee", definition: "Kare" },
+                { word: "アイスクリーム", romanji: "aisukuriimu", definition: "Es krim" }, 
+                { word: "きって", romanji: "kitte", definition: "Perangko" }, 
+                { word: "はがき", romanji: "hagaki", definition: "Kartu pos" }, 
+                { word: "ふうとう", romanji: "fuutou", definition: "Amplop" },
+                { word: "がいこく", romanji: "gaikoku", definition: "Luar negeri" }, 
+                { word: "りゅうがくせい", romanji: "ryuugakusei", definition: "Pelajar asing" }, 
+                { word: "クラス", romanji: "kurasu", definition: "Kelas" }, 
+                { word: "じかん", romanji: "jikan", definition: "～ jam" },
+                { word: "しゅうかん", romanji: "shuukan", definition: "～ minggu" }, 
+                { word: "かげつ", romanji: "kagetsu", definition: "～ bulan" }, 
+                { word: "ねん", romanji: "nen", definition: "～ tahun" }, 
+                { word: "ぐらい", romanji: "gurai", definition: "Kira-kira ～" },
+                { word: "どのくらい", romanji: "donokurai", definition: "Berapa lama?" }, 
+                { word: "ぜんぶで", romanji: "zenbu de", definition: "Semuanya" }, 
+                { word: "みんな", romanji: "minna", definition: "Semua" }, 
+                { word: "だけ", romanji: "dake", definition: "Hanya ～" },
+                { word: "かしこまりました", romanji: "kashikomarimashita", definition: "Baik / Mengerti" }, 
+                { word: "いいてんきですね", romanji: "ii tenki desu ne", definition: "Cuacanya bagus ya" }, 
+                { word: "おでかけですか", romanji: "odekake desu ka", definition: "Mau keluar?" }, 
+                { word: "いってらっしゃい", romanji: "itterasshai", definition: "Hati-hati" },
+                { word: "いってきます", romanji: "itte kimasu", definition: "Saya berangkat" }, 
+                { word: "ふなびん", romanji: "funabin", definition: "Pos laut" }, 
+                { word: "こうくうびん", romanji: "koukuubin", definition: "Pos udara" }, 
+                { word: "エアメール", romanji: "eameeru", definition: "Pos udara" },
+                { word: "オーストラリア", romanji: "oosutoraria", definition: "Australia" }, 
+                { word: "おねがいします", romanji: "onegaishimasu", definition: "Tolong" }
             ],
             12: [
-                { word: "かんたん", definition: "Mudah / Senang" }, { word: "ちかい", definition: "Dekat" }, { word: "とおい", definition: "Jauh" }, { word: "はやい", definition: "Laju / Cepat" },
-                { word: "おそい", definition: "Lambat / Lewat" }, { word: "おおい", definition: "Banyak" }, { word: "すくない", definition: "Sedikit" }, { word: "あたたかい", definition: "Hangat" },
-                { word: "すずしい", definition: "Sejuk / Nyaman" }, { word: "あまい", definition: "Manis" }, { word: "からい", definition: "Pedas" }, { word: "おもい", definition: "Berat" },
-                { word: "かるい", definition: "Ringan" }, { word: "いい", definition: "Lebih baik" }, { word: "きせつ", definition: "Musim" }, { word: "てんき", definition: "Cuaca" },
-                { word: "あめ", definition: "Hujan" }, { word: "ゆき", definition: "Salji" }, { word: "くもり", definition: "Mendung" }, { word: "ホテル", definition: "Hotel" },
-                { word: "くうこう", definition: "Lapangan terbang" }, { word: "うみ", definition: "Laut" }, { word: "せかい", definition: "Dunia" }, { word: "パーティー", definition: "Parti" },
-                { word: "まつり", definition: "Festival" }, { word: "レモン", definition: "Lemon" }, { word: "いけばな", definition: "Gubahan bunga" }, { word: "もみじ", definition: "Maple" },
-                { word: "どちら", definition: "Mana satu?" }, { word: "どちらも", definition: "Kedua-duanya" }, { word: "いちばん", definition: "Paling utama" }, { word: "ずっと", definition: "Jauh lebih" },
-                { word: "はじめて", definition: "Kali pertama" }, { word: "ただいま", definition: "Sudah pulang" }, { word: "おかえりなさい", definition: "Selamat kembali" }, { word: "わあ、すごいひとですね", definition: "Ramainya orang" },
-                { word: "つかれました", definition: "Dah penat" }, { word: "ホンコン", definition: "Hong Kong" }, { word: "シンガポール", definition: "Singapura" }, { word: "めいしょ", definition: "Tempat terkenal" },
-                { word: "すきやき", definition: "Sukiyaki" }, { word: "さしみ", definition: "Sashimi" }, { word: "すし", definition: "Sushi" }, { word: "てんぷら", definition: "Tempura" }
+                { word: "かんたん", romanji: "kantan", definition: "Mudah / Gampang" }, 
+                { word: "ちかい", romanji: "chikai", definition: "Dekat" }, 
+                { word: "とおい", romanji: "tooi", definition: "Jauh" }, 
+                { word: "はやい", romanji: "hayai", definition: "Cepat" },
+                { word: "おそい", romanji: "osoi", definition: "Lambat" }, 
+                { word: "おおい", romanji: "ooi", definition: "Banyak" }, 
+                { word: "すくない", romanji: "sukunai", definition: "Sedikit" }, 
+                { word: "あたたかい", romanji: "atatakai", definition: "Hangat" },
+                { word: "すずしい", romanji: "suzushii", definition: "Sejuk" }, 
+                { word: "あまい", romanji: "amai", definition: "Manis" }, 
+                { word: "からい", romanji: "karai", definition: "Pedas" }, 
+                { word: "おもい", romanji: "omoi", definition: "Berat" },
+                { word: "かるい", romanji: "karui", definition: "Ringan" }, 
+                { word: "いい", romanji: "ii", definition: "Lebih baik" }, 
+                { word: "きせつ", romanji: "kisetsu", definition: "Musim" }, 
+                { word: "てんき", romanji: "tenki", definition: "Cuaca" },
+                { word: "あめ", romanji: "ame", definition: "Hujan" }, 
+                { word: "ゆき", romanji: "yuki", definition: "Salju" }, 
+                { word: "くもり", romanji: "kumori", definition: "Mendung" }, 
+                { word: "ホテル", romanji: "hoteru", definition: "Hotel" },
+                { word: "くうこう", romanji: "kuukou", definition: "Bandara" }, 
+                { word: "うみ", romanji: "umi", definition: "Laut" }, 
+                { word: "せかい", romanji: "sekai", definition: "Dunia" }, 
+                { word: "パーティー", romanji: "paatii", definition: "Pesta" },
+                { word: "まつり", romanji: "matsuri", definition: "Perayaan" }, 
+                { word: "レモン", romanji: "remon", definition: "Lemon" }, 
+                { word: "いけばな", romanji: "ikebana", definition: "Seni merangkai bunga" }, 
+                { word: "もみじ", romanji: "momiji", definition: "Maple" },
+                { word: "どちら", romanji: "dochira", definition: "Yang mana" }, 
+                { word: "どちらも", romanji: "dochira mo", definition: "Dua-duanya" }, 
+                { word: "いちばん", romanji: "ichiban", definition: "Yang paling" }, 
+                { word: "ずっと", romanji: "zutto", definition: "Selamanya" },
+                { word: "はじめて", romanji: "hajimete", definition: "Pertama kali" }, 
+                { word: "ただいま", romanji: "tadaima", definition: "Saya pulang" }, 
+                { word: "おかえりなさい", romanji: "okaerinasai", definition: "Sudah pulang ya" }, 
+                { word: "わあ、すごいひとですね", romanji: "waa, sugoi hito desu ne", definition: "Wah banyak orang" },
+                { word: "つかれました", romanji: "tsukaremashita", definition: "Capek / Lelah" }, 
+                { word: "ホンコン", romanji: "honkon", definition: "Hongkong" }, 
+                { word: "シンガポール", romanji: "shingapooru", definition: "Singapura" }, 
+                { word: "めいしょ", romanji: "meisho", definition: "Tempat terkenal" },
+                { word: "すきやき", romanji: "sukiyaki", definition: "Sukiyaki" }, 
+                { word: "さしみ", romanji: "sashimi", definition: "Sashimi" }, 
+                { word: "すし", romanji: "sushi", definition: "Sushi" }, 
+                { word: "てんぷら", romanji: "tenpura", definition: "Tempura" }
             ],
             13: [
-                { word: "あそびます", definition: "Bermain" }, { word: "およぎます", definition: "Berenang" }, { word: "むかえます", definition: "Menyambut" }, { word: "つかれます", definition: "Penat" },
-                { word: "けっこんします", definition: "Berkahwin" }, { word: "かいものします", definition: "Beli-belah" }, { word: "しょくじします", definition: "Makan" }, { word: "さんぽします", definition: "Berjalan-jalan" },
-                { word: "たいへん", definition: "Sukar / Berat" }, { word: "ほしい", definition: "Mahukan / Ingin" }, { word: "ひろい", definition: "Luas / Lebar" }, { word: "せまい", definition: "Sempit" },
-                { word: "プール", definition: "Kolam renang" }, { word: "かわ", definition: "Sungai" }, { word: "びじゅつ", definition: "Kesenian" }, { word: "つり", definition: "Memancing" },
-                { word: "スキー", definition: "Ski" }, { word: "しゅうまつ", definition: "Hujung minggu" }, { word: "おしょうがつ", definition: "Tahun Baru" }, { word: "ごろ", definition: "Sekitar (waktu)" },
-                { word: "なにか", definition: "Sesuatu" }, { word: "どこか", definition: "Suatu tempat" }, { word: "のど가かわきます", definition: "Haus" }, { word: "おなかがすきます", definition: "Lapar" },
-                { word: "そうしましょう", definition: "Mari buat begitu" }, { word: "ごちゅうもんは", definition: "Nak pesan apa?" }, { word: "おまちください", definition: "Sila tunggu" }, { word: "べつべつに", definition: "Berasingan" },
-                { word: "はくぶつかん", definition: "Muzium" }, { word: "びじゅつかん", definition: "Galeri seni" }, { word: "としょかん", definition: "Perpustakaan" }, { word: "えいがかん", definition: "Pawagam" },
-                { word: "どうぶつえん", definition: "Zoo" }, { word: "しょくぶつえん", definition: "Taman botani" }, { word: "おてら", definition: "Tokong Budha" }
+                { word: "あそびます", romanji: "asobimasu", definition: "Bermain" }, 
+                { word: "およぎます", romanji: "oyogimasu", definition: "Berenang" }, 
+                { word: "むかえます", romanji: "mukaemasu", definition: "Menjemput" }, 
+                { word: "つかれます", romanji: "tsukaremasu", definition: "Lelah" },
+                { word: "けっこんします", romanji: "kekkon shimasu", definition: "Menikah" }, 
+                { word: "かいものします", romanji: "kaimono shimasu", definition: "Berbelanja" }, 
+                { word: "しょくじします", romanji: "shokuji shimasu", definition: "Makan bersama" }, 
+                { word: "さんぼします", romanji: "sanpo shimasu", definition: "Jalan-jalan" },
+                { word: "たいへん", romanji: "taihen", definition: "Susah / Berat" }, 
+                { word: "ほしい", romanji: "hoshii", definition: "Ingin" }, 
+                { word: "ひろい", romanji: "hiroi", definition: "Luas" }, 
+                { word: "せまい", romanji: "semai", definition: "Sempit" },
+                { word: "プール", romanji: "puuru", definition: "Kolam renang" }, 
+                { word: "かわ", romanji: "kawa", definition: "Sungai" }, 
+                { word: "びじゅつ", romanji: "bijutsu", definition: "Seni" }, 
+                { word: "つり", romanji: "tsuri", definition: "Pancing / Memancing" },
+                { word: "スキー", romanji: "sukii", definition: "Ski" }, 
+                { word: "しゅうまつ", romanji: "shuumatsu", definition: "Akhir pekan" }, 
+                { word: "おしょうがつ", romanji: "oshougatsu", definition: "Tahun baru" }, 
+                { word: "ごろ", romanji: "goro", definition: "Kira-kira / Sekitar" },
+                { word: "なにか", romanji: "nanika", definition: "Sesuatu" }, 
+                { word: "どこか", romanji: "dokoka", definition: "Suatu tempat" }, 
+                { word: "のどがかわきます", romanji: "nodo ga kawakimasu", definition: "Haus" }, 
+                { word: "おなかがすきます", romanji: "onaka ga sukimasu", definition: "Lapar" },
+                { word: "そうしましょう", romanji: "sou shimashou", definition: "Ya ayo" }, 
+                { word: "ごちゅうもんは", romanji: "gochuumon wa", definition: "Mau pesan apa?" }, 
+                { word: "おまちください", romanji: "omachi kudasai", definition: "Tunggu sebentar" }, 
+                { word: "べつべつに", romanji: "betsubetsu ni", definition: "Sendiri-sendiri" },
+                { word: "はくぶつかん", romanji: "hakubutsukan", definition: "Museum" }, 
+                { word: "びじゅつかん", romanji: "bijutsukan", definition: "Gedung kesenian" }, 
+                { word: "としょかん", romanji: "toshokan", definition: "Perpustakaan" }, 
+                { word: "えいがかん", romanji: "eigakan", definition: "Bioskop" },
+                { word: "どうぶつえん", romanji: "doubutsuen", definition: "Kebun binatang" }, 
+                { word: "しょくぶつえん", romanji: "shokubutsuen", definition: "Kebun raya" }, 
+                { word: "おてら", romanji: "otera", definition: "Kuil Budha" }
             ],
             14: [
-                { word: "つけます", definition: "Menghidupkan (suis)" }, { word: "けします", definition: "Mematikan (suis)" }, { word: "あけます", definition: "Membuka" }, { word: "しめます", definition: "Menutup" },
-                { word: "いそぎます", definition: "Buru-buru" }, { word: "まちます", definition: "Menunggu" }, { word: "もちます", definition: "Membawa" }, { word: "とります", definition: "Mengambil" },
-                { word: "てつだいます", definition: "Membantu" }, { word: "よびます", definition: "Memanggil" }, { word: "はなします", definition: "Bercakap" }, { word: "つかいます", definition: "Menggunakan" },
-                { word: "とめます", definition: "Memberhentikan" }, { word: "みせます", definition: "Menunjukkan" }, { word: "おしえます", definition: "Memberitahu" }, { word: "すわりまs", definition: "Duduk" },
-                { word: "たちます", definition: "Berdiri" }, { word: "はいります", definition: "Masuk" }, { word: "でます", definition: "Keluar" }, { word: "ふります", definition: "Turun (hujan)" },
-                { word: "コピーします", definition: "Memfotostat" }, { word: "でんき", definition: "Elektrik / Lampu" }, { word: "エアコン", definition: "AC" }, { word: "パスポート", definition: "Pasport" },
-                { word: "なまえ", definition: "Nama" }, { word: "じゅうしょ", definition: "Alamat" }, { word: "ちず", definition: "Peta" }, { word: "しお", definition: "Garam" },
-                { word: "さとう", definition: "Gula" }, { word: "もんだい", definition: "Soalan" }, { word: "こたえ", definition: "Jawapan" }, { word: "よみかた", definition: "Cara baca" },
-                { word: "かた", definition: "Cara ～" }, { word: "まっすぐ", definition: "Terus" }, { word: "ゆっくり", definition: "Perlahan-lahan" }, { word: "すぐ", definition: "Segera" },
-                { word: "また", definition: "Lagi" }, { word: "あとで", definition: "Kemudian" }, { word: "もうすこし", definition: "Sedikit lagi" }, { word: "もう", definition: "Lagi satu" },
-                { word: "さあ", definition: "Ayuh" }, { word: "あれ？", definition: "Eh? (hairan)" }, { word: "これでおねがいします", definition: "Minta ini" }, { word: "おつり", definition: "Baki wang" },
-                { word: "きっぷうりば", definition: "Kaunter tiket" }, { word: "jidou kenbaiki", definition: "Mesin tiket otomatis" }, { word: "seisanki", definition: "Mesin pelarasan" }, { word: "kaisatsuguchi", definition: "Pintu tiket" },
-                { word: "でぐち", definition: "Pintu keluar" }, { word: "いりぐち", definition: "Pintu masuk" }
+                { word: "つけます", romanji: "tsukemasu", definition: "Menyalakan / Memasang" }, 
+                { word: "けします", romanji: "keshimasu", definition: "Mematikan / Memadamkan" }, 
+                { word: "あけます", romanji: "akemasu", definition: "Membuka" }, 
+                { word: "しめます", romanji: "shimemasu", definition: "Menutup" },
+                { word: "いそぎます", romanji: "isogimasu", definition: "Buru-buru" }, 
+                { word: "まちます", romanji: "machimasu", definition: "Menunggu" }, 
+                { word: "もちます", romanji: "mochimasu", definition: "Membawa" }, 
+                { word: "とります", romanji: "torimasu", definition: "Mengambil" },
+                { word: "てつだいます", romanji: "tetsudaimasu", definition: "Membantu" }, 
+                { word: "よびます", romanji: "yobimasu", definition: "Memanggil" }, 
+                { word: "はなします", romanji: "hanashimasu", definition: "Berbicara" }, 
+                { word: "つかいます", romanji: "tsukaimasu", definition: "Memakai" },
+                { word: "とめます", romanji: "tomemasu", definition: "Menghentikan" }, 
+                { word: "みせます", romanji: "misemasu", definition: "Memperlihatkan" }, 
+                { word: "おしえます", romanji: "oshiemasu", definition: "Memberitahu" }, 
+                { word: "すわります", romanji: "suwarimasu", definition: "Duduk" },
+                { word: "たちます", romanji: "tachimasu", definition: "Berdiri" }, 
+                { word: "はいります", romanji: "hairimasu", definition: "Masuk" }, 
+                { word: "でます", romanji: "demasu", definition: "Keluar" }, 
+                { word: "ふります", romanji: "furimasu", definition: "Turun hujan" },
+                { word: "コピーします", romanji: "kopii shimasu", definition: "Memfotokopi" }, 
+                { word: "でんき", romanji: "denki", definition: "Listrik / Lampu" }, 
+                { word: "エアコン", romanji: "eakon", definition: "AC" }, 
+                { word: "パスポート", romanji: "basupooto", definition: "Paspor" },
+                { word: "なまえ", romanji: "namae", definition: "Nama" }, 
+                { word: "じゅうしょ", romanji: "juusho", definition: "Alamat" }, 
+                { word: "ちず", romanji: "chizu", definition: "Peta" }, 
+                { word: "しお", romanji: "shio", definition: "Garam" },
+                { word: "さとう", romanji: "satou", definition: "Gula" }, 
+                { word: "もんだい", romanji: "mondai", definition: "Masalah / Soal" }, 
+                { word: "こたえ", romanji: "kotae", definition: "Jawaban" }, 
+                { word: "よみかた", romanji: "yomikata", definition: "Cara membaca" },
+                { word: "かた", romanji: "kata", definition: "Cara ～" }, 
+                { word: "まっすぐ", romanji: "massugu", definition: "Lurus" }, 
+                { word: "ゆっくり", romanji: "yukkuri", definition: "Pelan-pelan" }, 
+                { word: "すぐ", romanji: "sugu", definition: "Segera / Langsung" },
+                { word: "また", romanji: "mata", definition: "Lagi" }, 
+                { word: "あとで", romanji: "ato de", definition: "Nanti" }, 
+                { word: "もうすこし", romanji: "mou sukoshi", definition: "Sedikit lagi" }, 
+                { word: "もう", romanji: "mou", definition: "～ lagi" },
+                { word: "さあ", romanji: "saa", definition: "Mari" }, 
+                { word: "あれ？", romanji: "are?", definition: "Ah (heran)" }, 
+                { word: "これでおねがいします", romanji: "kore de onegai shimasu", definition: "Minta dengan ini" }, 
+                { word: "おつり", romanji: "otsuri", definition: "Kembalian" },
+                { word: "きっぷうりば", romanji: "kippu uriba", definition: "Loket penjualan karcis" }, 
+                { word: "じどうけんばいき", romanji: "jidou kenbaiki", definition: "Mesin karcis otomatis" }, 
+                { word: "せいさんき", romanji: "seisanki", definition: "Alat penghitung otomatis" }, 
+                { word: "かいさつぐち", romanji: "kaisatsuguchi", definition: "Pintu pemeriksaan karcis" },
+                { word: "でぐち", romanji: "deguchi", definition: "Pintu keluar" }, 
+                { word: "いりぐち", romanji: "iriguchi", definition: "Pintu masuk" }
             ],
             15: [
-                { word: "おきます", definition: "Meletakkan" }, { word: "つくります", definition: "Membuat" }, { word: "うります", definition: "Menjual" }, { word: "しります", definition: "Mengetahui" },
-                { word: "すみます", definition: "Tinggal" }, { word: "けんきゅうします", definition: "Menyelidik" }, { word: "しりょう", definition: "Data / Bahan" }, { word: "カタログ", definition: "Katalog" },
-                { word: "じこくひょう", definition: "Jadual waktu" }, { word: "ふく", definition: "Pakaian" }, { word: "せいひん", definition: "Produk" }, { word: "soft", definition: "Software" },
-                { word: "denshi jisho", definition: "Kamus elektronik" }, { word: "keizai", definition: "Ekonomi" }, { word: "shiyakusho", definition: "Pejabat perbandaran" }, { word: "koukou", definition: "Sekolah Tinggi" },
-                { word: "haisha", definition: "Doktor gigi" }, { word: "dokushin", definition: "Bujang" }, { word: "sumimasen", definition: "Minta maaf" }, { word: "renshuu", definition: "Latihan" },
-                { word: "minasan", definition: "Semua orang" }, { word: "omoidashimasu", definition: "Teringat" }, { word: "irasshaimasu", definition: "Ada (Hormat)" }
+                { word: "おきます", romanji: "okimasu", definition: "Meletakkan / Menaruh" }, 
+                { word: "つくります", romanji: "tsukurimasu", definition: "Membuat / Memproduksi" }, 
+                { word: "うります", romanji: "urimasu", definition: "Menjual" }, 
+                { word: "しります", romanji: "shirimasu", definition: "Mengetahui / Mengenal" },
+                { word: "すみます", romanji: "sumimasu", definition: "Tinggal" }, 
+                { word: "けんきゅうします", romanji: "kenkyuu shimasu", definition: "Meneliti" }, 
+                { word: "しりょう", romanji: "shiryou", definition: "Data / Bahan" }, 
+                { word: "カタログ", romanji: "katarogu", definition: "Katalog" },
+                { word: "じこくひょう", romanji: "jikokuhyou", definition: "Jadwal" }, 
+                { word: "ふく", romanji: "fuku", definition: "Baju" }, 
+                { word: "せいひん", romanji: "seihin", definition: "Produk" }, 
+                { word: "ソフト", romanji: "sofuto", definition: "Software" },
+                { word: "でんしじしょ", romanji: "denshi jisho", definition: "Kamus elektronik" }, 
+                { word: "けいざい", romanji: "keizai", definition: "Ekonomi" }, 
+                { word: "しやくしょ", romanji: "shiyakusho", definition: "Kantor Wali Kota" }, 
+                { word: "こうこう", romanji: "koukou", definition: "SMA" },
+                { word: "はいしゃ", romanji: "haisha", definition: "Dokter gigi" }, 
+                { word: "どくしん", romanji: "dokushin", definition: "Bujangan" }, 
+                { word: "すみません", romanji: "sumimasen", definition: "Maaf" }, 
+                { word: "れんしゅう", romanji: "renshuu", definition: "Latihan" },
+                { word: "みなさん", romanji: "minasan", definition: "Semuanya" }, 
+                { word: "おもいだします", romanji: "omoidashimasu", definition: "Teringat" }, 
+                { word: "いらっしゃいます", romanji: "irasshaimasu", definition: "Ada (Hormat)" }
             ]
         };
 
@@ -424,7 +920,6 @@
         let score = 0;
         let isProcessing = false;
 
-        // Referensi Elemen DOM
         const mainApp = document.getElementById('main-app');
         const menuView = document.getElementById('menu-view');
         const quizView = document.getElementById('quiz-view');
@@ -441,6 +936,12 @@
         const finalScore = document.getElementById('final-score');
         const skipButton = document.getElementById('skip-button');
 
+        // Fungsi untuk menormalkan input (menghapus spasi berlebih, mengubah ke lowercase)
+        function normalizeInput(input) {
+            return input.toLowerCase().trim().replace(/\s+/g, ' ');
+        }
+
+        // Mengacak urutan soal
         function shuffleArray(array) {
             const shuffled = [...array];
             for (let i = shuffled.length - 1; i > 0; i--) {
@@ -450,24 +951,26 @@
             return shuffled;
         }
 
+        // Menampilkan Menu BAB
         function renderMenu() {
             babList.innerHTML = "";
             for (let i = 1; i <= 15; i++) {
                 const btn = document.createElement('button');
-                btn.className = "bab-card bg-white border border-slate-100 p-5 rounded-[1.8rem] text-center group active:scale-95 shadow-sm";
+                btn.className = "bg-white border-2 border-slate-100 p-4 rounded-2xl hover:border-red-500 hover:shadow-md transition-all text-center group active:scale-95";
                 const hasData = allData[i] && allData[i].length > 0;
                 btn.innerHTML = `
-                    <div class="text-[10px] font-bold text-slate-300 group-hover:text-red-400 mb-1 uppercase tracking-[0.2em]">Materi</div>
-                    <div class="text-xl font-extrabold text-slate-700 group-hover:text-red-600 leading-none">BAB ${i}</div>
-                    <div class="text-[9px] mt-2 font-bold px-2 py-0.5 rounded-full inline-block ${hasData ? 'bg-emerald-50 text-emerald-500' : 'bg-slate-50 text-slate-300'}">
-                        ${hasData ? allData[i].length + ' Kata' : 'Kosong'}
+                    <div class="text-[10px] font-bold text-slate-400 group-hover:text-red-400 mb-1 uppercase tracking-tighter">Materi</div>
+                    <div class="text-lg font-black text-slate-700 group-hover:text-red-600 leading-none">BAB ${i}</div>
+                    <div class="text-[9px] mt-1 ${hasData ? 'text-emerald-500 font-bold' : 'text-slate-300 italic'}">
+                        ${hasData ? allData[i].length + ' Kata' : '(Kosong)'}
                     </div>
                 `;
-                btn.onclick = () => { if (hasData) startQuiz(i); };
+                btn.onclick = () => hasData ? startQuiz(i) : alert(`Data BAB ${i} belum tersedia.`);
                 babList.appendChild(btn);
             }
         }
 
+        // Memulai Kuis BAB
         function startQuiz(babIndex) {
             currentBabIndex = babIndex;
             quizData = shuffleArray(allData[babIndex]);
@@ -483,21 +986,19 @@
             quizView.classList.add('hidden');
             resultView.classList.add('hidden');
             menuView.classList.remove('hidden');
-            userInput.value = "";
             renderMenu();
         }
 
+        // Memuat Pertanyaan
         function loadQuestion() {
             if (currentIndex < quizData.length) {
                 const q = quizData[currentIndex];
                 displayDefinition.innerText = q.definition;
-                userInput.value = ""; 
-                userInput.disabled = false; 
-                userInput.focus();
+                userInput.value = ""; userInput.disabled = false; userInput.focus();
                 isProcessing = false;
                 const progress = (currentIndex / quizData.length) * 100;
                 progressBar.style.width = `${progress}%`;
-                progressText.innerText = `Soal ${currentIndex + 1} / ${quizData.length}`;
+                progressText.innerText = `问题 ${currentIndex + 1} / ${quizData.length}`;
                 scoreText.innerText = `Skor: ${score}`;
                 statusNotif.classList.add('hidden');
                 userInput.classList.remove('border-emerald-500', 'bg-emerald-50', 'border-amber-500', 'bg-amber-50');
@@ -513,6 +1014,7 @@
             finalScore.innerText = score;
         }
 
+        // Umpan Balik (Feedback)
         function handleFeedback(isCorrect) {
             isProcessing = true;
             statusNotif.classList.remove('hidden');
@@ -520,35 +1022,57 @@
 
             if (isCorrect) {
                 score += 10;
-                notifText.innerText = "Benar! (正解)";
-                statusNotif.className = "absolute -top-12 left-0 right-0 font-bold flex items-center justify-center gap-2 fade-in text-emerald-500";
+                notifText.innerText = "正解です！ (Benar)";
+                statusNotif.className = "absolute -top-10 left-0 right-0 font-bold flex items-center justify-center gap-2 fade-in text-emerald-600";
                 userInput.classList.add('border-emerald-500', 'bg-emerald-50', 'correct-pulse');
             } else {
-                const correct = quizData[currentIndex].word;
-                notifText.innerText = `Jawaban: ${correct}`;
-                statusNotif.className = "absolute -top-12 left-0 right-0 font-bold flex items-center justify-center gap-2 fade-in text-amber-500 font-bold";
-                userInput.value = correct;
+                const correctRomanji = quizData[currentIndex].romanji;
+                notifText.innerText = `Jawaban: ${correctRomanji}`;
+                statusNotif.className = "absolute -top-10 left-0 right-0 font-bold flex items-center justify-center gap-2 fade-in text-amber-600";
+                userInput.value = correctRomanji;
                 userInput.classList.add('border-amber-500', 'bg-amber-50');
             }
-            setTimeout(() => { currentIndex++; loadQuestion(); }, isCorrect ? 800 : 2200);
+            setTimeout(() => { currentIndex++; loadQuestion(); }, isCorrect ? 800 : 1800);
         }
 
+        // Event Listeners
         userInput.addEventListener('input', (e) => {
             if (isProcessing) return;
-            if (userInput.value.trim() === quizData[currentIndex].word) {
+            const userAnswer = normalizeInput(e.target.value);
+            const correctRomanji = normalizeInput(quizData[currentIndex].romanji);
+            
+            // Bandingkan jawaban user dengan romanji yang benar
+            if (userAnswer === correctRomanji) {
                 handleFeedback(true);
             }
         });
 
-        skipButton.addEventListener('click', () => { if (!isProcessing) handleFeedback(false); });
+        userInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !isProcessing) {
+                const userAnswer = normalizeInput(userInput.value);
+                const correctRomanji = normalizeInput(quizData[currentIndex].romanji);
+                
+                if (userAnswer === correctRomanji) {
+                    handleFeedback(true);
+                } else {
+                    handleFeedback(false);
+                }
+            }
+        });
 
+        skipButton.addEventListener('click', () => {
+            if (!isProcessing) handleFeedback(false);
+        });
+
+        // Inisialisasi awal
         window.addEventListener('load', () => {
-            setTimeout(() => {
-                document.getElementById('app-loading').classList.add('hidden');
-                mainApp.classList.remove('hidden');
-                if (typeof wanakana !== 'undefined') wanakana.bind(userInput);
-                renderMenu();
-            }, 500);
+            document.getElementById('app-loading').classList.add('hidden');
+            mainApp.classList.remove('hidden');
+            // Matikan konversi otomatis WanaKana karena kita ingin Romanji
+            if (typeof wanakana !== 'undefined') {
+                wanakana.unbind(userInput);
+            }
+            renderMenu();
         });
     </script>
 </body>
