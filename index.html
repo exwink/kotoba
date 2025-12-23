@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Master Kosakata Jepang - 15 BAB Lengkap</title>
+    <title>kotoba - Master Kosakata Jepang</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Library WanaKana untuk konversi Romaji ke Kana otomatis -->
     <script src="https://unpkg.com/wanakana@2.3.1/wanakana.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+JP:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Noto+Sans+JP:wght@400;700&display=swap');
         
         body {
-            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            font-family: 'Plus Jakarta Sans', 'Noto Sans JP', sans-serif;
             -webkit-font-smoothing: antialiased;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
         }
 
         .japanese-text {
@@ -25,7 +26,7 @@
 
         @keyframes pulse-green {
             0% { transform: scale(1); }
-            50% { transform: scale(1.05); background-color: #dcfce7; }
+            50% { transform: scale(1.02); background-color: #f0fdf4; }
             100% { transform: scale(1); }
         }
 
@@ -38,117 +39,155 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Mengatur scrollbar untuk menu */
-        #menu-view::-webkit-scrollbar {
-            width: 6px;
+        #menu-view::-webkit-scrollbar, .custom-scroll::-webkit-scrollbar {
+            width: 5px;
         }
-        #menu-view::-webkit-scrollbar-thumb {
+        #menu-view::-webkit-scrollbar-thumb, .custom-scroll::-webkit-scrollbar-thumb {
             background-color: #e2e8f0;
             border-radius: 10px;
         }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        
+        .bab-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .bab-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .title-aesthetic {
+            font-size: 5rem;
+            line-height: 1;
+            letter-spacing: -0.05em;
+            background: linear-gradient(to bottom, #ef4444, #991b1b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .instruction-box {
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen flex items-center justify-center p-4">
+<body class="min-h-screen flex items-center justify-center p-4 sm:p-6">
 
-    <!-- Layar Pemuatan (Loading) -->
+    <!-- Layar Pemuatan -->
     <div id="app-loading" class="fixed inset-0 bg-white z-50 flex items-center justify-center">
         <div class="text-center">
-            <div class="inline-block w-8 h-8 border-4 border-red-600 border-t-transparent rounded-full animate-spin mb-2"></div>
-            <p class="text-slate-500 text-sm italic">Memuat data kuis...</p>
+            <div class="inline-block w-10 h-10 border-4 border-red-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+            <p class="text-slate-500 font-medium animate-pulse text-sm">Menyiapkan kosa kata...</p>
         </div>
     </div>
 
-    <div class="max-w-md w-full bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 hidden flex flex-col max-h-[90vh]" id="main-app">
+    <div class="max-w-md w-full glass-card rounded-[2.5rem] shadow-2xl overflow-hidden border border-white/50 hidden flex flex-col h-[92vh]" id="main-app">
         
         <!-- View 1: Menu Pemilihan BAB -->
-        <div id="menu-view" class="p-6 overflow-y-auto">
-            <div class="text-center mb-6">
-                <h1 class="text-2xl font-bold text-slate-800 tracking-tight text-red-600">Menu Belajar</h1>
-                <p class="text-slate-500 text-sm italic">Minna no Nihongo (BAB 1 - 15)</p>
+        <div id="menu-view" class="p-8 overflow-y-auto flex-1">
+            <div class="text-center mb-10 pt-6">
+                <h1 class="title-aesthetic font-black uppercase mb-6">kotoba</h1>
+                <p class="text-slate-500 text-[11px] font-bold tracking-widest uppercase bg-slate-100/80 inline-block px-5 py-2 rounded-full border border-slate-200/50">Minna no Nihongo (BAB 1 - 15)</p>
             </div>
-            <div class="grid grid-cols-2 gap-3" id="bab-list">
-                <!-- Tombol BAB akan dibuat secara dinamis oleh JavaScript -->
+            
+            <div class="grid grid-cols-2 gap-4" id="bab-list">
+                <!-- Tombol BAB dibuat dinamis oleh JS -->
+            </div>
+
+            <div class="mt-12 text-center border-t border-slate-100 pt-8 pb-4">
+                <p class="text-slate-400 text-[10px] font-bold tracking-[0.2em] uppercase mb-1">Created by</p>
+                <p class="text-red-500 font-extrabold text-xl tracking-tight hover:scale-110 transition-transform cursor-default">Exwink</p>
             </div>
         </div>
 
         <!-- View 2: Area Kuis Aktif -->
-        <div id="quiz-view" class="hidden flex-1 flex flex-col">
+        <div id="quiz-view" class="hidden flex-1 flex flex-col overflow-hidden">
             <!-- Header Kuis -->
-            <div class="bg-red-600 p-6 text-white text-center relative shrink-0">
-                <button onclick="backToMenu()" class="absolute left-4 top-6 opacity-80 hover:opacity-100 transition-opacity">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            <div class="bg-gradient-to-br from-red-600 to-rose-500 p-7 text-white text-center relative shrink-0">
+                <button onclick="backToMenu()" class="absolute left-6 top-7 p-2 bg-white/20 rounded-xl hover:bg-white/30 transition-colors cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
                     </svg>
                 </button>
-                <h1 id="current-bab-title" class="text-xl font-bold mb-1 italic text-white">BAB</h1>
-                <div class="w-full bg-red-800 rounded-full h-2 mt-4">
-                    <div id="progress-bar" class="bg-white h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                <h1 id="current-bab-title" class="text-xl font-extrabold mb-1 tracking-widest italic opacity-90 uppercase">BAB 1</h1>
+                <div class="w-full bg-black/10 rounded-full h-2 mt-5">
+                    <div id="progress-bar" class="bg-white h-2 rounded-full transition-all duration-700 shadow-sm" style="width: 0%"></div>
                 </div>
-                <div class="flex justify-between mt-2 text-xs font-medium opacity-80">
-                    <span id="progress-text">问题 1 / 0</span>
+                <div class="flex justify-between mt-3 text-[10px] font-bold uppercase tracking-wider opacity-90">
+                    <span id="progress-text">Soal 1 / 0</span>
                     <span id="score-text">Skor: 0</span>
                 </div>
             </div>
 
-            <!-- Area Pertanyaan -->
-            <div class="p-8 flex-1 flex flex-col justify-center">
-                <div class="text-center fade-in">
-                    <p class="text-slate-500 text-sm font-semibold uppercase tracking-wider mb-2">Bahasa Jepangnya:</p>
-                    <h2 id="display-definition" class="text-3xl font-bold text-slate-800 mb-8 min-h-[5rem] flex items-center justify-center px-4 leading-tight">
+            <!-- Konten Pertanyaan yang Bisa Discroll -->
+            <div class="p-6 flex-1 overflow-y-auto custom-scroll flex flex-col">
+                <div class="text-center fade-in w-full max-w-sm mx-auto flex-1 flex flex-col justify-center py-4">
+                    <p class="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-2">Bahasa Jepangnya:</p>
+                    <h2 id="display-definition" class="text-3xl font-extrabold text-slate-800 mb-6 min-h-[5rem] flex items-center justify-center px-4 leading-[1.25]">
                         ...
                     </h2>
-                    
-                    <div class="relative mb-4">
+
+                    <div class="relative mb-6 w-full">
                         <input type="text" id="user-input" 
-                            class="japanese-text w-full px-4 py-4 text-center text-3xl font-bold border-2 border-slate-200 rounded-2xl focus:border-red-500 focus:outline-none transition-colors"
-                            placeholder="Tulis Hiragana/Katakana..."
+                            class="japanese-text w-full px-4 py-6 text-center text-4xl font-bold border-2 border-slate-100 rounded-[2rem] focus:border-red-500 focus:outline-none transition-all shadow-xl shadow-slate-100/50 placeholder:text-slate-200"
+                            placeholder="...."
                             autocomplete="off"
                             autocapitalize="none">
                         
-                        <!-- Notifikasi Status -->
-                        <div id="status-notif" class="hidden absolute -top-10 left-0 right-0 font-bold flex items-center justify-center gap-2 fade-in">
+                        <div id="status-notif" class="hidden absolute -top-12 left-0 right-0 font-bold flex items-center justify-center gap-2 fade-in">
                             <span id="notif-text"></span>
                         </div>
                     </div>
 
-                    <!-- Tombol Skip -->
-                    <button id="skip-button" class="text-slate-400 hover:text-slate-600 text-sm font-medium transition-colors flex items-center justify-center w-full gap-1 mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
-                        </svg>
-                        Lewati (Skip)
+                    <button id="skip-button" class="text-slate-400 hover:text-slate-600 text-xs font-bold transition-colors flex items-center justify-center w-full gap-2 mb-8 py-2 group">
+                        <span class="opacity-50 group-hover:opacity-100 transition-opacity">⏭️</span>
+                        Lewati Soal
                     </button>
 
-                    <div class="bg-blue-50 p-3 rounded-xl border border-blue-100">
-                        <p class="text-blue-700 text-[10px] leading-relaxed">
-                            <strong>Petunjuk:</strong> Ketik dalam huruf Latin (Romaji), sistem akan otomatis mengubahnya menjadi Hiragana atau Katakana.
-                        </p>
+                    <!-- Bagian Instruksi -->
+                    <div class="instruction-box bg-slate-50 p-5 rounded-[2rem] border border-slate-100 shadow-sm w-full mb-4">
+                        <div class="text-slate-600 text-[13px] leading-relaxed font-semibold">
+                            Gunakan huruf hiragana atau katakana untuk menjawab ya!<br>
+                            <span class="text-[11px] font-medium text-slate-400 block mt-1">(Contoh: わたし, コーヒー)</span>
+                        </div>
+                        <div class="mt-3 text-red-500 font-extrabold text-base flex items-center justify-center gap-2 animate-bounce">
+                            Semangat mengerjakan! 💪
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- View 3: Layar Hasil Akhir -->
-        <div id="result-view" class="hidden p-8 text-center fade-in flex-1 flex flex-col justify-center">
-            <div class="mb-6 text-center">
-                <div class="inline-flex items-center justify-center w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        <div id="result-view" class="hidden p-10 text-center fade-in flex-1 flex flex-col justify-center overflow-y-auto">
+            <div class="mb-8 text-center">
+                <div class="inline-flex items-center justify-center w-24 h-24 bg-emerald-50 text-emerald-500 rounded-[2.5rem] mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                 </div>
-                <h2 class="text-2xl font-bold text-slate-800">Luar Biasa!</h2>
-                <p class="text-slate-500 mt-2">Materi BAB ini telah selesai kamu pelajari.</p>
-                <div class="mt-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
-                    <p class="text-sm text-slate-400">Skor Akhir</p>
-                    <p id="final-score" class="text-3xl font-black text-red-600">0</p>
+                <h2 class="text-3xl font-extrabold text-slate-800">Luar Biasa!</h2>
+                <p class="text-slate-500 mt-2 font-medium">Materi BAB ini telah selesai kamu pelajari.</p>
+                <div class="mt-8 bg-slate-50 p-6 rounded-[2rem] border border-slate-100 relative overflow-hidden">
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em]">Skor Akhir</p>
+                    <p id="final-score" class="text-5xl font-black text-red-500 mt-1">0</p>
                 </div>
             </div>
-            <div class="flex flex-col gap-3">
-                <button onclick="startQuiz(currentBabIndex)" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-2xl transition-all shadow-lg active:scale-95">
+            <div class="flex flex-col gap-4 px-4">
+                <button onclick="startQuiz(currentBabIndex)" class="w-full bg-red-600 hover:bg-red-700 text-white font-extrabold py-5 rounded-[1.5rem] transition-all shadow-lg shadow-red-500/20 active:scale-95">
                     Ulangi BAB Ini
                 </button>
-                <button onclick="backToMenu()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-4 rounded-2xl transition-all active:scale-95">
-                    Kembali ke Menu Utama
+                <button onclick="backToMenu()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-extrabold py-5 rounded-[1.5rem] transition-all active:scale-95">
+                    Kembali ke Menu
                 </button>
             </div>
         </div>
@@ -156,13 +195,13 @@
 
     <script>
         /**
-         * BASIS DATA KOSAKATA (BAB 1 - 15)
+         * BASIS DATA KOSAKATA (BAB 1 - 15) - DATA DIREVISI SESUAI PASTE TERAKHIR
          */
         const allData = {
             1: [
                 { word: "わたし", definition: "Saya" }, { word: "あなた", definition: "Kamu" }, { word: "あのひと", definition: "Orang itu (biasa)" }, { word: "あのかた", definition: "Orang itu (sopan)" },
-                { word: "さん", definition: "Saudara......" }, { word: "ちゃん", definition: "Panggilan untuk anak" }, { word: "じん", definition: "Orang......" }, { word: "せんせい", definition: "Guru, dosen" },
-                { word: "きょうし", definition: "Guru, dosen (sendiri)" }, { word: "がくせい", definition: "Siswa, murid" }, { word: "かいしゃいん", definition: "Pegawai perusahaan" }, { word: "しゃいん", definition: "Pegawai perusahaan" },
+                { word: "さん", definition: "Saudara......" }, { word: "ちゃん", definition: "Panggilan untuk anak laki/perempuan" }, { word: "じん", definition: "Orang......" }, { word: "せんせい", definition: "Guru, dosen" },
+                { word: "きょうし", definition: "Guru, dosen (untuk kalangan sendiri)" }, { word: "がくせい", definition: "Siswa, murid" }, { word: "かいしゃいん", definition: "Pegawai perusahaan" }, { word: "しゃいん", definition: "Pegawai perusahaan" },
                 { word: "ぎんこういん", definition: "Pegawai bank" }, { word: "いしゃ", definition: "Dokter" }, { word: "けんきゅうしゃ", definition: "Peneliti" }, { word: "だいがく", definition: "Universitas" },
                 { word: "びょういん", definition: "Rumah sakit" }, { word: "だれ", definition: "Siapa (biasa)" }, { word: "どなた", definition: "Siapa (sopan)" }, { word: "さい", definition: "Umur......" },
                 { word: "なんさい", definition: "Umur berapa? (biasa)" }, { word: "おいくつ", definition: "Umur berapa? (sopan)" }, { word: "はい", definition: "Iya" }, { word: "いいえ", definition: "Tidak" },
@@ -181,21 +220,21 @@
                 { word: "コンピューター", definition: "Komputer" }, { word: "くるま", definition: "Mobil" }, { word: "つくえ", definition: "Meja" }, { word: "いす", definition: "Kursi" },
                 { word: "チョコレート", definition: "Coklat" }, { word: "コーヒー", definition: "Kopi" }, { word: "おみやげ", definition: "Oleh-oleh" }, { word: "えいご", definition: "Bahasa Inggris" },
                 { word: "にほんご", definition: "Bahasa Jepang" }, { word: "ご", definition: "Bahasa ～" }, { word: "なん", definition: "Apa" }, { word: "そう", definition: "Begitu" },
-                { word: "あのう", definition: "Eee ... (ragu)" }, { word: "えっ", definition: "Eh (terkejut)" }, { word: "どうぞ", definition: "Silakan" }, { word: "どうもありがとうございます", definition: "Terima kasih" },
-                { word: "ですか", definition: "O, begitu, benarkah?" }, { word: "ちがいます", definition: "Bukan, Salah" }, { word: "あ", definition: "O, eh (sadar)" },
-                { word: "これからおせわになります", definition: "Mulai sekarang mohon bantuannya" }, { word: "こちらこそよろしくおねがいします", definition: "Sama-sama" }
+                { word: "あのう", definition: "Eee ... (ungkapan ketika ragu)" }, { word: "えっ", definition: "Eh (di luar dugaan)" }, { word: "どうぞ", definition: "Silakan" }, { word: "どうもありがとうございます", definition: "Terima kasih" },
+                { word: "そうですか", definition: "O, begitu, benarkah?" }, { word: "ちagimasu", definition: "Bukan, Tidak, Salah" }, { word: "あ", definition: "O, eh (sadar)" },
+                { word: "これからおせわになります", definition: "Mulai sekarang saya akan meminta bantuannya" }, { word: "こちらこそよろしくおねがいします", definition: "Ya sama-sama" }
             ],
             3: [
                 { word: "ここ", definition: "Disini" }, { word: "そこ", definition: "Disitu" }, { word: "あそこ", definition: "Disana" }, { word: "どこ", definition: "Dimana?" },
                 { word: "こちら", definition: "Disini (sopan)" }, { word: "そちら", definition: "Disitu (sopan)" }, { word: "あちら", definition: "Disana (sopan)" }, { word: "どちら", definition: "Dimana? (sopan)" },
-                { word: "きょうしつ", definition: "Ruang kelas" }, { word: "しょくどう", definition: "Kantin" }, { word: "じむしょ", definition: "Kantor" }, { word: "かいぎしつ", definition: "Ruang rapat" },
-                { word: "うけつけ", definition: "Meja informasi" }, { word: "ロビー", definition: "Lobi" }, { word: "へや", definition: "Kamar" }, { word: "おてあらい", definition: "WC" },
-                { word: "トイレ", definition: "Toilet" }, { word: "かいだん", definition: "Tangga" }, { word: "エレベーター", definition: "Lift" }, { word: "エスカレーター", definition: "Eskalator" },
+                { word: "きょうしつ", definition: "Ruang kelas" }, { word: "しょくどう", definition: "Ruang makan, Kantin" }, { word: "じむしょ", definition: "Kantor" }, { word: "かいぎしつ", definition: "Ruang rapat" },
+                { word: "うけつけ", definition: "Meja informasi" }, { word: "ロビー", definition: "Ruang tunggu, lobi" }, { word: "へや", definition: "Kamar" }, { word: "おてあらい", definition: "Kamar kecil, WC" },
+                { word: "トイレ", definition: "Toilet" }, { word: "かいだん", definition: "Tangga" }, { word: "エレベーター", definition: "Lift" }, { word: "エスカレーター", definition: "Eskalator, tangga berjalan" },
                 { word: "じどうはんばいき", definition: "Mesin jual otomatis" }, { word: "でんわ", definition: "Telepon" }, { word: "おくに", definition: "Negara" }, { word: "かいしゃ", definition: "Perusahaan" },
                 { word: "うち", definition: "Rumah" }, { word: "くつ", definition: "Sepatu" }, { word: "ネクタイ", definition: "Dasi" }, { word: "ワイン", definition: "Anggur putih" },
-                { word: "うりば", definition: "Tempat penjualan" }, { word: "ちか", definition: "Basement" }, { word: "かい", definition: "Lantai ～" }, { word: "なんがい", definition: "Lantai berapa?" },
-                { word: "えん", definition: "～yen" }, { word: "いくら", definition: "Berapa harganya?" }, { word: "ひゃく", definition: "Seratus" }, { word: "せん", definition: "Seribu" },
-                { word: "まん", definition: "Puluh ribu" }, { word: "すみません", definition: "Maaf" }, { word: "どうも", definition: "Terima kasih" }, { word: "いらっしゃいませ", definition: "Selamat datang" },
+                { word: "うりば", definition: "Tempat penjualan" }, { word: "ちか", definition: "Bawah tanah, basement" }, { word: "かい", definition: "Lantai /tingkat ～" }, { word: "なんがい", definition: "Lantai berapa?" },
+                { word: "えん", definition: "～yen" }, { word: "いくら", definition: "Berapa?" }, { word: "ひゃく", definition: "Seratus" }, { word: "せん", definition: "Seribu" },
+                { word: "まん", definition: "Puluh ribu" }, { word: "sumimasen", definition: "Maaf" }, { word: "どうも", definition: "Terima kasih" }, { word: "いらっしゃいませ", definition: "Selamat datang" },
                 { word: "みせてください", definition: "Tolong perlihatkan" }, { word: "じゃ", definition: "Kalau begitu" }, { word: "をください", definition: "Tolong ～" }, { word: "イタリア", definition: "Italia" },
                 { word: "スイス", definition: "Swiss" }, { word: "フランス", definition: "Perancis" }, { word: "ジャカルタ", definition: "Jakarta" }, { word: "バンコク", definition: "Bangkok" },
                 { word: "ベルリン", definition: "Berlin" }, { word: "おくじょう", definition: "Lantai atas" }, { word: "レストラン", definition: "Restoran" }, { word: "ゆうえんち", definition: "Tempat hiburan" },
@@ -203,13 +242,13 @@
             ],
             4: [
                 { word: "おきます", definition: "Bangun tidur" }, { word: "ねます", definition: "Tidur" }, { word: "はたらきます", definition: "Bekerja" }, { word: "やすみます", definition: "Beristirahat, libur" },
-                { word: "べんきょうします", definition: "Belajar" }, { word: "おわります", definition: "Selesai" }, { word: "デパート", definition: "Dept. store" }, { word: "ぎんこう", definition: "Bank" },
+                { word: "べんきょうします", definition: "Belajar" }, { word: "おわります", definition: "Selesai" }, { word: "デパート", definition: "Departemen store" }, { word: "ぎんこう", definition: "Bank" },
                 { word: "ゆうびんきょく", definition: "Kantor pos" }, { word: "としょかん", definition: "Perpustakaan" }, { word: "びじゅつかん", definition: "Gedung kesenian" }, { word: "いま", definition: "Sekarang" },
-                { word: "じ", definition: "Jam / Pukul" }, { word: "ふん", definition: "Menit" }, { word: "はん", definition: "Setengah" }, { word: "なんじ", definition: "Jam berapa?" },
-                { word: "なんぶん", definition: "Berapa menit?" }, { word: "ごぜん", definition: "AM (Pagi)" }, { word: "ごご", definition: "PM (Sore/Malam)" }, { word: "あさ", definition: "Pagi" },
-                { word: "ひる", definition: "Siang" }, { word: "ばん", definition: "Malam" }, { word: "よる", definition: "Malam" }, { word: "おototoi", definition: "Kemarin lusa" },
+                { word: "じ", definition: "Jam, pukul" }, { word: "ふん", definition: "Menit" }, { word: "はん", definition: "Setengah" }, { word: "なんじ", definition: "Jam berapa?" },
+                { word: "なんぶん", definition: "Berapa menit?" }, { word: "ごぜん", definition: "AM (waktu sebelum jam 12 siang)" }, { word: "ごご", definition: "PM (waktu setelah jam 12 siang)" }, { word: "あさ", definition: "Pagi" },
+                { word: "ひる", definition: "Siang" }, { word: "ばん", definition: "Malam" }, { word: "よる", definition: "Malam" }, { word: "おととい", definition: "2 hari yang lalu, kemarin lusa" },
                 { word: "きのう", definition: "Kemarin" }, { word: "きょう", definition: "Hari ini" }, { word: "あした", definition: "Besok" }, { word: "あさって", definition: "Besok lusa" },
-                { word: "けさ", definition: "Tadi pagi" }, { word: "こんばん", definition: "Malam ini" }, { word: "やすみ", definition: "Istirahat, libur" }, { word: "ひるやすみ", definition: "Istirahat siang" },
+                { word: "けさ", definition: "Tadi pagi" }, { word: "こんばん", definition: "Malam ini" }, { word: "やすみ", definition: "Istirahat, cuti, libur" }, { word: "ひるやすみ", definition: "Istirahat siang" },
                 { word: "しけん", definition: "Ujian" }, { word: "かいぎ", definition: "Rapat" }, { word: "えいが", definition: "Film" }, { word: "まいあさ", definition: "Setiap pagi" },
                 { word: "まいばん", definition: "Setiap malam" }, { word: "まいにち", definition: "Setiap hari" }, { word: "げつようび", definition: "Hari Senin" }, { word: "かようび", definition: "Hari Selasa" },
                 { word: "すいようび", definition: "Hari Rabu" }, { word: "もくようび", definition: "Hari Kamis" }, { word: "きんようび", definition: "Hari Jumat" }, { word: "どようび", definition: "Hari Sabtu" },
@@ -220,7 +259,7 @@
                 { word: "でんわばんごうあんない", definition: "Petunjuk nomor telepon" }
             ],
             5: [
-                { word: "いきます", definition: "Pergi" }, { word: "きます", definition: "Datang" }, { word: "かえります", definition: "Pulang" }, { word: "がっこう", definition: "Sekolah" },
+                { word: "いきます", definition: "Pergi" }, { word: "きます", definition: "Datang" }, { word: "かえります", definition: "Pulang" }, { word: "がっこう", definition: "Sekolahan" },
                 { word: "スーパー", definition: "Supermarket" }, { word: "えき", definition: "Stasiun" }, { word: "ひこうき", definition: "Pesawat terbang" }, { word: "ふね", definition: "Kapal laut" },
                 { word: "でんしゃ", definition: "Kereta listrik" }, { word: "ちかてつ", definition: "Kereta bawah tanah" }, { word: "しんかんせん", definition: "Shinkansen" }, { word: "バス", definition: "Bus" },
                 { word: "タクシー", definition: "Taksi" }, { word: "じてんしゃ", definition: "Sepeda" }, { word: "あるいて", definition: "Jalan kaki" }, { word: "ひと", definition: "Orang" },
@@ -228,152 +267,152 @@
                 { word: "ひとりで", definition: "Sendirian" }, { word: "せんしゅう", definition: "Minggu lalu" }, { word: "こんしゅう", definition: "Minggu ini" }, { word: "らいしゅう", definition: "Minggu depan" },
                 { word: "せんげつ", definition: "Bulan lalu" }, { word: "こんげつ", definition: "Bulan ini" }, { word: "らいげつ", definition: "Bulan depan" }, { word: "きょねん", definition: "Tahun lalu" },
                 { word: "ことし", definition: "Tahun ini" }, { word: "らいねん", definition: "Tahun depan" }, { word: "ねん", definition: "Tahun" }, { word: "なんねん", definition: "Tahun berapa?" },
-                { word: "がつ", definition: "Bulan" }, { word: "なんがつ", definition: "Bulan apa?" }, { word: "ついたち", definition: "Tanggal 1" }, { word: "ふつか", definition: "Tanggal 2 / 2 hari" },
-                { word: "みっか", definition: "Tanggal 3 / 3 hari" }, { word: "よっか", definition: "Tanggal 4 / 4 hari" }, { word: "いつか", definition: "Tanggal 5 / 5 hari" }, { word: "むいか", definition: "Tanggal 6 / 6 hari" },
-                { word: "なのか", definition: "Tanggal 7 / 7 hari" }, { word: "ようか", definition: "Tanggal 8 / 8 hari" }, { word: "ここのか", definition: "Tanggal 9 / 9 hari" }, { word: "とおか", definition: "Tanggal 10 / 10 hari" },
-                { word: "じゅうよっか", definition: "Tanggal 14 / 14 hari" }, { word: "はつか", definition: "Tanggal 20 / 20 hari" }, { word: "にじゅうよっか", definition: "Tanggal 24 / 24 hari" }, { word: "にち", definition: "Tanggal / Hari" },
-                { word: "なんにち", definition: "Tanggal berapa?" }, { word: "いつ", definition: "Kapan" }, { word: "たんじょうび", definition: "Hari ulang tahun" }, { word: "そうですね", definition: "Ya begitulah" },
-                { word: "どういたしまして", definition: "Sama-sama" }, { word: "ばんせん", definition: "Peron nomor" }, { word: "つぎの", definition: "Yang berikutnya" }, { word: "ふつう", definition: "Biasa" },
+                { word: "がつ", definition: "Bulan" }, { word: "なんがつ", definition: "Bulan apa?" }, { word: "ついたち", definition: "Tanggal 1" }, { word: "ふつか", definition: "Tanggal 2, 2 hari" },
+                { word: "みっか", definition: "Tanggal 3, 3 hari" }, { word: "よっか", definition: "Tanggal 4, 4 hari" }, { word: "いつか", definition: "Tanggal 5, 5 hari" }, { word: "むいか", definition: "Tanggal 6, 6 hari" },
+                { word: "なのか", definition: "Tanggal 7, 7 hari" }, { word: "ようか", definition: "Tanggal 8, 8 hari" }, { word: "ここのか", definition: "Tanggal 9, 9 hari" }, { word: "とおか", definition: "Tanggal 10, 10 hari" },
+                { word: "じゅうよっか", definition: "Tanggal 14, 14 hari" }, { word: "はつか", definition: "Tanggal 20, 20 hari" }, { word: "にじゅうよっか", definition: "Tanggal 24, 24 hari" }, { word: "にち", definition: "Tanggal, hari" },
+                { word: "なんにち", definition: "Tanggal berapa, berapa hari" }, { word: "いつ", definition: "Kapan" }, { word: "たんじょうび", definition: "Hari ulang tahun" }, { word: "そうですね", definition: "Ya begitulah" },
+                { word: "どういたしまして", definition: "Sama-sama" }, { word: "ばんせん", definition: "Peron nomor, jalur nomor" }, { word: "つぎの", definition: "Yang berikutnya" }, { word: "ふつう", definition: "Biasa" },
                 { word: "きゅうこう", definition: "Ekspres" }, { word: "とっきゅう", definition: "Super ekspres" }, { word: "しゅくさいじつ", definition: "Hari libur nasional" }, { word: "がんじつ", definition: "Tahun baru" }
             ],
             6: [
-                { word: "たべます", definition: "Makan" }, { word: "のみます", definition: "Minum" }, { word: "すいます", definition: "Merokok" }, { word: "みます", definition: "Melihat / Menonton" },
-                { word: "ききます", definition: "Mendengar" }, { word: "よみます", definition: "Membaca" }, { word: "かきます", definition: "Menulis / Menggambar" }, { word: "かいます", definition: "Membeli" },
-                { word: "とります", definition: "Mengambil (foto)" }, { word: "します", definition: "Melakukan" }, { word: "あいます", definition: "Bertemu" }, { word: "ごはん", definition: "Nasi" },
+                { word: "たべます", definition: "Makan" }, { word: "のみます", definition: "Minum" }, { word: "すいます", definition: "Menghisap / merokok" }, { word: "みます", definition: "Melihat / menonton" },
+                { word: "ききます", definition: "Mendengar" }, { word: "よみます", definition: "Membaca" }, { word: "かきます", definition: "Menulis / menggambar" }, { word: "かいます", definition: "Membeli" },
+                { word: "とります", definition: "Mengambil (foto)" }, { word: "します", definition: "Melakukan / berbuat" }, { word: "あいます", definition: "Bertemu" }, { word: "ごはん", definition: "Nasi" },
                 { word: "あさごはん", definition: "Makan pagi" }, { word: "ひるごはん", definition: "Makan siang" }, { word: "ばんごはん", definition: "Makan malam" }, { word: "パン", definition: "Roti" },
                 { word: "たまご", definition: "Telur" }, { word: "にく", definition: "Daging" }, { word: "さかな", definition: "Ikan" }, { word: "やさい", definition: "Sayuran" },
-                { word: "くだもの", definition: "Buah-buahan" }, { word: "みず", definition: "Air" }, { word: "おちゃ", definition: "Teh Jepang" }, { word: "こうちゃ", definition: "Teh" },
+                { word: "くだもの", definition: "Buah-buahan" }, { word: "みず", definition: "Air" }, { word: "おちゃ", definition: "Teh Jepang / teh hijau" }, { word: "こうちゃ", definition: "Teh" },
                 { word: "ぎゅうにゅう", definition: "Susu" }, { word: "ジュース", definition: "Jus" }, { word: "ビール", definition: "Bir" }, { word: "おさけ", definition: "Minuman keras" },
                 { word: "たばこ", definition: "Rokok" }, { word: "てがみ", definition: "Surat" }, { word: "レポート", definition: "Laporan" }, { word: "しゃしん", definition: "Foto" },
                 { word: "ビデオ", definition: "Kaset video" }, { word: "みせ", definition: "Toko" }, { word: "にわ", definition: "Halaman" }, { word: "しゅくだい", definition: "PR" },
                 { word: "テニス", definition: "Tenis" }, { word: "サッカー", definition: "Sepak bola" }, { word: "はなみ", definition: "Hanami" }, { word: "なに", definition: "Apa" },
-                { word: "いっしょに", definition: "Bersama-sama" }, { word: "ちょっと", definition: "Sebentar" }, { word: "いつも", definition: "Selalu" }, { word: "ときどき", definition: "Kadang-kadang" },
+                { word: "いっしょに", definition: "Bersama-sama" }, { word: "ちょっと", definition: "Sebentar / sedikit" }, { word: "いつも", definition: "Selalu" }, { word: "ときどき", definition: "Kadang-kadang" },
                 { word: "それから", definition: "Setelah itu" }, { word: "ええ", definition: "Ya" }, { word: "いいですね", definition: "Bagus ya" }, { word: "わかりました", definition: "Mengerti" },
-                { word: "メキシコ", definition: "Meksiko" }, { word: "なんですか", definition: "Apa?" }, { word: "じゃ、また", definition: "Ok, sampai jumpa" }
+                { word: "メキシコ", definition: "Meksiko" }, { word: "なんですか", definition: "Apa?" }, { word: "じゃ、また", definition: "Ok, sampai jumpa [besok]" }
             ],
             7: [
-                { word: "きります", definition: "Memotong / Menggunting" }, { word: "おくります", definition: "Mengirim" }, { word: "あげます", definition: "Memberikan" }, { word: "もらいます", definition: "Menerima" },
-                { word: "かします", definition: "Meminjamkan" }, { word: "かります", definition: "Meminjam" }, { word: "おしえます", definition: "Mengajar" }, { word: "ならいます", definition: "Belajar (kepada)" },
+                { word: "きります", definition: "Memotong / menggunting" }, { word: "おくります", definition: "Mengirim" }, { word: "あげます", definition: "Memberikan" }, { word: "もらいます", definition: "Menerima / mendapatkan" },
+                { word: "かします", definition: "Meminjamkan / menyewakan" }, { word: "かります", definition: "Meminjam / menyewa" }, { word: "おしえます", definition: "Mengajar" }, { word: "ならいます", definition: "Belajar (kepada)" },
                 { word: "かけます", definition: "Menelepon" }, { word: "て", definition: "Tangan" }, { word: "はし", definition: "Sumpit" }, { word: "スプーン", definition: "Sendok" },
                 { word: "ナイフ", definition: "Pisau" }, { word: "フォーク", definition: "Garpu" }, { word: "はさみ", definition: "Gunting" }, { word: "パソコン", definition: "Laptop" },
                 { word: "ケータイ", definition: "HP" }, { word: "メール", definition: "Email" }, { word: "ねんがじょう", definition: "Kartu tahun baru" }, { word: "パンチ", definition: "Pelubang kertas" },
                 { word: "ホッチキス", definition: "Stapler" }, { word: "セロテープ", definition: "Selotip" }, { word: "けしゴム", definition: "Penghapus karet" }, { word: "かみ", definition: "Kertas" },
-                { word: "はな", definition: "Bunga" }, { word: "シャツ", definition: "Kemeja" }, { word: "プレゼント", definition: "Hadiah / Kado" }, { word: "にもつ", definition: "Barang" },
+                { word: "はな", definition: "Bunga" }, { word: "シャツ", definition: "Kemeja" }, { word: "プレゼント", definition: "Hadiah / kado" }, { word: "にもつ", definition: "Barang" },
                 { word: "おかね", definition: "Uang" }, { word: "きっぷ", definition: "Karcis" }, { word: "クリスマス", definition: "Natal" }, { word: "ちち", definition: "Ayah" },
                 { word: "はは", definition: "Ibu" }, { word: "おとうさん", definition: "Ayah orang lain" }, { word: "おかあさん", definition: "Ibu orang lain" }, { word: "もう", definition: "Sudah" },
-                { word: "まだ", definition: "Belum" }, { word: "これから", definition: "Mulai dari sekarang" }, { word: "すてきですね", definition: "Bagus / Indah ya" }, { word: "いらっしゃい", definition: "Selamat datang" },
+                { word: "まだ", definition: "Belum" }, { word: "これから", definition: "Mulai dari sekarang" }, { word: "すてきですね", definition: "Bagus / indah ya" }, { word: "いらっしゃい", definition: "Selamat datang" },
                 { word: "どうぞおあがりください", definition: "Silakan masuk" }, { word: "しつれいします", definition: "Permisi" }, { word: "いかがですか", definition: "Bagaimana?" }, { word: "いただきます", definition: "Selamat makan" },
                 { word: "ごちそうさまでした", definition: "Terima kasih atas hidangannya" }, { word: "スペイン", definition: "Spanyol" }, { word: "かぞく", definition: "Keluarga" }, { word: "そぼ", definition: "Nenek" },
                 { word: "そふ", definition: "Kakek" }, { word: "そふぼ", definition: "Kakek nenek" }
             ],
             8: [
-                { word: "ハンサム", definition: "Tampan / Gagah" }, { word: "きれい", definition: "Cantik / Bersih" }, { word: "しずか", definition: "Sunyi / Tenang" }, { word: "にぎやか", definition: "Ramai" },
+                { word: "ハンサム", definition: "Tampan / gagah" }, { word: "きれい", definition: "Cantik / bersih" }, { word: "しずか", definition: "Sunyi / tenang" }, { word: "にぎやか", definition: "Ramai" },
                 { word: "ゆうめい", definition: "Terkenal" }, { word: "しんせつ", definition: "Baik hati" }, { word: "げんき", definition: "Sehat" }, { word: "ひま", definition: "Senggang" },
                 { word: "べんり", definition: "Praktis" }, { word: "すてき", definition: "Bagus" }, { word: "おおきい", definition: "Besar" }, { word: "ちいさい", definition: "Kecil" },
-                { word: "あたらしい", definition: "Baru" }, { word: "ふるい", definition: "Lama / Tua" }, { word: "いい", definition: "Baik / Bagus" }, { word: "わるい", definition: "Jelek" },
-                { word: "あつい", definition: "Panas" }, { word: "さむい", definition: "Dingin (suhu)" }, { word: "つめたい", definition: "Dingin (benda)" }, { word: "むずかしい", definition: "Sulit" },
-                { word: "やさしい", definition: "Mudah" }, { word: "たかい", definition: "Mahal / Tinggi" }, { word: "やすい", definition: "Murah" }, { word: "ひくい", definition: "Rendah" },
+                { word: "あたらしい", definition: " Baru" }, { word: "ふるい", definition: "Lama / tua" }, { word: "いい", definition: "Baik / bagus" }, { word: "わるい", definition: "Jelek" },
+                { word: "あつい", definition: "Panas" }, { word: "さむい", definition: "Dingin suhu" }, { word: "つめたい", definition: "Dingin benda" }, { word: "むずかしい", definition: "Sulit" },
+                { word: "やさしい", definition: "Mudah" }, { word: "たかい", definition: "Mahal / tinggi" }, { word: "やすい", definition: "Murah" }, { word: "ひくい", definition: "Rendah" },
                 { word: "おもしろい", definition: "Menarik" }, { word: "おいしい", definition: "Enak" }, { word: "いそがしい", definition: "Sibuk" }, { word: "たのしい", definition: "Senang" },
                 { word: "しろい", definition: "Putih" }, { word: "くろい", definition: "Hitam" }, { word: "あかい", definition: "Merah" }, { word: "あおい", definition: "Biru" },
                 { word: "さくら", definition: "Sakura" }, { word: "やま", definition: "Gunung" }, { word: "まち", definition: "Kota" }, { word: "たべもの", definition: "Makanan" },
                 { word: "ところ", definition: "Tempat" }, { word: "りょう", definition: "Asrama" }, { word: "レストラン", definition: "Restoran" }, { word: "せいかつ", definition: "Kehidupan" },
-                { word: "しごと", definition: "Pekerjaan" }, { word: "どう", definition: "Bagaimana?" }, { word: "どんな", definition: "Yang bagaimana?" }, { word: "とても", definition: "Sangat / Sekali" },
-                { word: "amari", definition: "Tidak begitu" }, { word: "soshite", definition: "Kemudian" }, { word: "ga", definition: "Tetapi" }, { word: "ogenki desu ka", definition: "Apa kabar?" },
-                { word: "sou desu ne", definition: "Bagaimana ya?" }, { word: "mou ippai ikaga desu ka", definition: "Mau nambah secangkir lagi?" }, { word: "kekkou desu", definition: "Cukup" }, { word: "sorosoro shitsurei shimasu", definition: "Maaf saya pamit dulu" },
-                { word: "iie", definition: "Sama-sama" }, { word: "mata irasshatte kudasai", definition: "Silakan datang lagi" }
+                { word: "しごと", definition: "Pekerjaan" }, { word: "どう", definition: "Bagaimana?" }, { word: "どんな", definition: "Yang bagaimana?" }, { word: "とても", definition: "Sangat / sekali" },
+                { word: "あまり", definition: "Tidak begitu" }, { word: "そして", definition: "Kemudian" }, { word: "が", definition: "Tetapi" }, { word: "おげんきですか", definition: "Apa kabar?" },
+                { word: "そうですね", definition: "Bagaimana ya?" }, { word: "もういっぱいいかがですか", definition: "Mau nambah secangkir lagi?" }, { word: "けっこうです", definition: "Cukup" }, { word: "そろそろしつれいします", definition: "Maaf saya pamit dulu" },
+                { word: "いいえ", definition: "Sama-sama" }, { word: "またいらっしゃってください", definition: "Silakan datang lagi" }
             ],
             9: [
-                { word: "わかります", definition: "Mengerti" }, { word: "あります", definition: "Ada / Mempunyai" }, { word: "すき", definition: "Suka / Gemar" }, { word: "きらい", definition: "Benci" },
-                { word: "jouzu", definition: "Pandai" }, { word: "heta", definition: "Tidak pandai" }, { word: "nomimono", definition: "Minuman" }, { word: "ryouri", definition: "Masakan" },
-                { word: "supootsu", definition: "Olahraga" }, { word: "yakyuu", definition: "Baseball" }, { word: "dansu", definition: "Dansa" }, { word: "ryokou", definition: "Tamasya" },
-                { word: "ongaku", definition: "Musik" }, { word: "uta", definition: "Lagu" }, { word: "kurashikku", definition: "Klasik" }, { word: "jazu", definition: "Jazz" },
-                { word: "konsaato", definition: "Konser" }, { word: "karaoke", definition: "Karaoke" }, { word: "kabuki", definition: "Kabuki" }, { word: "e", definition: "Gambar" },
-                { word: "ji", definition: "Huruf" }, { word: "kanji", definition: "Kanji" }, { word: "hiragana", definition: "Hiragana" }, { word: "katakana", definition: "Katakana" },
-                { word: "roomaji", definition: "Huruf Latin" }, { word: "komakai okane", definition: "Uang kecil" }, { word: "chiketto", definition: "Tiket" }, { word: "jikan", definition: "Waktu" },
-                { word: "youji", definition: "Urusan" }, { word: "yakusoku", definition: "Janji" }, { word: "arubaito", definition: "Paruh waktu" }, { word: "goshujin", definition: "Suami orang lain" },
-                { word: "shujin", definition: "Suami" }, { word: "okusan", definition: "Istri orang lain" }, { word: "tsuma", definition: "Istri" }, { word: "kodomo", definition: "Anak" },
-                { word: "yoku", definition: "Dengan baik" }, { word: "daitai", definition: "Kira-kira" }, { word: "takusan", definition: "Banyak" }, { word: "sukoshi", definition: "Sedikit" },
-                { word: "zenzen", definition: "Sama sekali" }, { word: "hayaku", definition: "Cepat" }, { word: "から", definition: "Karena" }, { word: "doushite", definition: "Kenapa" },
-                { word: "kashite kudasai", definition: "Tolong pinjamkan" }, { word: "ii desu yo", definition: "Boleh" }, { word: "zannen desu", definition: "Sayang sekali" }, { word: "issho ni ikaga desu ka", definition: "Bagaimana kalau bersama" },
-                { word: "chotto", definition: "Tidak bisa" }, { word: "dame desu ka", definition: "Tidak bisa ya" }, { word: "mata kondo onegaishimasu", definition: "Lain kali saja" }, { word: "oo", definition: "Ah / Oh" }
+                { word: "わかります", definition: "Mengerti" }, { word: "あります", definition: "Ada / mempunyai" }, { word: "すき", definition: "Suka, gemar" }, { word: "きらい", definition: "Benci" },
+                { word: "じょうず", definition: "Pandai" }, { word: "へた", definition: "Tidak pandai" }, { word: "のみもの", definition: "Minuman" }, { word: "りょうり", definition: "Masakan" },
+                { word: "スポーツ", definition: "Olahraga" }, { word: "やきゅう", definition: "Baseball" }, { word: "ダンス", definition: "Dansa" }, { word: "りょこう", definition: "Tamasya" },
+                { word: "おんがく", definition: "Musik" }, { word: "うた", definition: "Lagu" }, { word: "クラシック", definition: "Klasik" }, { word: "ジャズ", definition: "Jazz" },
+                { word: "コンサート", definition: "Konsert" }, { word: "カラオケ", definition: "Karaoke" }, { word: "かぶき", definition: "Kabuki" }, { word: "え", definition: "Gambar" },
+                { word: "じ", definition: "Huruf" }, { word: "かんじ", definition: "Kanji" }, { word: "ひらがな", definition: "Hiragana" }, { word: "カタカナ", definition: "Katakana" },
+                { word: "ローマじ", definition: "Huruf latin" }, { word: "こまかいおかね", definition: "Uang kecil" }, { word: "チケット", definition: "Tiket" }, { word: "じかん", definition: "Waktu" },
+                { word: "ようじ", definition: "Urusan" }, { word: "やくそく", definition: "Janji" }, { word: "アルバイト", definition: "Kerja paruh waktu" }, { word: "ごしゅじん", definition: "Suami orang lain" },
+                { word: "しゅじん", definition: "Suami" }, { word: "おくさん", definition: "Istri orang lain" }, { word: "つま", definition: "Istri" }, { word: "こども", definition: "Anak" },
+                { word: "よく", definition: "Dengan baik" }, { word: "だいたい", definition: "Kira-kira" }, { word: "たくさん", definition: "Banyak" }, { word: "すこし", definition: "Sedikit" },
+                { word: "ぜんぜん", definition: "Sama sekali" }, { word: "はやく", definition: "Dengan cepat" }, { word: "から", definition: "Karena" }, { word: "どうして", definition: "Kenapa" },
+                { word: "かしてください", definition: "Tolong pinjamkan" }, { word: "いいですよ", definition: "Boleh" }, { word: "ざんねんです", definition: "Sayang sekali" }, { word: "いっしょにいかがですか", definition: "Bagaimana kalau bersama-sama" },
+                { word: "ちょっと", definition: "Maaf, saya tidak bisa" }, { word: "だめですか", definition: "Tidak bisa ya" }, { word: "またこんどおねがいします", definition: "Lain kali saja" }, { word: "おお", definition: "Ah / Oh" }
             ],
             10: [
-                { word: "ATM", definition: "ATM" }, { word: "コンビニ", definition: "Toko 24 jam" }, { word: "こうえん", definition: "Taman" }, { word: "kissaten", definition: "Coffee shop" },
-                { word: "ya", definition: "Toko ～" }, { word: "noriba", definition: "Tempat naik" }, { word: "ken", definition: "Prefektur" }, { word: "ue", definition: "Atas" },
-                { word: "shita", definition: "Bawah" }, { word: "mae", definition: "Depan" }, { word: "ushiro", definition: "Belakang" }, { word: "migi", definition: "Kanan" },
-                { word: "hidari", definition: "Kiri" }, { word: "naka", definition: "Dalam" }, { word: "soto", definition: "Luar" }, { word: "tonari", definition: "Samping" },
-                { word: "chikaku", definition: "Dekat" }, { word: "aida", definition: "Antara" }, { word: "doumo sumimasen", definition: "Maaf / Terima kasih banyak" }, { word: "nanpuraa", definition: "Kecap ikan" },
-                { word: "koonaa", definition: "Bagian penjualan" }, { word: "ichiban shita", definition: "Paling bawah" }, { word: "genkan", definition: "Pintu masuk" }, { word: "furoba", definition: "Kamar mandi" },
-                { word: "senmenjo", definition: "Tempat cuci tangan" }, { word: "daidokoro", definition: "Dapur" }, { word: "shokudou", definition: "Kantin" }, { word: "ima", definition: "Ruang tamu" },
-                { word: "shinshitsu", definition: "Kamar tidur" }, { word: "rouka", definition: "Koridor" }, { word: "beranda", definition: "Teras" }, { word: "あります", definition: "Ada (benda mati)" },
-                { word: "います", definition: "Ada (benda hidup)" }, { word: "iroiro", definition: "Berbagai" }, { word: "otoko no hito", definition: "Orang laki-laki" }, { word: "onna no hito", definition: "Orang perempuan" },
-                { word: "otoko no ko", definition: "Anak laki-laki" }, { word: "onna no ko", definition: "Anak perempuan" }, { word: "いぬ", definition: "Anjing" }, { word: "ねこ", definition: "Kucing" },
-                { word: "panda", definition: "Panda" }, { word: "zou", definition: "Gajah" }, { word: "ki", definition: "Pohon" }, { word: "mono", definition: "Barang" },
-                { word: "denchi", definition: "Baterai" }, { word: "hako", definition: "Kotak" }, { word: "suicchi", definition: "Saklar" }, { word: "reizouko", definition: "Kulkas" },
-                { word: "teeburu", definition: "Meja makan" }, { word: "beddo", definition: "Tempat tidur" }, { word: "tana", definition: "Lemari" }, { word: "doa", definition: "Pintu" },
-                { word: "mado", definition: "Jendela" }, { word: "posuto", definition: "Kotak surat" }, { word: "biru", definition: "Gedung" }
+                { word: "ATM", definition: "ATM" }, { word: "コンビニ", definition: "Toko 24 jam" }, { word: "こうえん", definition: "Taman" }, { word: "きっさてん", definition: "Coffee shop / cafe" },
+                { word: "や", definition: "Toko ～" }, { word: "のりば", definition: "Tempat naik" }, { word: "けん", definition: "Prefektur" }, { word: "うえ", definition: "Atas" },
+                { word: "した", definition: "Bawah" }, { word: "まえ", definition: "Depan" }, { word: "うしろ", definition: "Belakang" }, { word: "みぎ", definition: "Kanan" },
+                { word: "ひだり", definition: "Kiri" }, { word: "なか", definition: "Dalam" }, { word: "そと", definition: "Luar" }, { word: "となり", definition: "Samping / sebelah" },
+                { word: "ちかく", definition: "Dekat" }, { word: "あいだ", definition: "Antara" }, { word: "どうもすみません", definition: "Maaf / terima kasih banyak" }, { word: "ナンプラー", definition: "Kecap ikan" },
+                { word: "コーナー", definition: "Tempat / bagian penjualan" }, { word: "いちばんした", definition: "Paling bawah" }, { word: "げんかん", definition: "Pintu masuk" }, { word: "ふろば", definition: "Kamar mandi" },
+                { word: "せんめんじょ", definition: "Tempat cuci tangan" }, { word: "だいどころ", definition: "Dapur" }, { word: "しょくどう", definition: "Kantin / ruang makan" }, { word: "いま", definition: "Ruang tamu" },
+                { word: "しんしつ", definition: "Kamar tidur" }, { word: "ろうか", definition: "Koridor" }, { word: "ベランダ", definition: "Teras" }, { word: "あります", definition: "Ada (benda mati)" },
+                { word: "います", definition: "Ada (benda hidup)" }, { word: "いろいろ", definition: "Berbagai / macam-macam" }, { word: "おとこのひと", definition: "Orang laki-laki" }, { word: "おんなのひと", definition: "Orang perempuan" },
+                { word: "おとこのこ", definition: "Anak laki-laki" }, { word: "おんなのこ", definition: "Anak perempuan" }, { word: "いぬ", definition: "Anjing" }, { word: "ねこ", definition: "Kucing" },
+                { word: "パンダ", definition: "Panda" }, { word: "ぞう", definition: "Gajah" }, { word: "き", definition: "Pohon" }, { word: "もの", definition: "Barang" },
+                { word: "でんち", definition: "Baterai" }, { word: "はこ", definition: "Kotak" }, { word: "スイッチ", definition: "Saklar" }, { word: "れいぞうこ", definition: "Kulkas" },
+                { word: "テーブル", definition: "Meja makan" }, { word: "ベッド", definition: "Tempat tidur" }, { word: "たな", definition: "Lemari" }, { word: "ドア", definition: "Pintu" },
+                { word: "まど", definition: "Jendela" }, { word: "ポスト", definition: "Kotak surat" }, { word: "ビル", definition: "Gedung" }
             ],
             11: [
-                { word: "います", definition: "Ada / Mempunyai" }, { word: "かかります", definition: "Memerlukan waktu" }, { word: "やすみます", definition: "Libur / Tidak masuk" }, { word: "ひとつ", definition: "1 buah" },
+                { word: "います", definition: "Ada / mempunyai" }, { word: "かかります", definition: "Memerlukan waktu" }, { word: "やすみます", definition: "Tidak masuk kerja / libur" }, { word: "ひとつ", definition: "1 buah" },
                 { word: "ふたつ", definition: "2 buah" }, { word: "みっつ", definition: "3 buah" }, { word: "よっつ", definition: "4 buah" }, { word: "いつつ", definition: "5 buah" },
-                { word: "むっつ", definition: "6 buah" }, { word: "ななつ", definition: "7 buah" }, { word: "やっつ", definition: "8 buah" }, { word: "kokonotsu", definition: "9 buah" },
-                { word: "too", definition: "10 buah" }, { word: "ikutsu", definition: "Berapa buah?" }, { word: "hitori", definition: "1 orang" }, { word: "futari", definition: "2 orang" },
-                { word: "nin", definition: "～ orang" }, { word: "dai", definition: "～ unit" }, { word: "mai", definition: "～ lembar" }, { word: "kai", definition: "～ kali" },
-                { word: "ringo", definition: "Apel" }, { word: "mikan", definition: "Jeruk" }, { word: "sandoicchi", definition: "Sandwich" }, { word: "karee", definition: "Kare" },
-                { word: "aisukuriimu", definition: "Es krim" }, { word: "kitte", definition: "Perangko" }, { word: "hagaki", definition: "Kartu pos" }, { word: "fuutou", definition: "Amplop" },
-                { word: "gaikoku", definition: "Luar negeri" }, { word: "ryuugakusei", definition: "Pelajar asing" }, { word: "kurasu", definition: "Kelas" }, { word: "jikan", definition: "～ jam" },
-                { word: "shuukan", definition: "～ minggu" }, { word: "kagetsu", definition: "～ bulan" }, { word: "nen", definition: "～ tahun" }, { word: "gurai", definition: "Kira-kira ～" },
-                { word: "donokurai", definition: "Berapa lama?" }, { word: "zenbu de", definition: "Semuanya" }, { word: "minna", definition: "Semua" }, { word: "dake", definition: "Hanya ～" },
-                { word: "kashikomarimashita", definition: "Baik / Mengerti" }, { word: "ii tenki desu ne", definition: "Cuacanya bagus ya" }, { word: "odekake desu ka", definition: "Mau keluar?" }, { word: "itterasshai", definition: "Hati-hati" },
-                { word: "itte kimasu", definition: "Saya berangkat" }, { word: "funabin", definition: "Pos laut" }, { word: "koukuubin", definition: "Pos udara" }, { word: "eameeru", definition: "Pos udara" },
-                { word: "oosutoraria", definition: "Australia" }, { word: "onegaishimasu", definition: "Tolong" }
+                { word: "むっつ", definition: "6 buah" }, { word: "ななつ", definition: "7 buah" }, { word: "やっつ", definition: "8 buah" }, { word: "ここのつ", definition: "9 buah" },
+                { word: "とお", definition: "10 buah" }, { word: "いくつ", definition: "Berapa buah ?" }, { word: "ひとり", definition: "1 orang" }, { word: "ふたり", definition: "2 orang" },
+                { word: "にん", definition: "～ orang" }, { word: "だい", definition: "～ unit" }, { word: "まい", definition: "～ lembar" }, { word: "かい", definition: "～ kali" },
+                { word: "りんご", definition: "Apel" }, { word: "みかん", definition: "Jeruk" }, { word: "サンドイッチ", definition: "Sandwich" }, { word: "カレー", definition: "Kare" },
+                { word: "アイスクリーム", definition: "Es krim" }, { word: "きって", definition: "Perangko" }, { word: "はがき", definition: "Kartu pos" }, { word: "ふうとう", definition: "Amplop" },
+                { word: "がいこく", definition: "Luar negeri" }, { word: "りゅうがくせい", definition: "Pelajar asing" }, { word: "クラス", definition: "Kelas" }, { word: "じかん", definition: "～ jam" },
+                { word: "しゅうかん", definition: "～ minggu" }, { word: "かげつ", definition: "～ bulan" }, { word: "ねん", definition: "～ tahun" }, { word: "ぐらい", definition: "Kira-kira ～" },
+                { word: "どのくらい", definition: "Berapa lama ?" }, { word: "ぜんぶで", definition: "Semuanya" }, { word: "みんな", definition: "Semua" }, { word: "だけ", definition: "Hanya ～" },
+                { word: "かしこまりました", definition: "Baik / mengerti" }, { word: "いいてんきですね", definition: "Cuacanya bagus ya..." }, { word: "おでかけですか", definition: "Mau keluar ?" }, { word: "いってらっしゃい", definition: "Hati-hati (berangkarnya)" },
+                { word: "いってきます", definition: "Saya berangkat" }, { word: "ふなびん", definition: "Pos laut" }, { word: "こうくうびん", definition: "Pos udara" }, { word: "エアメール", definition: "Pos udara" },
+                { word: "オーストラリア", definition: "Australia" }, { word: "おねがいします", definition: "Tolong" }
             ],
             12: [
-                { word: "かんたん", definition: "Mudah / Gampang" }, { word: "ちかい", definition: "Dekat" }, { word: "とおい", definition: "Jauh" }, { word: "はやい", definition: "Cepat" },
-                { word: "osoi", definition: "Lambat" }, { word: "ooi", definition: "Banyak" }, { word: "sukunai", definition: "Sedikit" }, { word: "atatakai", definition: "Hangat" },
-                { word: "suzushii", definition: "Sejuk" }, { word: "amai", definition: "Manis" }, { word: "karai", definition: "Pedas" }, { word: "omoi", definition: "Berat" },
-                { word: "karui", definition: "Ringan" }, { word: "ii", definition: "Lebih baik" }, { word: "kisetsu", definition: "Musim" }, { word: "tenki", definition: "Cuaca" },
-                { word: "ame", definition: "Hujan" }, { word: "yuki", definition: "Salju" }, { word: "kumori", definition: "Mendung" }, { word: "hoteru", definition: "Hotel" },
-                { word: "kuukou", definition: "Bandara" }, { word: "umi", definition: "Laut" }, { word: "sekai", definition: "Dunia" }, { word: "paatii", definition: "Pesta" },
-                { word: "matsuri", definition: "Perayaan" }, { word: "remon", definition: "Lemon" }, { word: "ikebana", definition: "Seni merangkai bunga" }, { word: "momiji", definition: "Maple" },
-                { word: "dochira", definition: "Yang mana" }, { word: "dochira mo", definition: "Dua-duanya" }, { word: "ichiban", definition: "Yang paling" }, { word: "zutto", definition: "Selamanya" },
-                { word: "hajimete", definition: "Pertama kali" }, { word: "tadaima", definition: "Saya pulang" }, { word: "okaerinasai", definition: "Sudah pulang ya" }, { word: "waa, sugoi hito desu ne", definition: "Wah banyak orang" },
-                { word: "tsukaremashita", definition: "Capek / Lelah" }, { word: "honkon", definition: "Hongkong" }, { word: "shingapooru", definition: "Singapura" }, { word: "meisho", definition: "Tempat terkenal" },
-                { word: "sukiyaki", definition: "Sukiyaki" }, { word: "sashimi", definition: "Sashimi" }, { word: "sushi", definition: "Sushi" }, { word: "tenpura", definition: "Tempura" }
+                { word: "かんたん", definition: "Mudah, gampang" }, { word: "ちかい", definition: "Dekat" }, { word: "とおい", definition: "Jauh" }, { word: "はやい", definition: "Cepat" },
+                { word: "おそい", definition: "Lambat" }, { word: "おおい", definition: "Banyak" }, { word: "すくない", definition: "Sedikit" }, { word: "あたたかい", definition: "Hangat" },
+                { word: "すずしい", definition: "Sejuk" }, { word: "あまい", definition: "Manis" }, { word: "からい", definition: "Pedas" }, { word: "おもい", definition: "Berat" },
+                { word: "かるい", definition: "Ringan" }, { word: "いい", definition: "Lebih baik" }, { word: "きせつ", definition: "Musim" }, { word: "てんき", definition: "Cuaca" },
+                { word: "あめ", definition: "Hujan" }, { word: "ゆき", definition: "Salju" }, { word: "くもり", definition: "Mendung" }, { word: "ホテル", definition: "Hotel" },
+                { word: "くうこう", definition: "Bandara" }, { word: "うみ", definition: "Laut" }, { word: "せかい", definition: "Dunia" }, { word: "パーティー", definition: "Pesta" },
+                { word: "まつり", definition: "Perayaan" }, { word: "レモン", definition: "Lemon" }, { word: "いけばな", definition: "Seni merangkai bunga" }, { word: "もみじ", definition: "Maple" },
+                { word: "どちら", definition: "Yang mana" }, { word: "どちらも", definition: "Dua-duanya / yang mana saja" }, { word: "いちばん", definition: "Yang paling" }, { word: "ずっと", definition: "Selamanya" },
+                { word: "はじめて", definition: "Pertama kali" }, { word: "ただいま", definition: "Saya pulang / saya kembali" }, { word: "おかえりなさい", definition: "Sudah pulang ya..." }, { word: "わあ、すごいひとですね", definition: "Wah...banyak orang" },
+                { word: "つかれました", definition: "Capek / lelah" }, { word: "ホンコン", definition: "Hongkong" }, { word: "シンガポール", definition: "Singapura" }, { word: "めいしょ", definition: "Tempat terkenal" },
+                { word: "すきやき", definition: "Sukiyaki (daging sapi & sayur)" }, { word: "さしみ", definition: "Sashimi (ikan mentah)" }, { word: "すし", definition: "Sushi (nasi cuka & ikan)" }, { word: "てんぷら", definition: "Tempura (gorengan tepung)" }
             ],
             13: [
                 { word: "あそびます", definition: "Bermain" }, { word: "およぎます", definition: "Berenang" }, { word: "むかえます", definition: "Menjemput" }, { word: "つかれます", definition: "Lelah" },
-                { word: "kekkon shimasu", definition: "Menikah" }, { word: "kaimono shimasu", definition: "Berbelanja" }, { word: "shokuji shimasu", definition: "Makan bersama" }, { word: "sanpo shimasu", definition: "Jalan-jalan" },
-                { word: "taihen", definition: "Susah / Berat" }, { word: "hoshii", definition: "Ingin" }, { word: "hiroi", definition: "Luas" }, { word: "semai", definition: "Sempit" },
-                { word: "puuru", definition: "Kolam renang" }, { word: "kawa", definition: "Sungai" }, { word: "bijutsu", definition: "Seni" }, { word: "tsuri", definition: "Pancing / Memancing" },
-                { word: "sukii", definition: "Ski" }, { word: "shuumatsu", definition: "Akhir pekan" }, { word: "oshougatsu", definition: "Tahun baru" }, { word: "goro", definition: "Kira-kira / Sekitar" },
-                { word: "nanika", definition: "Sesuatu" }, { word: "dokoka", definition: "Suatu tempat" }, { word: "nodo ga kawakimasu", definition: "Haus" }, { word: "onaka ga sukimasu", definition: "Lapar" },
-                { word: "sou shimashou", definition: "Ya ayo" }, { word: "gochuumon wa", definition: "Mau pesan apa?" }, { word: "omachi kudasai", definition: "Tunggu sebentar" }, { word: "betsubetsu ni", definition: "Sendiri-sendiri" },
-                { word: "hakubutsukan", definition: "Museum" }, { word: "bijutsukan", definition: "Gedung kesenian" }, { word: "toshokan", definition: "Perpustakaan" }, { word: "eigakan", definition: "Bioskop" },
-                { word: "doubutsuen", definition: "Kebun binatang" }, { word: "shokubutsuen", definition: "Kebun raya" }, { word: "otera", definition: "Kuil Budha" }
+                { word: "けっこんします", definition: "Menikah" }, { word: "かいものします", definition: "Berbelanja" }, { word: "しょくじします", definition: "Makan bersama" }, { word: "さんぼします", definition: "Jalan-jalan" },
+                { word: "たいへん", definition: "Susah, berat" }, { word: "ほしい", definition: "Ingin" }, { word: "ひろい", definition: "Luas" }, { word: "せまい", definition: "Sempit" },
+                { word: "プール", definition: "Kolam renang" }, { word: "かわ", definition: "Sungai" }, { word: "びじゅつ", definition: "Seni" }, { word: "つり", definition: "Pancing, memancing" },
+                { word: "スキー", definition: "Ski" }, { word: "しゅうまつ", definition: "Akhir pekan" }, { word: "おしょうがつ", definition: "Tahun baru" }, { word: "ごろ", definition: "Kira-kira, sekitar" },
+                { word: "なにか", definition: "Sesuatu" }, { word: "どこか", definition: "Suatu tempat" }, { word: "のどがかわきます", definition: "Haus" }, { word: "おなかがすきます", definition: "Lapar" },
+                { word: "そうしましょう", definition: "Ya ayo" }, { word: "ごちゅうもんは", definition: "Mau pesan apa?" }, { word: "おまちください", definition: "Tunggu sebentar" }, { word: "べつべつに", definition: "Sendiri-sendiri / masing-masing" },
+                { word: "はくぶつかん", definition: "Museum" }, { word: "びじゅつかん", definition: "Gedung kesenian" }, { word: "としょかん", definition: "Perpustakaan" }, { word: "えいがかん", definition: "Bioskop" },
+                { word: "どうぶつえん", definition: "Kebun binatang" }, { word: "しょくぶつえん", definition: "Kebun raya" }, { word: "おてら", definition: "Kuil budha" }
             ],
             14: [
-                { word: "つけます", definition: "Menyalakan / Memasang" }, { word: "けします", definition: "Mematikan / Memadamkan" }, { word: "あけます", definition: "Membuka" }, { word: "しめます", definition: "Menutup" },
-                { word: "isogimasu", definition: "Buru-buru" }, { word: "machimasu", definition: "Menunggu" }, { word: "mochimasu", definition: "Membawa" }, { word: "torimasu", definition: "Mengambil" },
-                { word: "tetsudaimasu", definition: "Membantu" }, { word: "yobimasu", definition: "Memanggil" }, { word: "hanashimasu", definition: "Berbicara" }, { word: "tsukaimasu", definition: "Memakai" },
-                { word: "tomemasu", definition: "Menghentikan" }, { word: "misemasu", definition: "Memperlihatkan" }, { word: "oshiemasu", definition: "Memberitahu" }, { word: "suwarimasu", definition: "Duduk" },
-                { word: "たちます", definition: "Berdiri" }, { word: "hairimasu", definition: "Masuk" }, { word: "demasu", definition: "Keluar" }, { word: "furimasu", definition: "Turun hujan" },
-                { word: "kopii shimasu", definition: "Memfotokopi" }, { word: "denki", definition: "Listrik / Lampu" }, { word: "eakon", definition: "AC" }, { word: "basupooto", definition: "Paspor" },
-                { word: "namae", definition: "Nama" }, { word: "juusho", definition: "Alamat" }, { word: "chizu", definition: "Peta" }, { word: "shio", definition: "Garam" },
-                { word: "satou", definition: "Gula" }, { word: "mondai", definition: "Masalah / Soal" }, { word: "kotae", definition: "Jawaban" }, { word: "yomikata", definition: "Cara membaca" },
-                { word: "kata", definition: "Cara ～" }, { word: "massugu", definition: "Lurus" }, { word: "yukkuri", definition: "Pelan-pelan" }, { word: "sugu", definition: "Segera / Langsung" },
-                { word: "mata", definition: "Lagi" }, { word: "ato de", definition: "Nanti" }, { word: "mou sukoshi", definition: "Sedikit lagi" }, { word: "mou", definition: "～ lagi" },
-                { word: "saa", definition: "Mari" }, { word: "are?", definition: "Ah (heran)" }, { word: "kore de onegai shimasu", definition: "Minta dengan ini" }, { word: "otsuri", definition: "Kembalian" },
-                { word: "kippu uriba", definition: "Loket penjualan karcis" }, { word: "jidou kenbaiki", definition: "Mesin karcis otomatis" }, { word: "seisanki", definition: "Alat penghitung otomatis" }, { word: "kaisatsuguchi", definition: "Pintu pemeriksaan karcis" },
-                { word: "deguchi", definition: "Pintu keluar" }, { word: "iriguchi", definition: "Pintu masuk" }
+                { word: "つけます", definition: "Menyalakan, memasang, menghidupkan" }, { word: "けします", definition: "Mematikan, memadamkan" }, { word: "あけます", definition: "Membuka" }, { word: "しめます", definition: "Menutup" },
+                { word: "いそぎます", definition: "Buru-buru" }, { word: "まちます", definition: "Menunggu" }, { word: "もちます", definition: "Membawa" }, { word: "とります", definition: "Mengambil" },
+                { word: "てつだいます", definition: "Membantu" }, { word: "よびます", definition: "Memanggil" }, { word: "はなします", definition: "Berbicara" }, { word: "つかいます", definition: "Memakai" },
+                { word: "とめます", definition: "Menghentikan" }, { word: "みせます", definition: "Memperlihatkan" }, { word: "おしえます", definition: "Memberitahu" }, { word: "すわります", definition: "Duduk" },
+                { word: "たちます", definition: "Berdiri" }, { word: "はいります", definition: "Masuk" }, { word: "でます", definition: "Keluar" }, { word: "ふります", definition: "Turun hujan" },
+                { word: "コピーします", definition: "Memfotokopi" }, { word: "でんき", definition: "Listrik, lampu" }, { word: "エアコン", definition: "AC" }, { word: "パスポート", definition: "Paspor" },
+                { word: "なまえ", definition: "Nama" }, { word: "じゅうしょ", definition: "Alamat" }, { word: "ちず", definition: "Peta" }, { word: "しお", definition: "Garam" },
+                { word: "さとう", definition: "Gula" }, { word: "もんだい", definition: "Masalah, soal" }, { word: "こたえ", definition: "Jawaban" }, { word: "よみかた", definition: "Cara membaca" },
+                { word: "かた", definition: "Cara～" }, { word: "まっすぐ", definition: "Lurus" }, { word: "ゆっくり", definition: "Pelan-pelan, istirahat dengan baik" }, { word: "すぐ", definition: "Segera, langsung" },
+                { word: "また", definition: "Lagi" }, { word: "あとで", definition: "Nanti" }, { word: "もうすこし", definition: "Sedikit lagi" }, { word: "もう", definition: "～lagi" },
+                { word: "さあ", definition: "Mari" }, { word: "あれ？", definition: "Ah {saat heran atau kaget}" }, { word: "これでおねがいします", definition: "Minta dengan ini" }, { word: "おつり", definition: "Kembalian" },
+                { word: "きっぷうりば", definition: "Loket penjualan karcis" }, { word: "じどうけんばいき", definition: "Mesin karcis otomatis" }, { word: "せいさんき", definition: "Alat penghitung otomatis" }, { word: "かいさつぐち", definition: "Pintu pemeriksaan karcis" },
+                { word: "でぐち", definition: "Pintu keluar" }, { word: "いりぐち", definition: "Pintu masuk" }
             ],
             15: [
-                { word: "おきます", definition: "Meletakkan / Menaruh" }, { word: "つくります", definition: "Membuat / Memproduksi" }, { word: "うります", definition: "Menjual" }, { word: "shirimasu", definition: "Mengetahui / Mengenal" },
-                { word: "sumimasu", definition: "Tinggal" }, { word: "kenkyuu shimasu", definition: "Meneliti" }, { word: "shiryou", definition: "Data / Bahan" }, { word: "katarogu", definition: "Katalog" },
-                { word: "jikokuhyou", definition: "Jadwal" }, { word: "fuku", definition: "Baju" }, { word: "seihin", definition: "Produk" }, { word: "sofuto", definition: "Software" },
-                { word: "denshi jisho", definition: "Kamus elektronik" }, { word: "keizai", definition: "Ekonomi" }, { word: "shiyakusho", definition: "Kantor Wali Kota" }, { word: "koukou", definition: "SMA" },
-                { word: "haisha", definition: "Dokter gigi" }, { word: "dokushin", definition: "Bujangan" }, { word: "sumimasen", definition: "Maaf" }, { word: "renshuu", definition: "Latihan" },
-                { word: "minasan", definition: "Semuanya" }, { word: "omoidashimasu", definition: "Teringat" }, { word: "irasshaimasu", definition: "Ada (Hormat)" }
+                { word: "おきます", definition: "Meletakkan, menaruh" }, { word: "つくります", definition: "Membuat, membangun, memproduksi" }, { word: "うります", definition: "Menjual" }, { word: "しります", definition: "Mengetahui, mengenal" },
+                { word: "すみます", definition: "Tinggal" }, { word: "けんきゅうします", definition: "Meneliti" }, { word: "しりょう", definition: "Data, bahan" }, { word: "カタログ", definition: "Katalog" },
+                { word: "じこくひょう", definition: "Jadwal" }, { word: "ふく", definition: "Baju" }, { word: "せいひん", definition: "Produk" }, { word: "ソフト", definition: "Perangkat lunak" },
+                { word: "でんしじしょ", definition: "Kamus elektronik" }, { word: "けいざい", definition: " Ekonomi" }, { word: "しやくしょ", definition: "Kantor wali kota" }, { word: "こうこう", definition: "SMA" },
+                { word: "はいしゃ", definition: "Doktor gigi" }, { word: "どくしん", definition: "Bujangan, belum berkeluarga" }, { word: "すみません", definition: "Maaf" }, { word: "れんしゅう", definition: "Latihan" },
+                { word: "みなさん", definition: "Semuanya, bapak-bapak dan ibu-ibu sekalian" }, { word: "おもいだします", definition: "Teringat" }, { word: "いらっしゃいます", definition: "Ada (Hormat)" }
             ]
         };
 
@@ -383,6 +422,7 @@
         let score = 0;
         let isProcessing = false;
 
+        // Referensi Elemen DOM
         const mainApp = document.getElementById('main-app');
         const menuView = document.getElementById('menu-view');
         const quizView = document.getElementById('quiz-view');
@@ -399,7 +439,6 @@
         const finalScore = document.getElementById('final-score');
         const skipButton = document.getElementById('skip-button');
 
-        // Mengacak urutan soal
         function shuffleArray(array) {
             const shuffled = [...array];
             for (let i = shuffled.length - 1; i > 0; i--) {
@@ -409,26 +448,24 @@
             return shuffled;
         }
 
-        // Menampilkan Menu BAB
         function renderMenu() {
             babList.innerHTML = "";
             for (let i = 1; i <= 15; i++) {
                 const btn = document.createElement('button');
-                btn.className = "bg-white border-2 border-slate-100 p-4 rounded-2xl hover:border-red-500 hover:shadow-md transition-all text-center group active:scale-95";
+                btn.className = "bab-card bg-white border border-slate-100 p-5 rounded-[1.8rem] text-center group active:scale-95 shadow-sm";
                 const hasData = allData[i] && allData[i].length > 0;
                 btn.innerHTML = `
-                    <div class="text-[10px] font-bold text-slate-400 group-hover:text-red-400 mb-1 uppercase tracking-tighter">Materi</div>
-                    <div class="text-lg font-black text-slate-700 group-hover:text-red-600 leading-none">BAB ${i}</div>
-                    <div class="text-[9px] mt-1 ${hasData ? 'text-emerald-500 font-bold' : 'text-slate-300 italic'}">
-                        ${hasData ? allData[i].length + ' Kata' : '(Kosong)'}
+                    <div class="text-[10px] font-bold text-slate-300 group-hover:text-red-400 mb-1 uppercase tracking-[0.2em]">Materi</div>
+                    <div class="text-xl font-extrabold text-slate-700 group-hover:text-red-600 leading-none">BAB ${i}</div>
+                    <div class="text-[9px] mt-2 font-bold px-2 py-0.5 rounded-full inline-block ${hasData ? 'bg-emerald-50 text-emerald-500' : 'bg-slate-50 text-slate-300'}">
+                        ${hasData ? allData[i].length + ' Kata' : 'Kosong'}
                     </div>
                 `;
-                btn.onclick = () => hasData ? startQuiz(i) : alert(`Data BAB ${i} belum tersedia.`);
+                btn.onclick = () => { if (hasData) startQuiz(i); };
                 babList.appendChild(btn);
             }
         }
 
-        // Memulai Kuis BAB
         function startQuiz(babIndex) {
             currentBabIndex = babIndex;
             quizData = shuffleArray(allData[babIndex]);
@@ -444,19 +481,21 @@
             quizView.classList.add('hidden');
             resultView.classList.add('hidden');
             menuView.classList.remove('hidden');
+            userInput.value = "";
             renderMenu();
         }
 
-        // Memuat Pertanyaan
         function loadQuestion() {
             if (currentIndex < quizData.length) {
                 const q = quizData[currentIndex];
                 displayDefinition.innerText = q.definition;
-                userInput.value = ""; userInput.disabled = false; userInput.focus();
+                userInput.value = ""; 
+                userInput.disabled = false; 
+                userInput.focus();
                 isProcessing = false;
                 const progress = (currentIndex / quizData.length) * 100;
                 progressBar.style.width = `${progress}%`;
-                progressText.innerText = `问题 ${currentIndex + 1} / ${quizData.length}`;
+                progressText.innerText = `Soal ${currentIndex + 1} / ${quizData.length}`;
                 scoreText.innerText = `Skor: ${score}`;
                 statusNotif.classList.add('hidden');
                 userInput.classList.remove('border-emerald-500', 'bg-emerald-50', 'border-amber-500', 'bg-amber-50');
@@ -472,7 +511,6 @@
             finalScore.innerText = score;
         }
 
-        // Umpan Balik (Feedback)
         function handleFeedback(isCorrect) {
             isProcessing = true;
             statusNotif.classList.remove('hidden');
@@ -480,36 +518,35 @@
 
             if (isCorrect) {
                 score += 10;
-                notifText.innerText = "正解です！ (Benar)";
-                statusNotif.className = "absolute -top-10 left-0 right-0 font-bold flex items-center justify-center gap-2 fade-in text-emerald-600";
+                notifText.innerText = "Benar! (正解)";
+                statusNotif.className = "absolute -top-12 left-0 right-0 font-bold flex items-center justify-center gap-2 fade-in text-emerald-500";
                 userInput.classList.add('border-emerald-500', 'bg-emerald-50', 'correct-pulse');
             } else {
                 const correct = quizData[currentIndex].word;
                 notifText.innerText = `Jawaban: ${correct}`;
-                statusNotif.className = "absolute -top-10 left-0 right-0 font-bold flex items-center justify-center gap-2 fade-in text-amber-600";
+                statusNotif.className = "absolute -top-12 left-0 right-0 font-bold flex items-center justify-center gap-2 fade-in text-amber-500 font-bold";
                 userInput.value = correct;
                 userInput.classList.add('border-amber-500', 'bg-amber-50');
             }
-            setTimeout(() => { currentIndex++; loadQuestion(); }, isCorrect ? 800 : 1800);
+            setTimeout(() => { currentIndex++; loadQuestion(); }, isCorrect ? 800 : 2200);
         }
 
-        // Event Listeners
         userInput.addEventListener('input', (e) => {
             if (isProcessing) return;
-            const currentAnswer = quizData[currentIndex].word;
-            if (e.target.value.trim() === currentAnswer) handleFeedback(true);
+            if (userInput.value.trim() === quizData[currentIndex].word) {
+                handleFeedback(true);
+            }
         });
 
-        skipButton.addEventListener('click', () => {
-            if (!isProcessing) handleFeedback(false);
-        });
+        skipButton.addEventListener('click', () => { if (!isProcessing) handleFeedback(false); });
 
-        // Inisialisasi awal
         window.addEventListener('load', () => {
-            document.getElementById('app-loading').classList.add('hidden');
-            mainApp.classList.remove('hidden');
-            if (typeof wanakana !== 'undefined') wanakana.bind(userInput);
-            renderMenu();
+            setTimeout(() => {
+                document.getElementById('app-loading').classList.add('hidden');
+                mainApp.classList.remove('hidden');
+                if (typeof wanakana !== 'undefined') wanakana.bind(userInput);
+                renderMenu();
+            }, 500);
         });
     </script>
 </body>
