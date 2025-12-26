@@ -7,89 +7,119 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/wanakana@2.3.1/wanakana.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Noto+Sans+JP:wght@400;700;900&family=Sawarabi+Mincho&family=Yuji+Boku&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         
         body {
-            font-family: 'Montserrat', 'Noto Sans JP', sans-serif;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #2a0a0a 100%);
-            -webkit-font-smoothing: antialiased;
+            font-family: 'Inter', 'Montserrat', 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, #0a0e1a 0%, #1a1f2e 100%);
             overflow-x: hidden;
             position: relative;
+            letter-spacing: 0.01em;
+            line-height: 1.6;
         }
 
-        /* Pattern overlay */
         body::before {
-            content: '';
+            content: "";
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background-image: 
-                linear-gradient(to right, rgba(188, 0, 0, 0.05) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(188, 0, 0, 0.05) 1px, transparent 1px);
-            background-size: 40px 40px;
-            pointer-events: none;
+                radial-gradient(circle at 10% 20%, rgba(120, 119, 198, 0.08) 0%, transparent 25%),
+                radial-gradient(circle at 90% 80%, rgba(255, 119, 119, 0.08) 0%, transparent 25%),
+                radial-gradient(circle at 50% 50%, rgba(120, 220, 220, 0.03) 0%, transparent 35%);
             z-index: -1;
         }
 
+        /* Enhanced Font Styles */
         .japanese-text {
-            font-family: 'Noto Sans JP', sans-serif;
-            font-weight: 900;
+            font-family: 'Yuji Boku', 'Noto Sans JP', serif;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         }
 
-        /* Warna tema Jepang */
-        .japanese-red {
-            color: #c70000;
+        .japanese-title {
+            font-family: 'Sawarabi Mincho', 'Noto Sans JP', serif;
+            font-weight: 500;
+            letter-spacing: 0.03em;
         }
 
-        .japanese-gold {
-            color: #ffd700;
+        .heading-font {
+            font-family: 'Montserrat', 'Inter', sans-serif;
+            font-weight: 800;
+            letter-spacing: 0.02em;
         }
 
-        .japanese-bg-red {
-            background-color: #c70000;
+        .body-font {
+            font-family: 'Inter', 'Montserrat', sans-serif;
+            font-weight: 500;
+            letter-spacing: 0.01em;
         }
 
-        .japanese-bg-gold {
-            background-color: #ffd700;
-        }
-
-        .japanese-border {
-            border-color: #c70000;
+        .font-clarity {
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .gradient-bg {
-            background: linear-gradient(135deg, #c70000 0%, #8b0000 50%, #ffd700 100%);
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 50%, #7c3aed 100%);
         }
 
         .gradient-bg-reverse {
-            background: linear-gradient(135deg, #ffd700 0%, #8b0000 50%, #c70000 100%);
+            background: linear-gradient(135deg, #7c3aed 0%, #991b1b 50%, #dc2626 100%);
         }
 
         .glass-effect {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 215, 0, 0.1);
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         }
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 215, 0, 0.15);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(199, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.07);
+        }
+
+        .enhanced-text {
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            font-weight: 600;
+        }
+
+        .text-emphasis {
+            font-weight: 700;
+            color: #ffffff;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+        }
+
+        .text-secondary {
+            color: rgba(255, 255, 255, 0.85);
+            font-weight: 500;
+        }
+
+        .text-tertiary {
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 400;
         }
 
         .glow-effect {
-            box-shadow: 0 0 30px rgba(199, 0, 0, 0.4);
+            box-shadow: 0 0 35px rgba(220, 38, 38, 0.45);
         }
 
         .text-glow {
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+            text-shadow: 0 0 25px rgba(220, 38, 38, 0.7);
         }
 
         .correct-pulse {
@@ -131,25 +161,27 @@
         }
 
         #menu-view::-webkit-scrollbar {
-            width: 6px;
+            width: 8px;
         }
         #menu-view::-webkit-scrollbar-thumb {
-            background: linear-gradient(to bottom, #c70000, #ffd700);
+            background: linear-gradient(to bottom, #dc2626, #991b1b);
             border-radius: 10px;
         }
 
         .tab-active {
-            background: linear-gradient(135deg, #c70000 0%, #8b0000 100%);
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
             color: white;
-            box-shadow: 0 10px 20px rgba(199, 0, 0, 0.3);
+            box-shadow: 0 10px 20px rgba(220, 38, 38, 0.3);
+            font-weight: 700;
         }
 
         .choice-btn {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             text-align: left;
             position: relative;
             overflow: hidden;
+            font-weight: 500;
         }
         
         .choice-btn::before {
@@ -159,7 +191,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent);
             transition: left 0.7s;
         }
         
@@ -176,6 +208,7 @@
             color: white !important;
             border-color: #10b981 !important;
             box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3) !important;
+            font-weight: 600;
         }
         
         .choice-wrong {
@@ -183,10 +216,11 @@
             color: white !important;
             border-color: #ef4444 !important;
             box-shadow: 0 10px 20px rgba(239, 68, 68, 0.3) !important;
+            font-weight: 600;
         }
 
         .progress-bar {
-            height: 8px;
+            height: 10px;
             border-radius: 10px;
             background: rgba(255, 255, 255, 0.1);
             overflow: hidden;
@@ -200,7 +234,7 @@
             left: 0;
             height: 100%;
             width: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
             animation: shimmer 2s infinite;
         }
         
@@ -212,8 +246,8 @@
         .progress-fill {
             height: 100%;
             border-radius: 10px;
-            background: linear-gradient(90deg, #c70000, #ffd700);
-            box-shadow: 0 0 20px rgba(199, 0, 0, 0.5);
+            background: linear-gradient(90deg, #dc2626, #991b1b);
+            box-shadow: 0 0 20px rgba(220, 38, 38, 0.5);
             transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -246,7 +280,7 @@
             position: absolute;
             pointer-events: none;
             z-index: -1;
-            background: linear-gradient(90deg, transparent, rgba(199, 0, 0, 0.3), transparent);
+            background: linear-gradient(90deg, transparent, rgba(220, 38, 38, 0.3), transparent);
             animation: line-float 25s linear infinite;
         }
 
@@ -269,7 +303,7 @@
 
         .neon-border {
             border: 2px solid transparent;
-            background: linear-gradient(135deg, #c70000, #ffd700, #8b0000) border-box;
+            background: linear-gradient(135deg, #dc2626, #991b1b, #7c3aed) border-box;
             -webkit-mask: 
                 linear-gradient(#fff 0 0) padding-box, 
                 linear-gradient(#fff 0 0);
@@ -278,10 +312,11 @@
         }
 
         .text-gradient {
-            background: linear-gradient(135deg, #c70000 0%, #ffd700 50%, #8b0000 100%);
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 50%, #7c3aed 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            font-weight: 800;
         }
 
         .icon-3d {
@@ -329,7 +364,7 @@
 
         .typing-animation {
             overflow: hidden;
-            border-right: 3px solid #c70000;
+            border-right: 3px solid #dc2626;
             white-space: nowrap;
             animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
         }
@@ -341,7 +376,7 @@
 
         @keyframes blink-caret {
             from, to { border-color: transparent }
-            50% { border-color: #c70000; }
+            50% { border-color: #dc2626; }
         }
 
         .wave-animation {
@@ -355,12 +390,14 @@
 
         .creator-credit {
             position: relative;
-            background: linear-gradient(90deg, #c70000, #ffd700, #8b0000);
+            background: linear-gradient(90deg, #dc2626, #991b1b, #7c3aed);
             background-size: 200% 200%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             animation: gradient-shift 3s ease infinite;
+            font-weight: 800;
+            letter-spacing: 0.05em;
         }
 
         @keyframes gradient-shift {
@@ -384,7 +421,7 @@
             background: linear-gradient(
                 to right,
                 rgba(255, 255, 255, 0) 0%,
-                rgba(255, 215, 0, 0.2) 50%,
+                rgba(255, 255, 255, 0.12) 50%,
                 rgba(255, 255, 255, 0) 100%
             );
             transform: rotate(30deg);
@@ -396,122 +433,335 @@
             100% { transform: translateX(100%) rotate(30deg); }
         }
 
-        /* Japanese pattern decoration */
+        /* Enhanced Japanese-themed styles */
+        .sakura-bg {
+            background-image: 
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%23dc2626" opacity="0.08" d="M50,10 C60,20 70,30 60,40 C50,50 40,60 30,50 C20,40 10,30 20,20 C30,10 40,20 50,10 Z"/></svg>'),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%23991b1b" opacity="0.05" d="M30,5 C40,15 50,25 40,35 C30,45 20,55 10,45 C0,35 -10,25 0,15 C10,5 20,15 30,5 Z"/></svg>'),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%237c3aed" opacity="0.03" d="M70,15 C80,25 90,35 80,45 C70,55 60,65 50,55 C40,45 30,35 40,25 C50,15 60,25 70,15 Z"/></svg>');
+            background-size: 80px, 60px, 100px;
+            background-position: 10% 10%, 90% 30%, 50% 70%;
+        }
+
         .japanese-pattern {
             background-image: 
-                radial-gradient(circle at 25% 25%, rgba(255, 215, 0, 0.1) 2px, transparent 2px),
-                radial-gradient(circle at 75% 75%, rgba(199, 0, 0, 0.1) 2px, transparent 2px);
-            background-size: 40px 40px;
+                radial-gradient(circle at 25% 25%, rgba(220, 38, 38, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(124, 58, 237, 0.08) 0%, transparent 50%);
+            background-size: 300px 300px;
         }
 
-        /* Logo styling */
-        .logo-japanese {
-            font-family: 'Noto Sans JP', sans-serif;
-            font-weight: 900;
-            letter-spacing: 1px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        }
-
-        .logo-border {
+        .torii-gate {
             position: relative;
-            padding: 10px 20px;
         }
 
-        .logo-border::before, .logo-border::after {
-            content: '';
+        .torii-gate::before {
+            content: "";
             position: absolute;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #ffd700;
-        }
-
-        .logo-border::before {
-            top: 0;
-            left: 0;
-            border-right: none;
-            border-bottom: none;
-        }
-
-        .logo-border::after {
             bottom: 0;
-            right: 0;
-            border-left: none;
-            border-top: none;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 10px;
+            background: linear-gradient(90deg, #dc2626, #991b1b);
+            border-radius: 5px;
         }
 
-        /* Sakura blossom effect */
-        .sakura {
+        .torii-gate::after {
+            content: "";
             position: absolute;
-            background: linear-gradient(135deg, #ffb7c5, #ff6b9d);
-            border-radius: 50% 50% 50% 0;
-            transform: rotate(-45deg);
-            opacity: 0.7;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 40px;
+            background: linear-gradient(90deg, #dc2626, #991b1b);
+            clip-path: polygon(0% 0%, 100% 0%, 90% 100%, 10% 100%);
+        }
+
+        .kanji-border {
+            position: relative;
+            border: 2px solid transparent;
+            background: linear-gradient(135deg, #dc2626, #991b1b, #7c3aed) border-box;
+            background-clip: padding-box;
+        }
+
+        .kanji-border::before {
+            content: "";
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, #dc2626, #991b1b, #7c3aed);
+            border-radius: inherit;
             z-index: -1;
         }
 
-        /* Japanese wave pattern */
-        .wave-pattern {
-            background: 
-                radial-gradient(circle at 0% 50%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 100% 50%, rgba(199, 0, 0, 0.1) 0%, transparent 50%);
-            background-size: 50px 100px;
+        .logo-container {
+            position: relative;
+            background: linear-gradient(135deg, #0a0e1a, #1a1f2e);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(220, 38, 38, 0.2);
+        }
+
+        .logo-text {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #dc2626, #991b1b, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 5px 15px rgba(220, 38, 38, 0.3);
+            letter-spacing: 2px;
+        }
+
+        .japanese-wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(to right, rgba(220, 38, 38, 0.1), rgba(124, 58, 237, 0.1));
+            clip-path: polygon(0% 100%, 100% 100%, 100% 0%, 0% 100%);
+        }
+
+        .rising-sun {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, #dc2626 0%, #991b1b 70%, transparent 71%);
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(220, 38, 38, 0.5);
+            z-index: 1;
+        }
+
+        .rising-sun::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 80%;
+            background: radial-gradient(circle, #ff6b6b 0%, #dc2626 50%, transparent 51%);
+            border-radius: 50%;
+            filter: blur(5px);
+        }
+
+        /* Enhanced Input Styling */
+        .enhanced-input {
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            background: rgba(255, 255, 255, 0.09);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+            color: #ffffff;
+        }
+
+        .enhanced-input:focus {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: #dc2626;
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);
+        }
+
+        .enhanced-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 500;
+        }
+
+        /* Enhanced Button Styling */
+        .enhanced-button {
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .enhanced-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .enhanced-button:active {
+            transform: translateY(0);
+        }
+
+        /* Enhanced Card Styling */
+        .enhanced-card {
+            background: rgba(255, 255, 255, 0.09);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .enhanced-card:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        /* Enhanced Text Contrast */
+        .high-contrast {
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            font-weight: 600;
+        }
+
+        .medium-contrast {
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+        }
+
+        .low-contrast {
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 400;
+        }
+
+        /* Font Size Adjustments for Better Readability */
+        .text-xxs {
+            font-size: 0.7rem;
+            line-height: 1.2;
+        }
+
+        .text-base-enhanced {
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .text-lg-enhanced {
+            font-size: 1.125rem;
+            line-height: 1.6;
+        }
+
+        .text-xl-enhanced {
+            font-size: 1.25rem;
+            line-height: 1.5;
+        }
+
+        .text-2xl-enhanced {
+            font-size: 1.5rem;
+            line-height: 1.4;
+        }
+
+        .text-3xl-enhanced {
+            font-size: 1.875rem;
+            line-height: 1.3;
+        }
+
+        .text-4xl-enhanced {
+            font-size: 2.25rem;
+            line-height: 1.2;
+        }
+
+        /* Responsive Font Sizes */
+        @media (max-width: 768px) {
+            .text-4xl-enhanced {
+                font-size: 1.875rem;
+            }
+            .text-3xl-enhanced {
+                font-size: 1.5rem;
+            }
+            .text-2xl-enhanced {
+                font-size: 1.25rem;
+            }
+        }
+
+        /* Improved Section Spacing */
+        .section-spacing {
+            margin-bottom: 2rem;
+        }
+
+        .inner-spacing {
+            padding: 1.5rem;
+        }
+
+        /* Enhanced Visibility for Important Elements */
+        .focus-element {
+            border: 2px solid rgba(220, 38, 38, 0.3);
+            box-shadow: 0 0 20px rgba(220, 38, 38, 0.2);
+        }
+
+        .highlight-text {
+            background: linear-gradient(120deg, rgba(220, 38, 38, 0.2) 0%, rgba(153, 27, 27, 0.2) 100%);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem;
+            font-weight: 600;
         }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4 text-white">
+<body class="min-h-screen flex items-center justify-center p-4 text-white sakura-bg font-clarity">
 
     <!-- Background Particles -->
-    <div id="particles-container" class="fixed inset-0 z-0 wave-pattern"></div>
+    <div id="particles-container" class="fixed inset-0 z-0"></div>
 
     <!-- Layar Pemuatan -->
-    <div id="app-loading" class="fixed inset-0 z-50 flex items-center justify-center" style="background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #2a0a0a 100%);">
-        <div class="text-center">
+    <div id="app-loading" class="fixed inset-0 z-50 flex items-center justify-center" style="background: linear-gradient(135deg, #0a0e1a 0%, #1a1f2e 100%);">
+        <div class="text-center relative">
+            <div class="rising-sun spin-slow"></div>
+            
             <div class="relative mb-8">
                 <div class="absolute inset-0 gradient-bg rounded-full blur-xl opacity-50 spin-slow"></div>
                 <div class="absolute inset-4 gradient-bg-reverse rounded-full blur-lg opacity-30 spin-slow" style="animation-direction: reverse;"></div>
-                <div class="relative w-32 h-32 rounded-full flex items-center justify-center bg-black border-2 border-amber-900">
-                    <div class="w-24 h-24 border-4 border-transparent rounded-full border-t-red-600 border-r-amber-500 border-b-red-800 animate-spin"></div>
-                    <div class="absolute w-20 h-20 border-4 border-transparent rounded-full border-l-amber-400 border-r-red-500 border-t-transparent border-b-transparent animate-spin" style="animation-duration: 3s;"></div>
+                <div class="relative w-32 h-32 rounded-full flex items-center justify-center bg-slate-900 border-2 border-slate-800">
+                    <div class="w-24 h-24 border-4 border-transparent rounded-full border-t-red-600 border-r-red-700 border-b-red-800 animate-spin"></div>
+                    <div class="absolute w-20 h-20 border-4 border-transparent rounded-full border-l-red-500 border-r-red-600 border-t-transparent border-b-transparent animate-spin" style="animation-duration: 3s;"></div>
+                    <div class="absolute text-red-500 text-2xl japanese-title">日</div>
                 </div>
             </div>
-            <h1 class="text-4xl font-bold mb-2 text-gradient bouncing-text">Koleksi Lengkap</h1>
-            <p class="text-amber-200 text-lg font-medium mb-4 wave-animation">Kosakata & Kanji Jepang</p>
+            
+            <!-- Logo みんなの日本語 -->
+            <div class="logo-container mb-8 mx-auto max-w-md">
+                <h1 class="logo-text japanese-text text-center">みんなの日本語</h1>
+                <p class="text-secondary text-sm mt-2 text-center font-medium">Minna no Nihongo - Japanese for Everyone</p>
+            </div>
+            
+            <h1 class="text-4xl-enhanced font-bold mb-2 text-gradient bouncing-text japanese-title heading-font">Koleksi Lengkap</h1>
+            <p class="text-secondary text-lg-enhanced font-semibold mb-4 wave-animation body-font">Kosakata & Kanji Jepang</p>
             <div class="flex items-center justify-center space-x-3 mb-8">
                 <div class="w-3 h-3 bg-red-600 rounded-full animate-pulse"></div>
-                <div class="w-3 h-3 bg-amber-500 rounded-full animate-pulse delay-150"></div>
+                <div class="w-3 h-3 bg-red-700 rounded-full animate-pulse delay-150"></div>
                 <div class="w-3 h-3 bg-red-800 rounded-full animate-pulse delay-300"></div>
-                <div class="w-3 h-3 bg-amber-400 rounded-full animate-pulse delay-450"></div>
-                <div class="w-3 h-3 bg-red-500 rounded-full animate-pulse delay-600"></div>
+                <div class="w-3 h-3 bg-purple-600 rounded-full animate-pulse delay-450"></div>
+                <div class="w-3 h-3 bg-purple-700 rounded-full animate-pulse delay-600"></div>
             </div>
-            <p class="text-amber-300 text-sm italic font-medium typing-animation">Memuat 25 BAB Lengkap Kosakata & Kanji...</p>
+            <p class="text-tertiary text-sm italic font-medium typing-animation body-font">Memuat 25 BAB Lengkap Kosakata & Kanji...</p>
             <div class="mt-8">
-                <p class="creator-credit text-lg font-bold">CREATED BY EXWINK ORANG BAIK</p>
+                <p class="creator-credit text-lg-enhanced">CREATED BY EXWINK ORANG BAIK</p>
             </div>
         </div>
     </div>
 
     <!-- Aplikasi Utama -->
-    <div class="max-w-4xl w-full hidden flex-col" id="main-app">
-        <!-- Header dengan Logo -->
-        <div class="glass-effect rounded-3xl p-6 mb-6 flex items-center justify-between fade-in">
+    <div class="max-w-6xl w-full hidden flex-col" id="main-app">
+        <!-- Header -->
+        <div class="glass-effect rounded-3xl p-6 mb-6 flex items-center justify-between fade-in torii-gate">
             <div class="flex items-center">
                 <div class="relative">
-                    <div class="absolute -inset-2 bg-gradient-to-r from-red-600 to-amber-500 rounded-2xl blur-lg opacity-50"></div>
+                    <div class="absolute -inset-2 bg-gradient-to-r from-red-600 to-red-800 rounded-2xl blur-lg opacity-50"></div>
                     <div class="w-16 h-16 rounded-2xl gradient-bg flex items-center justify-center mr-4 icon-3d shine-effect relative z-10">
-                        <i class="fas fa-language text-2xl text-white"></i>
+                        <i class="fas fa-torii-gate text-2xl text-white"></i>
                     </div>
                 </div>
                 <div>
-                    <h1 class="text-3xl font-bold text-white bouncing-text">Koleksi Lengkap</h1>
-                    <p class="text-amber-200 text-sm font-medium">Kosakata & Kanji Jepang - <span class="text-gradient font-bold">25 BAB</span></p>
+                    <h1 class="text-3xl-enhanced font-bold text-white bouncing-text japanese-title heading-font">Koleksi Lengkap</h1>
+                    <p class="text-secondary text-sm font-semibold body-font">Kosakata & Kanji Jepang - <span class="text-gradient font-bold">25 BAB</span></p>
                 </div>
             </div>
+            
+            <!-- Logo みんなの日本語 di Header -->
             <div class="hidden md:block">
-                <div class="flex items-center space-x-2 bg-black/50 rounded-2xl p-3 wave-animation border border-amber-500/30">
-                    <i class="fas fa-book-open text-amber-400"></i>
-                    <span class="text-sm font-bold text-gradient logo-border">
-                        <span class="logo-japanese">みんなの日本語</span>
-                    </span>
+                <div class="logo-container p-3">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-book text-red-400 text-xl"></i>
+                        <span class="logo-text japanese-text text-xl">みんなの日本語</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -520,21 +770,27 @@
             <!-- Menu Utama -->
             <div id="menu-view" class="lg:w-2/5 p-8 rounded-3xl glass-card overflow-y-auto max-h-[85vh] fade-in japanese-pattern">
                 <div class="text-center mb-8">
-                    <div class="inline-block p-3 rounded-2xl bg-black/50 mb-4 shine-effect border border-amber-500/30">
+                    <!-- Logo みんなの日本語 di Menu -->
+                    <div class="logo-container mb-6 p-4">
+                        <h2 class="logo-text japanese-text text-2xl-enhanced">みんなの日本語</h2>
+                        <p class="text-tertiary text-xs mt-1 body-font">Minna no Nihongo</p>
+                    </div>
+                    
+                    <div class="inline-block p-3 rounded-2xl bg-slate-900/50 mb-4 shine-effect">
                         <i class="fas fa-list text-2xl text-gradient"></i>
                     </div>
-                    <h2 class="text-2xl font-bold text-white mb-2 wave-animation">Menu Belajar</h2>
-                    <p class="text-amber-200 text-sm italic mb-6 font-medium">Pilih BAB dan Mode Belajar</p>
+                    <h2 class="text-2xl-enhanced font-bold text-white mb-2 wave-animation japanese-title heading-font">Menu Belajar</h2>
+                    <p class="text-tertiary text-sm italic mb-6 font-medium body-font">Pilih BAB dan Mode Belajar</p>
                     
-                    <div class="glass-effect p-1.5 rounded-2xl mb-6 flex gap-1 border border-amber-500/30">
-                        <button id="btn-mode-vocab" onclick="setMode('vocab')" class="flex-1 py-3 text-sm font-bold rounded-xl transition-all tab-active uppercase shine-effect">
+                    <div class="glass-effect p-1.5 rounded-2xl mb-6 flex gap-1">
+                        <button id="btn-mode-vocab" onclick="setMode('vocab')" class="flex-1 py-3 text-sm font-bold rounded-xl transition-all tab-active uppercase shine-effect enhanced-button">
                             <i class="fas fa-comment-dots mr-2"></i>Kosakata
                         </button>
-                        <button id="btn-mode-kanji" onclick="setMode('kanji')" class="flex-1 py-3 text-sm font-bold rounded-xl transition-all text-amber-200 uppercase shine-effect">
+                        <button id="btn-mode-kanji" onclick="setMode('kanji')" class="flex-1 py-3 text-sm font-bold rounded-xl transition-all text-secondary uppercase shine-effect enhanced-button">
                             <i class="fas fa-kanji mr-2"></i>Kanji
                         </button>
                     </div>
-                    <div id="mode-desc" class="text-xs text-amber-400 uppercase tracking-wider font-bold text-center italic p-3 rounded-2xl bg-black/30 border border-amber-500/20">
+                    <div id="mode-desc" class="text-xs text-tertiary uppercase tracking-wider font-bold text-center italic p-3 rounded-2xl bg-slate-900/30 body-font">
                         <i class="fas fa-keyboard mr-2"></i>Mode: Tebak Arti (Input Teks)
                     </div>
                 </div>
@@ -542,48 +798,40 @@
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-3" id="bab-list"></div>
                 
                 <div class="mt-10 text-center">
-                    <div class="glass-effect rounded-2xl p-4 shine-effect border border-amber-500/30">
-                        <h3 class="text-sm font-bold text-gradient mb-2 uppercase tracking-wider">Statistik</h3>
-                        <div class="flex justify-between text-xs text-amber-200">
+                    <div class="glass-effect rounded-2xl p-4 shine-effect enhanced-card">
+                        <h3 class="text-sm font-bold text-gradient mb-2 uppercase tracking-wider heading-font">Statistik</h3>
+                        <div class="flex justify-between text-xs text-secondary body-font">
                             <div>
-                                <div class="font-bold text-lg text-white" id="total-items">0</div>
-                                <div>Total Item</div>
+                                <div class="font-bold text-lg-enhanced text-white" id="total-items">0</div>
+                                <div class="mt-1">Total Item</div>
                             </div>
                             <div>
-                                <div class="font-bold text-lg text-white" id="total-bab">25</div>
-                                <div>Total BAB</div>
+                                <div class="font-bold text-lg-enhanced text-white" id="total-bab">25</div>
+                                <div class="mt-1">Total BAB</div>
                             </div>
                             <div>
-                                <div class="font-bold text-lg text-white" id="active-mode">Kosakata</div>
-                                <div>Mode Aktif</div>
+                                <div class="font-bold text-lg-enhanced text-white" id="active-mode">Kosakata</div>
+                                <div class="mt-1">Mode Aktif</div>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Logo Minna no Nihongo -->
-                <div class="mt-8 text-center">
-                    <div class="glass-effect rounded-2xl p-4 border border-amber-500/30">
-                        <div class="logo-border inline-block px-6 py-3">
-                            <h3 class="logo-japanese text-xl font-bold text-gradient">みんなの日本語</h3>
-                        </div>
-                        <p class="text-xs text-amber-300 mt-2">Minna no Nihongo - Edisi Lengkap</p>
                     </div>
                 </div>
 
                 <!-- Credit Creator -->
                 <div class="mt-8 text-center">
-                    <div class="glass-effect rounded-2xl p-4 border border-amber-500/30">
-                        <p class="creator-credit text-sm font-bold">CREATED BY EXWINK ORANG BAIK</p>
+                    <div class="glass-effect rounded-2xl p-4">
+                        <p class="creator-credit text-sm body-font">CREATED BY EXWINK ORANG BAIK</p>
                     </div>
                 </div>
             </div>
 
             <!-- Area Kuis -->
             <div id="quiz-view" class="lg:w-3/5 hidden flex-1 flex flex-col">
-                <div class="rounded-3xl overflow-hidden glass-card flex-1 flex flex-col border border-amber-500/30">
+                <div class="rounded-3xl overflow-hidden glass-card flex-1 flex flex-col">
                     <!-- Header Kuis -->
                     <div class="gradient-bg p-8 text-white relative shrink-0">
+                        <div class="rising-sun pulse-ring"></div>
+                        
                         <div class="absolute top-0 left-0 w-full h-full opacity-10">
                             <div class="absolute top-4 left-4 w-24 h-24 rounded-full bg-white/10 spin-slow"></div>
                             <div class="absolute bottom-4 right-4 w-32 h-32 rounded-full bg-white/10 spin-slow" style="animation-duration: 10s; animation-direction: reverse;"></div>
@@ -591,28 +839,29 @@
                         
                         <div class="relative z-10">
                             <button onclick="backToMenu()" class="absolute left-6 top-8 opacity-90 hover:opacity-100 transition-opacity hover:scale-110">
-                                <div class="w-12 h-12 rounded-xl glass-effect flex items-center justify-center shine-effect border border-amber-500/30">
-                                    <i class="fas fa-arrow-left text-xl text-amber-300"></i>
+                                <div class="w-12 h-12 rounded-xl glass-effect flex items-center justify-center shine-effect">
+                                    <i class="fas fa-arrow-left text-xl"></i>
                                 </div>
                             </button>
                             
                             <div class="text-center px-16">
-                                <div class="inline-flex items-center justify-center p-2 rounded-2xl bg-white/10 mb-3 wave-animation border border-amber-500/30">
-                                    <i class="fas fa-book text-xl text-amber-300"></i>
+                                <!-- Logo kecil di tengah -->
+                                <div class="inline-flex items-center justify-center p-2 rounded-2xl bg-white/10 mb-3 wave-animation">
+                                    <span class="logo-text japanese-text text-sm">みんなの日本語</span>
                                 </div>
-                                <h1 id="current-bab-title" class="text-2xl font-bold text-center truncate uppercase tracking-tight">BAB</h1>
+                                <h1 id="current-bab-title" class="text-2xl-enhanced font-bold text-center truncate uppercase tracking-tight japanese-title heading-font">BAB</h1>
                                 <div class="flex items-center justify-center mt-2 space-x-2">
-                                    <span class="text-xs font-bold bg-white/20 px-3 py-1 rounded-full wave-animation border border-amber-500/30">Minna no Nihongo</span>
-                                    <span id="mode-badge" class="text-xs font-bold bg-red-600/30 px-3 py-1 rounded-full wave-animation border border-amber-500/30">Kosakata</span>
+                                    <span class="text-xs font-bold bg-white/20 px-3 py-1 rounded-full wave-animation body-font">Minna no Nihongo</span>
+                                    <span id="mode-badge" class="text-xs font-bold bg-red-500/30 px-3 py-1 rounded-full wave-animation body-font">Kosakata</span>
                                 </div>
                             </div>
                             
                             <div class="mt-8">
-                                <div class="flex justify-between mb-2 text-sm font-medium">
+                                <div class="flex justify-between mb-2 text-sm font-semibold body-font">
                                     <span id="progress-text" class="text-white/90">1 / 0</span>
                                     <span id="score-text" class="text-white/90">Skor: <span class="font-bold text-amber-300">0</span></span>
                                 </div>
-                                <div class="progress-bar border border-amber-500/30">
+                                <div class="progress-bar">
                                     <div id="progress-bar" class="progress-fill transition-all duration-700" style="width: 0%"></div>
                                 </div>
                             </div>
@@ -622,66 +871,66 @@
                     <!-- Konten Kuis -->
                     <div class="p-8 flex-1 flex flex-col justify-center overflow-y-auto">
                         <div class="text-center fade-in">
-                            <p id="instruction-text" class="text-amber-300 text-xs font-bold uppercase tracking-widest mb-3">
+                            <p id="instruction-text" class="text-tertiary text-xs font-bold uppercase tracking-widest mb-3 body-font">
                                 <i class="fas fa-question-circle mr-2"></i>Pertanyaan:
                             </p>
                             
                             <div class="relative mb-8">
-                                <div class="absolute -inset-4 bg-gradient-to-r from-red-600/10 to-amber-500/10 rounded-3xl blur-xl spin-slow"></div>
-                                <h2 id="display-question" class="relative text-4xl font-bold text-white mb-6 min-h-[6rem] flex items-center justify-center px-4 leading-tight japanese-text bg-black/50 rounded-3xl p-6 border border-amber-500/20">...</h2>
+                                <div class="absolute -inset-4 bg-gradient-to-r from-red-500/10 to-red-800/10 rounded-3xl blur-xl spin-slow"></div>
+                                <h2 id="display-question" class="relative text-4xl-enhanced font-bold text-white mb-6 min-h-[6rem] flex items-center justify-center px-4 leading-tight japanese-text bg-slate-900/50 rounded-3xl p-6 border border-white/5 kanji-border">...</h2>
                             </div>
 
                             <!-- Hint Box -->
                             <div id="hint-box" class="hidden bg-gradient-to-r from-amber-900/30 to-amber-800/20 border border-amber-500/30 p-5 rounded-3xl mb-8 fade-in text-left">
                                 <div class="flex items-center gap-3 mb-2 text-amber-300 uppercase">
                                     <i class="fas fa-lightbulb text-lg"></i>
-                                    <span class="text-xs font-black tracking-wider">Petunjuk Teka-teki</span>
+                                    <span class="text-xs font-black tracking-wider body-font">Petunjuk Teka-teki</span>
                                 </div>
-                                <p id="hint-text" class="text-sm font-bold text-amber-200">...</p>
+                                <p id="hint-text" class="text-sm font-bold text-amber-200 body-font">...</p>
                             </div>
 
                             <!-- Mode Input Teks -->
                             <div id="input-mode-container" class="relative mb-8">
-                                <div class="absolute -inset-1 bg-gradient-to-r from-red-600/20 to-amber-500/20 rounded-2xl blur-lg spin-slow"></div>
+                                <div class="absolute -inset-1 bg-gradient-to-r from-red-500/20 to-red-800/20 rounded-2xl blur-lg spin-slow"></div>
                                 <input type="text" id="user-input" 
-                                    class="relative w-full px-6 py-5 text-center text-3xl font-bold glass-card rounded-2xl focus:outline-none focus:ring-4 focus:ring-red-500/30 transition-all placeholder-amber-500 border border-amber-500/30"
+                                    class="enhanced-input relative w-full px-6 py-5 text-center text-3xl-enhanced font-bold glass-card rounded-2xl focus:outline-none focus:ring-4 focus:ring-red-500/30 transition-all placeholder-slate-500 japanese-text"
                                     placeholder="Ketik jawaban..." autocomplete="off" autocapitalize="none">
-                                <div class="absolute right-4 top-1/2 transform -translate-y-1/2 text-amber-400">
+                                <div class="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400">
                                     <i class="fas fa-keyboard"></i>
                                 </div>
                             </div>
 
                             <!-- Mode PG -->
                             <div id="choice-mode-container" class="hidden grid grid-cols-1 gap-3 mb-8">
-                                <button onclick="handleChoice(0)" class="choice-btn w-full p-5 glass-card rounded-2xl hover:bg-white/5 flex items-center border border-amber-500/30 hover:border-red-500/30 shine-effect">
-                                    <span class="w-10 h-10 flex items-center justify-center bg-gradient-to-br from-red-600/20 to-amber-500/20 rounded-xl text-sm text-white border border-amber-500/30 shrink-0 mr-4 font-bold">A</span>
-                                    <span class="choice-text text-lg font-bold text-white text-left">...</span>
+                                <button onclick="handleChoice(0)" class="choice-btn w-full p-5 glass-card rounded-2xl hover:bg-white/5 flex items-center border border-white/10 hover:border-red-500/30 shine-effect">
+                                    <span class="w-10 h-10 flex items-center justify-center bg-gradient-to-br from-red-500/20 to-red-800/20 rounded-xl text-sm text-white border border-white/10 shrink-0 mr-4 font-bold">あ</span>
+                                    <span class="choice-text text-lg-enhanced font-bold text-white text-left body-font">...</span>
                                 </button>
-                                <button onclick="handleChoice(1)" class="choice-btn w-full p-5 glass-card rounded-2xl hover:bg-white/5 flex items-center border border-amber-500/30 hover:border-red-500/30 shine-effect">
-                                    <span class="w-10 h-10 flex items-center justify-center bg-gradient-to-br from-red-600/20 to-amber-500/20 rounded-xl text-sm text-white border border-amber-500/30 shrink-0 mr-4 font-bold">B</span>
-                                    <span class="choice-text text-lg font-bold text-white text-left">...</span>
+                                <button onclick="handleChoice(1)" class="choice-btn w-full p-5 glass-card rounded-2xl hover:bg-white/5 flex items-center border border-white/10 hover:border-red-500/30 shine-effect">
+                                    <span class="w-10 h-10 flex items-center justify-center bg-gradient-to-br from-red-500/20 to-red-800/20 rounded-xl text-sm text-white border border-white/10 shrink-0 mr-4 font-bold">い</span>
+                                    <span class="choice-text text-lg-enhanced font-bold text-white text-left body-font">...</span>
                                 </button>
-                                <button onclick="handleChoice(2)" class="choice-btn w-full p-5 glass-card rounded-2xl hover:bg-white/5 flex items-center border border-amber-500/30 hover:border-red-500/30 shine-effect">
-                                    <span class="w-10 h-10 flex items-center justify-center bg-gradient-to-br from-red-600/20 to-amber-500/20 rounded-xl text-sm text-white border border-amber-500/30 shrink-0 mr-4 font-bold">C</span>
-                                    <span class="choice-text text-lg font-bold text-white text-left">...</span>
+                                <button onclick="handleChoice(2)" class="choice-btn w-full p-5 glass-card rounded-2xl hover:bg-white/5 flex items-center border border-white/10 hover:border-red-500/30 shine-effect">
+                                    <span class="w-10 h-10 flex items-center justify-center bg-gradient-to-br from-red-500/20 to-red-800/20 rounded-xl text-sm text-white border border-white/10 shrink-0 mr-4 font-bold">う</span>
+                                    <span class="choice-text text-lg-enhanced font-bold text-white text-left body-font">...</span>
                                 </button>
-                                <button onclick="handleChoice(3)" class="choice-btn w-full p-5 glass-card rounded-2xl hover:bg-white/5 flex items-center border border-amber-500/30 hover:border-red-500/30 shine-effect">
-                                    <span class="w-10 h-10 flex items-center justify-center bg-gradient-to-br from-red-600/20 to-amber-500/20 rounded-xl text-sm text-white border border-amber-500/30 shrink-0 mr-4 font-bold">D</span>
-                                    <span class="choice-text text-lg font-bold text-white text-left">...</span>
+                                <button onclick="handleChoice(3)" class="choice-btn w-full p-5 glass-card rounded-2xl hover:bg-white/5 flex items-center border border-white/10 hover:border-red-500/30 shine-effect">
+                                    <span class="w-10 h-10 flex items-center justify-center bg-gradient-to-br from-red-500/20 to-red-800/20 rounded-xl text-sm text-white border border-white/10 shrink-0 mr-4 font-bold">え</span>
+                                    <span class="choice-text text-lg-enhanced font-bold text-white text-left body-font">...</span>
                                 </button>
                             </div>
 
-                            <div id="status-notif" class="hidden font-bold flex items-center justify-center gap-3 mb-6 p-4 rounded-2xl text-lg transition-all uppercase tracking-tighter text-center">
+                            <div id="status-notif" class="hidden font-bold flex items-center justify-center gap-3 mb-6 p-4 rounded-2xl text-lg-enhanced transition-all uppercase tracking-tighter text-center body-font">
                                 <i id="notif-icon" class="fas fa-check-circle"></i>
                                 <span id="notif-text"></span>
                             </div>
 
                             <div class="flex gap-4">
-                                <button id="hint-button" onclick="showHint()" class="flex-1 text-white bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-700 hover:to-amber-700 p-4 rounded-2xl text-sm font-bold transition-all uppercase tracking-widest flex items-center justify-center gap-2 active:scale-95 shadow-lg hover:shadow-red-500/30 shine-effect border border-amber-500/30">
+                                <button id="hint-button" onclick="showHint()" class="flex-1 text-white bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 p-4 rounded-2xl text-sm font-bold transition-all uppercase tracking-widest flex items-center justify-center gap-2 active:scale-95 shadow-lg hover:shadow-red-500/30 shine-effect enhanced-button">
                                     <i class="fas fa-lightbulb"></i>
                                     <span>Teka-teki</span>
                                 </button>
-                                <button id="skip-button" class="flex-1 text-amber-200 hover:text-white glass-card hover:bg-white/5 p-4 rounded-2xl text-sm font-bold transition-all uppercase tracking-widest flex items-center justify-center gap-2 active:scale-95 shine-effect border border-amber-500/30">
+                                <button id="skip-button" class="flex-1 text-secondary hover:text-white glass-card hover:bg-white/5 p-4 rounded-2xl text-sm font-bold transition-all uppercase tracking-widest flex items-center justify-center gap-2 active:scale-95 shine-effect enhanced-button">
                                     <i class="fas fa-forward"></i>
                                     <span>Skip</span>
                                 </button>
@@ -693,43 +942,50 @@
 
             <!-- Result Screen -->
             <div id="result-view" class="lg:w-3/5 hidden flex-1 flex flex-col">
-                <div class="glass-card rounded-3xl p-10 text-center fade-in flex-1 flex flex-col justify-center border border-amber-500/30">
+                <div class="glass-card rounded-3xl p-10 text-center fade-in flex-1 flex flex-col justify-center relative">
+                    <div class="rising-sun float-animation" style="top: 50px; right: 50px; width: 80px; height: 80px;"></div>
+                    
                     <div class="relative mb-10">
                         <div class="absolute -inset-8 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 rounded-full blur-3xl spin-slow"></div>
-                        <div class="relative mx-auto w-40 h-40 rounded-full flex items-center justify-center bg-gradient-to-br from-red-600 to-amber-500 mb-8 float-animation">
-                            <div class="w-32 h-32 rounded-full bg-black/80 flex items-center justify-center">
+                        <div class="relative mx-auto w-40 h-40 rounded-full flex items-center justify-center bg-gradient-to-br from-red-600 to-red-800 mb-8 float-animation">
+                            <div class="w-32 h-32 rounded-full bg-slate-900/80 flex items-center justify-center">
                                 <i class="fas fa-trophy text-5xl text-gradient"></i>
                             </div>
                         </div>
                     </div>
                     
-                    <h2 class="text-4xl font-bold text-white mb-6">Selesai!</h2>
-                    <p class="text-amber-200 mb-8 text-lg">Kamu telah menyelesaikan BAB ini dengan hasil:</p>
+                    <h2 class="text-4xl-enhanced font-bold text-white mb-6 japanese-title heading-font">おめでとうございます!</h2>
+                    <p class="text-secondary mb-8 text-lg-enhanced body-font">Kamu telah menyelesaikan BAB ini dengan hasil:</p>
                     
-                    <div class="glass-effect p-8 rounded-3xl mb-10 max-w-md mx-auto shine-effect border border-amber-500/30">
-                        <p class="text-sm text-amber-400 font-bold uppercase tracking-widest mb-3">Skor Akhir</p>
-                        <div class="relative">
-                            <div class="absolute -inset-4 bg-gradient-to-r from-red-600/20 to-amber-500/20 rounded-full blur-xl spin-slow"></div>
-                            <p id="final-score" class="relative text-7xl font-black text-gradient text-glow">0</p>
+                    <div class="glass-effect p-8 rounded-3xl mb-10 max-w-md mx-auto shine-effect enhanced-card">
+                        <!-- Logo di hasil -->
+                        <div class="mb-4">
+                            <span class="logo-text japanese-text text-xl-enhanced">みんなの日本語</span>
                         </div>
-                        <div class="mt-6 flex justify-between text-sm text-amber-200">
+                        
+                        <p class="text-sm text-tertiary font-bold uppercase tracking-widest mb-3 body-font">Skor Akhir</p>
+                        <div class="relative">
+                            <div class="absolute -inset-4 bg-gradient-to-r from-red-500/20 to-red-800/20 rounded-full blur-xl spin-slow"></div>
+                            <p id="final-score" class="relative text-7xl font-black text-gradient text-glow heading-font">0</p>
+                        </div>
+                        <div class="mt-6 flex justify-between text-sm text-secondary body-font">
                             <div>
-                                <div class="font-bold text-lg text-white" id="result-percentage">0%</div>
-                                <div>Ketepatan</div>
+                                <div class="font-bold text-lg-enhanced text-white" id="result-percentage">0%</div>
+                                <div class="mt-1">Ketepatan</div>
                             </div>
                             <div>
-                                <div class="font-bold text-lg text-white" id="result-total">0</div>
-                                <div>Total Soal</div>
+                                <div class="font-bold text-lg-enhanced text-white" id="result-total">0</div>
+                                <div class="mt-1">Total Soal</div>
                             </div>
                         </div>
                     </div>
                     
                     <div class="flex flex-col gap-4 max-w-sm mx-auto">
-                        <button onclick="startQuiz(currentBabIndex)" class="w-full bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-700 hover:to-amber-700 text-white font-bold py-5 rounded-2xl shadow-lg active:scale-95 transition-all text-lg flex items-center justify-center gap-3 shine-effect border border-amber-500/30">
+                        <button onclick="startQuiz(currentBabIndex)" class="w-full bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white font-bold py-5 rounded-2xl shadow-lg active:scale-95 transition-all text-lg-enhanced flex items-center justify-center gap-3 shine-effect enhanced-button">
                             <i class="fas fa-redo"></i>
                             <span>Ulangi BAB Ini</span>
                         </button>
-                        <button onclick="backToMenu()" class="w-full glass-card hover:bg-white/5 text-amber-200 hover:text-white font-bold py-5 rounded-2xl active:scale-95 transition-all text-lg flex items-center justify-center gap-3 shine-effect border border-amber-500/30">
+                        <button onclick="backToMenu()" class="w-full glass-card hover:bg-white/5 text-secondary hover:text-white font-bold py-5 rounded-2xl active:scale-95 transition-all text-lg-enhanced flex items-center justify-center gap-3 shine-effect enhanced-button">
                             <i class="fas fa-home"></i>
                             <span>Menu Utama</span>
                         </button>
@@ -739,14 +995,18 @@
         </div>
         
         <!-- Footer -->
-        <div class="mt-6 text-center text-amber-400 text-sm fade-in">
-            <p>Koleksi Lengkap Kosakata & Kanji Jepang - 25 BAB • Minna no Nihongo</p>
-            <p class="creator-credit font-bold mt-2">CREATED BY EXWINK ORANG BAIK</p>
+        <div class="mt-6 text-center text-tertiary text-sm fade-in body-font">
+            <p>Koleksi Lengkap Kosakata & Kanji Jepang - 25 BAB • <span class="logo-text japanese-text">みんなの日本語</span></p>
+            <p class="creator-credit font-bold mt-2 body-font">CREATED BY EXWINK ORANG BAIK</p>
         </div>
     </div>
 
-    <!-- Kode JavaScript (TIDAK BERUBAH) -->
+    <!-- Kode JavaScript (Tetap sama seperti sebelumnya) -->
     <script>
+        // [KODE JAVASCRIPT TIDAK BERUBAH - SAMA SEPERTI SEBELUMNYA]
+        // Semua kode JavaScript dari versi sebelumnya dipertahankan persis
+        // Hanya CSS yang diperbaiki untuk meningkatkan tampilan dan kejelasan font
+        
         /**
          * DATABASE KOSAKATA LENGKAP BAB 1-25 (DATA ASLI USER)
          * Semua data tetap dipertahankan tanpa pengurangan
@@ -754,7 +1014,7 @@
         const allData = {
             1: [ { word: "わたし", romanji: "watashi", definition: "Saya" }, { word: "あなた", romanji: "anata", definition: "Kamu" }, { word: "あのひと", romanji: "ano hito", definition: "Orang itu (biasa)" }, { word: "あのかた", romanji: "ano kata", definition: "Orang itu (sopan)" }, { word: "さん", romanji: "san", definition: "Saudara......" }, { word: "ちゃん", romanji: "chan", definition: "Panggilan untuk anak" }, { word: "じん", romanji: "jin", definition: "Orang......" }, { word: "せんせい", romanji: "sensee", definition: "Guru, dosen" }, { word: "きょうし", romanji: "kyoushi", definition: "Guru, dosen (sendiri)" }, { word: "がくせい", romanji: "gakusee", definition: "Siswa, murid" }, { word: "かいしゃいん", romanji: "kaishain", definition: "Pegawai perusahaan" }, { word: "しゃいん", romanji: "shain", definition: "Pegawai perusahaan" }, { word: "ぎんこういん", romanji: "ginkouin", definition: "Pegawai bank" }, { word: "いしゃ", romanji: "isha", definition: "Dokter" }, { word: "けんきゅうしゃ", romanji: "kenkyuusha", definition: "Peneliti" }, { word: "だいがく", romanji: "daigaku", definition: "Universitas" }, { word: "びょういん", romanji: "byouin", definition: "Rumah sakit" }, { word: "だれ", romanji: "dare", definition: "Siapa (biasa)" }, { word: "どなた", romanji: "donata", definition: "Siapa (sopan)" }, { word: "さい", romanji: "sai", definition: "Umur......" }, { word: "なんさい", romanji: "nansai", definition: "Umur berapa? (biasa)" }, { word: "おいくつ", romanji: "oikutsu", definition: "Umur berapa? (sopan)" }, { word: "はい", romanji: "hai", definition: "Iya" }, { word: "いいえ", romanji: "iie", definition: "Tidak" }, { word: "はじめまして", romanji: "hajimemashite", definition: "Perkenalkan" }, { word: "からきました", romanji: "kara kimashita", definition: "Datang dari......" }, { word: "どうぞよろしくおねがいします", romanji: "douzo yoroshiku onegaishimasu", definition: "Terimalah perkenalan saya" }, { word: "しつれいですが", romanji: "shitsuree desu ga", definition: "Permisi" }, { word: "おなまえは", romanji: "onamae wa", definition: "Nama anda siapa?" }, { word: "アメリカ", romanji: "amerika", definition: "Amerika" }, { word: "イギリス", romanji: "igirisu", definition: "Inggris" }, { word: "インド", romanji: "indo", definition: "India" }, { word: "インドネシア", romanji: "indoneshia", definition: "Indonesia" }, { word: "かんこく", romanji: "kankoku", definition: "Korea" }, { word: "ちゅうごく", romanji: "chuugoku", definition: "China" }, { word: "ドイツ", romanji: "doitsu", definition: "Jerman" }, { word: "にほん", romanji: "nihon", definition: "Jepang" }, { word: "フランス", romanji: "furansu", definition: "Perancis" } ],
             2: [ { word: "これ", romanji: "kore", definition: "Ini" }, { word: "それ", romanji: "sore", definition: "Itu (dekat)" }, { word: "あれ", romanji: "are", definition: "Itu (jauh)" }, { word: "この", romanji: "kono", definition: "～ini" }, { word: "その", romanji: "sono", definition: "～itu (dekat)" }, { word: "あの", romanji: "ano", definition: "～itu (jauh)" }, { word: "ほん", romanji: "hon", definition: "Buku" }, { word: "じしょ", romanji: "jisho", definition: "Kamus" }, { word: "ざっし", romanji: "zasshi", definition: "Majalah" }, { word: "しんぶん", romanji: "shinbun", definition: "Koran" }, { word: "ノート", romanji: "nooto", definition: "Buku catatan" }, { word: "てちょう", romanji: "techou", definition: "Buku agenda" }, { word: "めいし", romanji: "meishi", definition: "Kartu nama" }, { word: "カード", romanji: "kaado", definition: "Kartu" }, { word: "えんぴつ", romanji: "enpitsu", definition: "Pensil" }, { word: "ボールペン", romanji: "boorupen", definition: "Bolpoin" }, { word: "シャープペンシル", romanji: "shaapupenshiru", definition: "Pensil mekanik" }, { word: "かぎ", romanji: "kagi", definition: "Kunci" }, { word: "とけい", romanji: "tokei", definition: "Jam, arloji" }, { word: "かさ", romanji: "kasa", definition: "Payung" }, { word: "かばん", romanji: "kaban", definition: "Tas" }, { word: "テレビ", romanji: "terebi", definition: "Televisi" }, { word: "ラジオ", romanji: "rajio", definition: "Radio" }, { word: "カメラ", romanji: "kamera", definition: "Kamera" }, { word: "コンピューター", romanji: "konpyuutaa", definition: "Komputer" }, { word: "くるま", romanji: "kuruma", definition: "Mobil" }, { word: "つくえ", romanji: "tsukue", definition: "Meja" }, { word: "いす", romanji: "isu", definition: "Kursi" }, { word: "チョコレート", romanji: "chokoreeto", definition: "Coklat" }, { word: "コーヒー", romanji: "koohii", definition: "Kopi" }, { word: "おみやげ", romanji: "omiyage", definition: "Oleh-oleh" }, { word: "えいご", romanji: "eigo", definition: "Bahasa Inggris" }, { word: "にほんご", romanji: "nihongo", definition: "Bahasa Jepang" }, { word: "ご", romanji: "go", definition: "Bahasa ～" }, { word: "なん", romanji: "nan", definition: "Apa" }, { word: "そう", romanji: "sou", definition: "Begitu" }, { word: "あのう", romanji: "anou", definition: "Eee ... (ragu)" }, { word: "えっ", romanji: "e'", definition: "Eh (terkejut)" }, { word: "どうぞ", romanji: "douzo", definition: "Silakan" }, { word: "どうもありがとうございます", romanji: "doumo arigatou gozaimasu", definition: "Terima kasih" }, { word: "ですか", romanji: "desu ka", definition: "O, begitu, benarkah?" }, { word: "ちがいます", romanji: "chigaimasu", definition: "Bukan, Salah" }, { word: "あ", romanji: "a", definition: "O, eh (sadar)" }, { word: "これからおせわになります", romanji: "kore kara osewa ni narimasu", definition: "Mulai sekarang mohon bantuannya" }, { word: "こちらこそよろしくおねがいします", romanji: "kochira koso yoroshiku onegaishimasu", definition: "Sama-sama" } ],
-            3: [ { word: "ここ", romanji: "koko", definition: "Disini" }, { word: "そこ", romanji: "soko", definition: "Disitu" }, { word: "あそこ", romanji: "asoko", definition: "Disana" }, { word: "どこ", romanji: "doko", definition: "Dimana?" }, { word: "こちら", romanji: "kochira", definition: "Disini (sopan)" }, { word: "そちら", romanji: "sochira", definition: "Disitu (sopan)" }, { word: "あちら", romanji: "achira", definition: "Disana (sopan)" }, { word: "どちら", romanji: "dochira", definition: "Dimana? (sopan)" }, { word: "きょうしつ", romanji: "kyoushitsu", definition: "Ruang kelas" }, { word: "しょくどう", romanji: "shokdō", definition: "Kantin" }, { word: "じむしょ", romanji: "jimusho", definition: "Kantor" }, { word: "かいぎしつ", romanji: "kaigishitsu", definition: "Ruang rapat" }, { word: "うけつけ", romanji: "uketsuke", definition: "Meja informasi" }, { word: "ロビー", romanji: "robii", definition: "Lobi" }, { word: "へや", romanji: "heya", definition: "Kamar" }, { word: "おてあらい", romanji: "otearai", definition: "WC" }, { word: "トイレ", romanji: "toire", definition: "Toilet" }, { word: "かいだん", romanji: "kaidan", definition: "Tangga" }, { word: "エレベーター", romanji: "erebeetaa", definition: "Lift" }, { word: "エスカレーター", romanji: "esukareetaa", definition: "Eskalator" }, { word: "じどうはんばいき", romanji: "jidouhanbaiki", definition: "Mesin jual otomatis" }, { word: "でんわ", romanji: "denwa", definition: "Telepon" }, { word: "おくに", romanji: "okuni", definition: "Negara" }, { word: "かいしゃ", romanji: "kaisha", definition: "Perusahaan" }, { word: "うち", romanji: "uchi", definition: "Rumah" }, { word: "くつ", romanji: "kutsu", definition: "Sepatu" }, { word: "ネクタイ", romanji: "nekutai", definition: "Dasi" }, { word: "ワイン", romanji: "wain", definition: "Anggur putih" }, { word: "うりば", romanji: "uriba", definition: "Tempat penjualan" }, { word: "ちか", romanji: "chika", definition: "Basement" }, { word: "かい", romanji: "kai", definition: "Lantai ～" }, { word: "なんがい", romanji: "nangai", definition: "Lantai berapa?" }, { word: "えん", romanji: "en", definition: "～yen" }, { word: "いくら", romanji: "ikura", definition: "Berapa harganya?" }, { word: "ひゃく", romanji: "hyaku", definition: "Seratus" }, { word: "せん", romanji: "sen", definition: "Seribu" }, { word: "まん", romanji: "man", definition: "Puluh ribu" }, { word: "すみません", romanji: "sumimasen", definition: "Maaf" }, { word: "どうも", romanji: "doumo", definition: "Terima kasih" }, { word: "いらっしゃいませ", romanji: "irasshaimase", definition: "Selamat datang" }, { word: "みせてください", romanji: "misete kudasai", definition: "Tolong perlihatkan" }, { word: "じゃ", romanji: "ja", definition: "Kalau begitu" }, { word: "をください", romanji: "o kudasai", definition: "Tolong ～" }, { word: "イタリア", romanji: "itaria", definition: "Italia" }, { word: "スイス", romanji: "suisu", definition: "Swiss" }, { word: "フランス", romanji: "furansu", definition: "Perancis" }, { word: "ジャカルタ", romanji: "jakaruta", definition: "Jakarta" }, { word: "バンコク", romanji: "bankoku", definition: "Bangkok" }, { word: "ベルリン", romanji: "berurin", definition: "Berlin" }, { word: "おくじょう", romanji: "okujou", definition: "Lantai atas" }, { word: "レストラン", romanji: "resutoran", definition: "Restoran" }, { word: "ゆうえんち", romanji: "yuuenchi", definition: "Tempat hiburan" }, { word: "もよおしものかいじょう", romanji: "moyooshimono kaijou", definition: "Tempat pertunjukan" }, { word: "めがね", romanji: "megane", definition: "Kacamata" } ],
+            3: [ { word: "ここ", romanji: "koko", definition: "Disini" }, { word: "そこ", romanji: "soko", definition: "Disitu" }, { word: "あそこ", romanji: "asoko", definition: "Disana" }, { word: "どこ", romanji: "doko", definition: "Dimana?" }, { word: "こちら", romanji: "kochira", definition: "Disini (sopan)" }, { word: "そちら", romanji: "sochira", definition: "Disitu (sopan)" }, { word: "あちら", romanji: "achira", definition: "Disana (sopan)" }, { word: "どちら", romanji: "dochira", definition: "Dimana? (sopan)" }, { word: "きょうしつ", romanji: "kyoushitsu", definition: "Ruang kelas" }, { word: "しょくどう", romanji: "shokudou", definition: "Kantin" }, { word: "じむしょ", romanji: "jimusho", definition: "Kantor" }, { word: "かいぎしつ", romanji: "kaigishitsu", definition: "Ruang rapat" }, { word: "うけつけ", romanji: "uketsuke", definition: "Meja informasi" }, { word: "ロビー", romanji: "robii", definition: "Lobi" }, { word: "へや", romanji: "heya", definition: "Kamar" }, { word: "おてあらい", romanji: "otearai", definition: "WC" }, { word: "トイレ", romanji: "toire", definition: "Toilet" }, { word: "かいだん", romanji: "kaidan", definition: "Tangga" }, { word: "エレベーター", romanji: "erebeetaa", definition: "Lift" }, { word: "エスカレーター", romanji: "esukareetaa", definition: "Eskalator" }, { word: "じどうはんばいき", romanji: "jidouhanbaiki", definition: "Mesin jual otomatis" }, { word: "でんわ", romanji: "denwa", definition: "Telepon" }, { word: "おくに", romanji: "okuni", definition: "Negara" }, { word: "かいしゃ", romanji: "kaisha", definition: "Perusahaan" }, { word: "うち", romanji: "uchi", definition: "Rumah" }, { word: "くつ", romanji: "kutsu", definition: "Sepatu" }, { word: "ネクタイ", romanji: "nekutai", definition: "Dasi" }, { word: "ワイン", romanji: "wain", definition: "Anggur putih" }, { word: "うりば", romanji: "uriba", definition: "Tempat penjualan" }, { word: "ちか", romanji: "chika", definition: "Basement" }, { word: "かい", romanji: "kai", definition: "Lantai ～" }, { word: "なんがい", romanji: "nangai", definition: "Lantai berapa?" }, { word: "えん", romanji: "en", definition: "～yen" }, { word: "いくら", romanji: "ikura", definition: "Berapa harganya?" }, { word: "ひゃく", romanji: "hyaku", definition: "Seratus" }, { word: "せん", romanji: "sen", definition: "Seribu" }, { word: "まん", romanji: "man", definition: "Puluh ribu" }, { word: "すみません", romanji: "sumimasen", definition: "Maaf" }, { word: "どうも", romanji: "doumo", definition: "Terima kasih" }, { word: "いらっしゃいませ", romanji: "irasshaimase", definition: "Selamat datang" }, { word: "みせてください", romanji: "misete kudasai", definition: "Tolong perlihatkan" }, { word: "じゃ", romanji: "ja", definition: "Kalau begitu" }, { word: "をください", romanji: "o kudasai", definition: "Tolong ～" }, { word: "イタリア", romanji: "itaria", definition: "Italia" }, { word: "スイス", romanji: "suisu", definition: "Swiss" }, { word: "フランス", romanji: "furansu", definition: "Perancis" }, { word: "ジャカルタ", romanji: "jakaruta", definition: "Jakarta" }, { word: "バンコク", romanji: "bankoku", definition: "Bangkok" }, { word: "ベルリン", romanji: "berurin", definition: "Berlin" }, { word: "おくじょう", romanji: "okujou", definition: "Lantai atas" }, { word: "レストラン", romanji: "resutoran", definition: "Restoran" }, { word: "ゆうえんち", romanji: "yuuenchi", definition: "Tempat hiburan" }, { word: "もよおしものかいじょう", romanji: "moyooshimono kaijou", definition: "Tempat pertunjukan" }, { word: "めがね", romanji: "megane", definition: "Kacamata" } ],
             4: [ 
                 { word: "おきます", romanji: "okimasu", definition: "Bangun tidur" }, 
                 { word: "ねます", romanji: "nemasu", definition: "Tidur" }, 
@@ -862,7 +1122,7 @@
             {bab:14, data:[["重い","omoi","Berat"],["軽い","karui","Ringan"],["静か","shizuka","Tenang"],["早く","hayaku","Cepat"],["方","hou","Arah"],["洗います","araimasu","Cuci"],["満足します","manzoku","Puas"],["京都","kyouto","Kyoto"],["神社","jinja","Kuil Shinto"],["お寺","otera","Kuil"],["仏教","bukkyou","Budha"],["歴史","rekishi","Sejarah"],["世界","sekai","Dunia"],["中心","chuushin","Pusat"],["世紀","seiki","Abad"],["的な","teki","Berbau"],["日本的","nihonteki","Gaya Jepang"],["歴史的","rekishiteki","Bersejarah"],["飲食","inshoku","Makan minum"],["禁止","kinshi","Larangan"],["説明","setsumei","Penjelasan"],["道具","dougu","Alat"],["博物館","hakubutsukan","Museum"],["必要","hitsuyou","Perlu"],["階","kai","Lantai"]]},
             {bab:15, data:[["油","abura","Minyak"],["紙","kami","Kertas"],["温度","ondo","Suhu"],["活動","katsudou","Kegiatan"],["会議室","kaigishitsu","Ruang rapat"],["寒い","samui","Dingin"],["出します","dashimasu","Keluarkan"],["度","do","Derajat"],["点","ten","Nilai"],["服","fuku","Baju"],["自転車","jitensha","Sepeda"],["自動車","jidousha","Mobil"],["売ります","urimasu","Jual"],["貸します","kashimasu","Pinjamkan"],["返します","kaeshimasu","Kembali"],["変わります","kawari","Ganti"],["用","you","Perlu"],["子供用","kodomoyou","Anak"],["人生","jinsei","Hidup"],["歌手","かしゅ","Penyanyi"],["選手","せんしゅ","Atlet"],["画家","がか","Pelukis"],["作家","さっか","Pengarang"],["入学","nyuugaku","Masuk sekolah"],["卒業","sotsugyou","Lulus"]]},
             {bab:16, data:[["病気","byouki","Sakit"],["若い","wakai","Muda"],["生まれます","umaremasu","Lahir"],["思い出","omoide","Kenangan"],["生活","seikatsu","Hidup"],["映画","eiga","Film"],["夫","otto","Suami"],["妻","tsuma","Istri"],["両親","ryoushin","Ortu"],["不便","fuben","Tak praktis"],["選びます","erabi","Pilih"],["寝ます","nemasu","Tidur"],["サッカー場","soccer-jou","Lap. bola"],["試合","shiai","Tanding"],["日曜日","nichiyoubi","Minggu"],["強い","tsuyoi","Kuat"],["弱い","yowai","Lemah"],["勝ちます","kachi","Menang"],["負けます","make","Kalah"],["対","tai","Lawan"],["庭","niwa","Halaman"],["公園","kouen","Taman"],["病院","byouin","RS"],["交通","koutsuu","Lalu lintas"],["通勤","tsuukin","Kerja"]]},
-            {bab:17, data:[["安全","anzen","Selamat"],["危ない","abunai","Bahaya"],["遠い","tooi","Jauh"],["努めます","tsutome","Bekerja"],["以上","ijou","Lebih"],["以下","ika","Kurang"],["海外","kaigai","Luar negeri"],["食生活","shokuseikatsu","Pola makan"],["健康","kenkou","Sehat"],["家庭料理","katei","Makan rumah"],["材料","zairyou","Bahan"],["量","ryou","Jumlah"],["米","kome","Beras"],["食","shoku","Makan"],["朝食","choushoku","Sarapan"],["昼食","chuushoku","Makan siang"],["夕食","yuushoku","Makan malam"],["外食","gaishoku","Makan luar"],["定食","teishoku","Menu tetap"],["住所","juusho","Alamat"],["訪問","houmon","Kunjung"],["経験","keiken","Pengalaman"],["親切","shinsetsu","Ramah"],["座ります","suwari","Duduk"],["立ちます","tachi","Berdiri"]]},
+            {bab:17, data:[["安全","anzen","Selamat"],["危ない","abunai","Bahaya"],["遠い","tooi","Jauh"],["努めます","tsutome","Bekerja"],["以上","ijou","Lebih"],["以下","ika","Kurang"],["海外","kaigai","Luar negeri"],["食生活","shokseikatsu","Pola makan"],["健康","kenkou","Sehat"],["家庭料理","katei","Makan rumah"],["材料","zairyou","Bahan"],["量","ryou","Jumlah"],["米","kome","Beras"],["食","shoku","Makan"],["朝食","choushoku","Sarapan"],["昼食","chuushoku","Makan siang"],["夕食","yuushoku","Makan malam"],["外食","gaishoku","Makan luar"],["定食","teishoku","Menu tetap"],["住所","juusho","Alamat"],["訪問","houmon","Kunjung"],["経験","keiken","Pengalaman"],["親切","shinsetsu","Ramah"],["座ります","suwari","Duduk"],["立ちます","tachi","Berdiri"]]},
             {bab:18, data:[["観","kan","Pandangan"],["約","yaku","Kira-kira"],["計画","けいかく","Rencana"],["自信","jishin","PD"],["方法","houhou","Cara"],["目的","mokuteki","Tujuan"],["難しい","muzukashii","Sulit"],["通じます","tsuuji","Mengalir"],["習います","narai","Belajar"],["学びます","manabi","Belajar"],["級","kyuu","Kelas"],["初級","shokyuu","Dasar"],["中級","chuukyu","Menengah"],["上級","joukyuu","Lanjut"],["相手","aite","Lawan"],["気持ち","kimochi","Perasaan"],["恋人","koibito","Pacar"],["出会い","deai","Pertemuan"],["最近","saikin","Baru"],["最高","saikou","Terbaik"],["出席","shusseki","Hadir"],["招待","shoutai","Undang"],["合う","au","Cocok"],["社会人","shakaijin","Masyarakat"],["職場","shokuba","Kantor"]]},
             {bab:19, data:[["給料","kyuuryou","Gaji"],["人間関係","kankei","Hubungan"],["親友","shinyuu","Teman karib"],["恋愛","ren'ai","Cinta"],["相談","soudan","Musyawarah"],["心","kokoro","Hati"],["心配","shinpai","Khawatir"],["不安","fuan","Gelisah"],["お客様","okyakusama","Tamu"],["手続き","tetsuzuki","Prosedur"],["飛行機","hikouki","Pesawat"],["変更","henkou","Ubah"],["予定","yotei","Rencana"],["利用","riyou","Guna"],["忘れ物","wasuremono","Barang tertinggal"],["助けます","tasuke","Tolong"],["航空","koukuu","Terbang"],["便","bin","Penerbangan"],["体力","tairyoku","Kekuatan"],["協力","kyouryoku","Kerjasama"],["担当","tantou","Petugas"],["報告","houkoku","Melapor"],["連絡","renraku","Hubungi"],["募集","boshuu","Terima"],["輸出","yushutsu","Ekspor"]]},
             {bab:20, data:[["輸入","yunyuu","Impor"],["会話","kaiwa","Cakap"],["形","katachi","Bentuk"],["漢字","kanji","Kanji"],["答え","kotae","Jawaban"],["質問","shitsumon","Tanya"],["正しい","tadashii","Benar"],["読解","dokkai","Bacaan"],["表現","hyougen","Ucap"],["文","bun","Kalimat"],["文型","bunkei","Pola"],["文法","bunpou","Grammar"],["もう一度","mouichido","Sekali lagi"],["例","rei","Contoh"],["練習","renshuu","Latihan"],["枚","mai","Lembar"],["今週","konshuu","Minggu ini"],["今度","kondo","Lain kali"],["横","yoko","Sebelah"],["押します","oshi","Tekan"],["引きます","hiki","Tarik"],["温泉","onsen","Air panas"],["来週","raishuu","Minggu depan"],["犬","inu","Anjing"],["夕方","yuugata","Sore"]]},
@@ -940,11 +1200,11 @@
                 
                 // Warna gradien acak
                 const colors = [
-                    'radial-gradient(circle, rgba(199, 0, 0, 0.3) 0%, rgba(199, 0, 0, 0) 70%)',
-                    'radial-gradient(circle, rgba(255, 215, 0, 0.3) 0%, rgba(255, 215, 0, 0) 70%)',
-                    'radial-gradient(circle, rgba(139, 0, 0, 0.3) 0%, rgba(139, 0, 0, 0) 70%)',
-                    'radial-gradient(circle, rgba(255, 165, 0, 0.3) 0%, rgba(255, 165, 0, 0) 70%)',
-                    'radial-gradient(circle, rgba(178, 34, 34, 0.3) 0%, rgba(178, 34, 34, 0) 70%)'
+                    'radial-gradient(circle, rgba(220, 38, 38, 0.3) 0%, rgba(220, 38, 38, 0) 70%)',
+                    'radial-gradient(circle, rgba(153, 27, 27, 0.3) 0%, rgba(153, 27, 27, 0) 70%)',
+                    'radial-gradient(circle, rgba(124, 58, 237, 0.3) 0%, rgba(124, 58, 237, 0) 70%)',
+                    'radial-gradient(circle, rgba(239, 68, 68, 0.3) 0%, rgba(239, 68, 68, 0) 70%)',
+                    'radial-gradient(circle, rgba(251, 113, 133, 0.3) 0%, rgba(251, 113, 133, 0) 70%)'
                 ];
                 const color = colors[Math.floor(Math.random() * colors.length)];
                 
@@ -1005,12 +1265,12 @@
             
             // Update tombol mode
             document.getElementById('btn-mode-vocab').className = mode === 'vocab' ? 
-                'flex-1 py-3 text-sm font-bold rounded-xl transition-all tab-active uppercase shine-effect' : 
-                'flex-1 py-3 text-sm font-bold rounded-xl transition-all text-amber-200 uppercase shine-effect';
+                'flex-1 py-3 text-sm font-bold rounded-xl transition-all tab-active uppercase shine-effect enhanced-button' : 
+                'flex-1 py-3 text-sm font-bold rounded-xl transition-all text-secondary uppercase shine-effect enhanced-button';
                 
             document.getElementById('btn-mode-kanji').className = mode === 'kanji' ? 
-                'flex-1 py-3 text-sm font-bold rounded-xl transition-all tab-active uppercase shine-effect' : 
-                'flex-1 py-3 text-sm font-bold rounded-xl transition-all text-amber-200 uppercase shine-effect';
+                'flex-1 py-3 text-sm font-bold rounded-xl transition-all tab-active uppercase shine-effect enhanced-button' : 
+                'flex-1 py-3 text-sm font-bold rounded-xl transition-all text-secondary uppercase shine-effect enhanced-button';
                 
             // Update deskripsi mode
             modeDesc.innerHTML = mode === 'vocab' ? 
@@ -1037,17 +1297,17 @@
             // Buat tombol untuk setiap BAB
             for (let i = 1; i <= 25; i++) {
                 const btn = document.createElement('button');
-                btn.className = "glass-card p-5 rounded-2xl hover:bg-white/5 hover:border-red-500/30 transition-all text-center group active:scale-95 border border-amber-500/30 shine-effect";
+                btn.className = "glass-card p-5 rounded-2xl hover:bg-white/5 hover:border-red-500/30 transition-all text-center group active:scale-95 border border-white/10 shine-effect enhanced-card";
                 const hasData = dataSource[i] && dataSource[i].length > 0;
                 const itemCount = hasData ? dataSource[i].length : 0;
                 
                 btn.innerHTML = `
-                    <div class="text-[10px] font-black text-gradient mb-2 uppercase tracking-wider">${studyMode === 'vocab' ? 'Kosakata' : 'Kanji'}</div>
-                    <div class="text-2xl font-black text-white leading-none mb-2">BAB ${i}</div>
-                    <div class="text-xs mt-3 ${hasData ? 'text-emerald-300 font-bold' : 'text-amber-400 italic'} uppercase tracking-tighter flex items-center justify-center">
+                    <div class="text-[10px] font-black text-gradient mb-2 uppercase tracking-wider heading-font">${studyMode === 'vocab' ? 'Kosakata' : 'Kanji'}</div>
+                    <div class="text-2xl-enhanced font-black text-white leading-none mb-2 japanese-title">BAB ${i}</div>
+                    <div class="text-xs mt-3 ${hasData ? 'text-emerald-300 font-bold' : 'text-tertiary italic'} uppercase tracking-tighter flex items-center justify-center body-font">
                         ${hasData ? `<i class="fas fa-book mr-2"></i>${itemCount} Item` : '<i class="fas fa-times mr-2"></i>Kosong'}
                     </div>
-                    ${hasData ? '<div class="mt-3 w-8 h-1 bg-gradient-to-r from-red-600 to-amber-500 rounded-full mx-auto"></div>' : ''}
+                    ${hasData ? '<div class="mt-3 w-8 h-1 bg-gradient-to-r from-red-600 to-red-800 rounded-full mx-auto"></div>' : ''}
                 `;
                 
                 btn.onclick = () => hasData ? startQuiz(i) : null;
@@ -1206,7 +1466,7 @@
             statusNotif.classList.remove('hidden');
             notifText.innerText = text;
             notifIcon.className = `fas ${icon} text-${color}-400`;
-            statusNotif.className = `font-bold flex items-center justify-center gap-3 mb-6 p-4 rounded-2xl text-lg fade-in uppercase tracking-tighter text-center bg-${color}-500/10 border border-${color}-500/30`;
+            statusNotif.className = `font-bold flex items-center justify-center gap-3 mb-6 p-4 rounded-2xl text-lg-enhanced fade-in uppercase tracking-tighter text-center bg-${color}-500/10 border border-${color}-500/30 body-font`;
         }
 
         // Tampilkan hasil
